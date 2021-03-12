@@ -1,0 +1,3 @@
+user: id, name, status
+membership: userid, groupid, roleid
+groups: name, description

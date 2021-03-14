@@ -1,3 +1,6 @@
-user: id, name, status
+user: id, name, status, pfp
 membership: userid, groupid, roleid
-groups: name, description
+group: id, name, description, owner
+role: id, groupid, name, perms
+chat_message: id, userid, chatid, text, expires
+chat: id, groupid, user1id, user2id

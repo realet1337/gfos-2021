@@ -3,7 +3,9 @@ package com.realet.sip;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,7 +18,9 @@ import javax.persistence.Table;
 public class Chat {
     
     @Id
-    private int id;
+    @GeneratedValue
+    @Column(nullable = false)
+    private long id;
 
     @OneToOne
     @JoinColumn(name = "group_id")

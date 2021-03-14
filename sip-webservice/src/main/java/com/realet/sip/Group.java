@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -20,9 +21,11 @@ import javax.persistence.Table;
 public class Group {
 
     @Id
-    private int id;
+    @GeneratedValue
+    @Column(nullable = false)
+    private long id;
 
-    @Column(name = "group_name")
+    @Column(name = "group_name", nullable = false)
     private String name;
 
     @Column(name = "group_description")
@@ -31,7 +34,7 @@ public class Group {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
     @ManyToMany(mappedBy = "groups")

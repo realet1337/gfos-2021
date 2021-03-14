@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
@@ -19,9 +21,13 @@ public class User{
     
     //directly matching database column names
     @Id
-    private Integer id;
+    @GeneratedValue
+    @Column(nullable = false)
+    private long id;
     
+    @Column(nullable = false)
     private String username;
+
     private String info;
     private String profile_picture;
     

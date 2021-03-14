@@ -43,7 +43,7 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "group")
-    private List<Chat> directChats1 = new ArrayList<>();
+    @OneToMany(mappedBy = "group")
+    private List<Chat> chat = new ArrayList<>();
     
 }

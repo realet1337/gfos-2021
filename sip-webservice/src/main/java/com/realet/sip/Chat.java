@@ -22,7 +22,7 @@ public class Chat {
     @Column(nullable = false)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 

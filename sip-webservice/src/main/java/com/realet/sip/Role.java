@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 public class Role {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
@@ -36,5 +37,63 @@ public class Role {
 
     @Column(nullable = false)
     private long permissions;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public long getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(long permissions) {
+        this.permissions = permissions;
+    }
+
+    public Role(String name, String color, Group group, long permissions) {
+        this.name = name;
+        this.color = color;
+        this.group = group;
+        this.permissions = permissions;
+    }
+
+    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
+    @Override
+    public String toString() {
+        return "Role{color=" + color + ", group=" + group + ", id=" + id + ", name=" + name + ", permissions="
+                + permissions + "}";
+    }
+
+    public Role() {
+        super();
+    }
 
 }

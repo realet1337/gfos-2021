@@ -8,20 +8,21 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="Groups")
+
 public class Group {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
@@ -45,5 +46,63 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     private List<Chat> chat = new ArrayList<>();
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Group(String name, String description, String image, User owner) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.owner = owner;
+    }
+
+    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
+    @Override
+    public String toString() {
+        return "Group{description=" + description + ", id=" + id + ", image=" + image + ", name=" + name + ", owner="
+                + owner + "}";
+    }
+
+    public Group() {
+        super();
+    }
     
 }

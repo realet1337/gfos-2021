@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/users")
 public class UsersResource {
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getUsers() {

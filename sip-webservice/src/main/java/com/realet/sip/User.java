@@ -40,16 +40,10 @@ public class User{
     private String info;
     private String profile_picture;
     
-    @ManyToMany
-    @JoinTable(name = "GroupMembership",
-    		   joinColumns=@JoinColumn(name="user_id"),
-    		   inverseJoinColumns=@JoinColumn(name="group_id"))
+    @ManyToMany(mappedBy = "users")
     private Set<Group> groups = new HashSet<>();
     
-    @ManyToMany
-    @JoinTable(name = "RoleMembership",
-    		   joinColumns=@JoinColumn(name="user_id"),
-    		   inverseJoinColumns=@JoinColumn(name="role_id"))
+    @ManyToMany(mappedBy = "users")
     private Set<Role> roles = new HashSet<>();
     
     @OneToMany(mappedBy = "owner")

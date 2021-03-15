@@ -11,13 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Groups")
+@Table(name="`Groups`")
 
 public class Group {
 
@@ -32,13 +33,16 @@ public class Group {
     @Column(name = "group_description")
     private String description;
 
-    private String image;
+    private String picture;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany
+    @JoinTable(name = "GroupMembership",
+    		   joinColumns=@JoinColumn(name="group_id"),
+    		   inverseJoinColumns=@JoinColumn(name="user_id"))
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "group")
@@ -71,12 +75,12 @@ public class Group {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setPicture(String image) {
+        this.picture = picture;
     }
 
     public User getOwner() {
@@ -87,17 +91,36 @@ public class Group {
         this.owner = owner;
     }
 
-    public Group(String name, String description, String image, User owner) {
+    public void addUser(User user){
+
+        users.add(user);
+
+    }
+
+    public void removeUser(User user){
+
+        users.remove(user);
+
+    }
+
+    public Set<User> getUsers(){
+
+        return users;
+
+    }
+
+    public Group(String name, String description, String picture, User owner, Set<User> users) {
         this.name = name;
         this.description = description;
-        this.image = image;
+        this.picture = picture;
         this.owner = owner;
+        this.users = users;
     }
 
     //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
     @Override
     public String toString() {
-        return "Group{description=" + description + ", id=" + id + ", image=" + image + ", name=" + name + ", owner="
+        return "Group{description=" + description + ", id=" + id + ", picture=" + picture + ", name=" + name + ", owner="
                 + owner + "}";
     }
 

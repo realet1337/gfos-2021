@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -28,7 +29,10 @@ public class Role {
     @Column(name = "role_color", nullable = false)
     private String color;
     
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany
+    @JoinTable(name = "RoleMembership",
+    		   joinColumns=@JoinColumn(name="role_id"),
+    		   inverseJoinColumns=@JoinColumn(name="user_id"))
     private Set<User> users = new HashSet<>();
 
     @ManyToOne
@@ -78,11 +82,30 @@ public class Role {
         this.permissions = permissions;
     }
 
-    public Role(String name, String color, Group group, long permissions) {
+    public void addUser(User user){
+
+        users.add(user);
+
+    }
+
+    public void removeUser(User user){
+
+        users.remove(user);
+
+    }
+
+    public Set<User> getUsers(){
+
+        return users;
+
+    }
+
+    public Role(String name, String color, Group group, long permissions, Set<User> users) {
         this.name = name;
         this.color = color;
         this.group = group;
         this.permissions = permissions;
+        this.users = users;
     }
 
     //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON

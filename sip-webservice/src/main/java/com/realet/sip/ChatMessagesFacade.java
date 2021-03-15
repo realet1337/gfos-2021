@@ -1,6 +1,6 @@
 package com.realet.sip;
 
-import java.util.List;
+
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -22,18 +22,18 @@ public class ChatMessagesFacade {
 
     }
 
-    public static void add(Chat chat){
+    public static void add(ChatMessage chatMessage){
 
         em.getTransaction().begin();
-        em.persist(chat);
+        em.persist(chatMessage);
         em.getTransaction().commit();
 
     }
 
-    public static void remove(Chat chat){
+    public static void remove(ChatMessage chatMessage){
 
         em.getTransaction().begin();
-        em.remove(chat);
+        em.remove(chatMessage);
         em.getTransaction().commit();
 
     }

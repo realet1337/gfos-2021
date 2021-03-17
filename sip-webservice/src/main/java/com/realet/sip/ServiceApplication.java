@@ -7,8 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+ 
 
-import com.realet.sip.UsersResource;
+//import com.realet.sip.UsersResource;
 
 @ApplicationPath("/")
 public class ServiceApplication extends Application {
@@ -18,6 +19,7 @@ public class ServiceApplication extends Application {
 
         Set<Class<?>> set = new HashSet<>();
         set.add( UsersResource.class );
+        set.add( AuthResource.class );
         return set;
     }
 
@@ -30,10 +32,13 @@ public class ServiceApplication extends Application {
         RolesFacade.initialize(em);
         ChatsFacade.initialize(em);
         ChatMessagesFacade.initialize(em);
+        SessionsFacade.initialize(em);
 
-        UsersFacade.add(new User("Gerd","hallo ich bin gerd",null));
-        UsersFacade.add(new User("Peter","hallo ich bin peter",null));
-        UsersFacade.add(new User("Frederik","hallo ich bin Frederik",null));
+        UsersFacade.add(new User("Gerd","gerd@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin gerd",null));
+        UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter",null));
+        UsersFacade.remove(UsersFacade.findById(2).get());
+        UsersFacade.add(new User("Frederik","frederik@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin Frederik",null));
+        UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter",null));
 
         Set<User> group_users = new HashSet<User>(UsersFacade.findAll());
 
@@ -41,7 +46,7 @@ public class ServiceApplication extends Application {
 
         Set<User> role_users = new HashSet<User>();
         role_users.add(UsersFacade.findById(1).get());
-        role_users.add(UsersFacade.findById(2).get());
+        role_users.add(UsersFacade.findById(4).get());
 
         RolesFacade.add(new Role("cool role 1","#FFFFFF",GroupsFacade.findById(1).get(),0,role_users));
 
@@ -52,18 +57,17 @@ public class ServiceApplication extends Application {
 
         ChatsFacade.add(new Chat(GroupsFacade.findById(1).get(),null,null));
 
-        ChatsFacade.add(new Chat(null, UsersFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(3).get()));
 
-        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(2).get(), UsersFacade.findById(2).get()));
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(2).get(), UsersFacade.findById(4).get()));
 
         ChatMessagesFacade.add(new ChatMessage("general kenobi", null, null, ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
 
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(1).get()));
-        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(2).get()));
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(4).get()));
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(3).get()));
 
-
-
+        
 
         
 

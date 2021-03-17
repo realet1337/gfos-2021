@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 public class UsersFacade {
 
@@ -31,6 +32,19 @@ public class UsersFacade {
     public static List<User> findByName(String name){
 
         return em.createNamedQuery("User.findByName", User.class).setParameter("name", name).getResultList();
+
+    }
+
+    public static Optional<User> findByEMail(String eMail){
+
+        try{
+            User user = em.createNamedQuery("User.findByEMail", User.class).setParameter("eMail", eMail).getSingleResult();
+            return Optional.of(user);
+        }catch(NoResultException e){
+
+            return Optional.empty();
+            
+        }
 
     }
 

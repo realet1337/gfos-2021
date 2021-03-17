@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 public class UsersResource {
 
     @GET
+    @Path("/{id}")    
     @Produces(MediaType.TEXT_PLAIN)
     public String getUsers() {
         return "HELLO WORLD";

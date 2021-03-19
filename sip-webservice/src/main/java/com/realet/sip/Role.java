@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Roles")
-public class Role {
+public class Role implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class Role {
     @JoinTable(name = "RoleMembership",
     		   joinColumns=@JoinColumn(name="role_id"),
     		   inverseJoinColumns=@JoinColumn(name="user_id"))
-    private Set<User> users = new HashSet<>();
+    private transient Set<User> users = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
@@ -106,13 +107,6 @@ public class Role {
         this.group = group;
         this.permissions = permissions;
         this.users = users;
-    }
-
-    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
-    @Override
-    public String toString() {
-        return "Role{color=" + color + ", group=" + group + ", id=" + id + ", name=" + name + ", permissions="
-                + permissions + "}";
     }
 
     public Role() {

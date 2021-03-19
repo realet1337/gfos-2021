@@ -56,6 +56,14 @@ public class UsersFacade {
 
     }
 
+    public static void update(User user){
+
+        em.getTransaction().begin();
+        em.merge(user);
+        em.getTransaction().commit();
+
+    }
+
     public static void remove(User user){
 
         em.getTransaction().begin();

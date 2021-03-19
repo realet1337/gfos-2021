@@ -29,6 +29,8 @@ public class SessionsFacade {
 
     }
 
+    //!! doesn't need update method
+
     public static void remove(Session session){
 
         em.getTransaction().begin();

@@ -59,6 +59,14 @@ public class ChatsFacade {
 
     }
 
+    public static void update(Chat chat){
+
+        em.getTransaction().begin();
+        em.merge(chat);
+        em.getTransaction().commit();
+
+    }
+
     public static void remove(Chat chat){
 
         em.getTransaction().begin();

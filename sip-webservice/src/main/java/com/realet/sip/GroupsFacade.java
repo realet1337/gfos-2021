@@ -29,6 +29,14 @@ public class GroupsFacade {
 
     }
 
+    public static void update(Group group){
+
+        em.getTransaction().begin();
+        em.merge(group);
+        em.getTransaction().commit();
+
+    }
+
     public static void remove(Group group){
 
         em.getTransaction().begin();

@@ -30,6 +30,14 @@ public class ChatMessagesFacade {
 
     }
 
+    public static void update(ChatMessage chatMessage){
+
+        em.getTransaction().begin();
+        em.merge(chatMessage);
+        em.getTransaction().commit();
+
+    }
+
     public static void remove(ChatMessage chatMessage){
 
         em.getTransaction().begin();

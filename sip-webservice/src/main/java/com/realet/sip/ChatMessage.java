@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,7 +16,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "ChatMessages")
-public class ChatMessage {
+public class ChatMessage implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,13 +96,6 @@ public class ChatMessage {
         this.author = author;
     }
 
-
-    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
-    @Override
-    public String toString() {
-        return "ChatMessage{author=" + author + ", chat=" + chat + ", content=" + content + ", expires=" + expires
-                + ", id=" + id + "}";
-    }
 
     public ChatMessage() {
         super();

@@ -29,6 +29,14 @@ public class RolesFacade {
 
     }
 
+    public static void update(Role role){
+
+        em.getTransaction().begin();
+        em.merge(role);
+        em.getTransaction().commit();
+
+    }
+
     public static void remove(Role role){
 
         em.getTransaction().begin();

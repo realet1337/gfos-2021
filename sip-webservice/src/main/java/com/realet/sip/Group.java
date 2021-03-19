@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="`Groups`")
 
-public class Group {
+public class Group implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,13 +44,13 @@ public class Group {
     @JoinTable(name = "GroupMembership",
     		   joinColumns=@JoinColumn(name="group_id"),
     		   inverseJoinColumns=@JoinColumn(name="user_id"))
-    private Set<User> users = new HashSet<>();
+    private transient Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "group")
-    private List<Role> roles = new ArrayList<>();
+    private transient List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private List<Chat> chat = new ArrayList<>();
+    private transient List<Chat> chat = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -115,13 +116,6 @@ public class Group {
         this.picture = picture;
         this.owner = owner;
         this.users = users;
-    }
-
-    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
-    @Override
-    public String toString() {
-        return "Group{description=" + description + ", id=" + id + ", picture=" + picture + ", name=" + name + ", owner="
-                + owner + "}";
     }
 
     public Group() {

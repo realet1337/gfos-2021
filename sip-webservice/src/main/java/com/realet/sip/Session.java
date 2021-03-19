@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "Sessions")
-public class Session {
+public class Session implements Serializable{
 
     @Id
     private String token;
@@ -56,12 +57,5 @@ public class Session {
     public String getToken() {
         return token;
     }
-
-    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
-    @Override
-    public String toString() {
-        return "Session{expires=" + expires + ", token=" + token + ", user=" + user + "}";
-    }
-    
 
 }

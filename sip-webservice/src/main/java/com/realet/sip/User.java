@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,12 +21,13 @@ import javax.persistence.Table;
 @Table(name = "Users")
 @NamedQueries({
 
+    //FIXME: make this "like"
     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.username = :name"),
     @NamedQuery(name = "User.findByEMail", query = "SELECT u FROM User u WHERE u.eMail = :eMail")
 
 })
 
-public class User{
+public class User implements Serializable{
     
     //directly matching database column names
     @Id
@@ -37,9 +39,9 @@ public class User{
     private String username;
 
     @Column(name = "e_mail", nullable = false)
-    private String eMail;
+    private transient String eMail;
 
-    private String pass;
+    private transient String pass;
 
     private String info;
 
@@ -47,25 +49,25 @@ public class User{
     private String profilePicture;
     
     @ManyToMany(mappedBy = "users")
-    private Set<Group> groups = new HashSet<>();
+    private transient  Set<Group> groups = new HashSet<>();
     
     @ManyToMany(mappedBy = "users")
-    private Set<Role> roles = new HashSet<>();
+    private transient Set<Role> roles = new HashSet<>();
     
     @OneToMany(mappedBy = "owner")
-    private List<Group> ownedGroups = new ArrayList<>();
+    private transient List<Group> ownedGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "user1")
-    private List<Chat> directChats1 = new ArrayList<>();
+    private transient List<Chat> directChats1 = new ArrayList<>();
 
     @OneToMany(mappedBy = "user2")
-    private List<Chat> directChats2 = new ArrayList<>();
+    private transient List<Chat> directChats2 = new ArrayList<>();
 
     @OneToMany(mappedBy = "author")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
+    private transient List<ChatMessage> chatMessages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Session> sessions = new ArrayList<>();
+    private transient List<Session> sessions = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -113,13 +115,6 @@ public class User{
         this.info = info;
         this.profilePicture = profilePicture;
         this.pass = pass;
-    }
-
-    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
-    @Override
-    public String toString() {
-        return "User{id=" + id + ", info=" + info + ", profilePicture=" + profilePicture + ", username=" + username + ", eMail=" + eMail + ", pass=" + pass
-                + "}";
     }
 
     public User() {

@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 
 })
 
-public class Chat {
+public class Chat implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +45,7 @@ public class Chat {
     private User user2;
 
     @OneToMany(mappedBy = "chat")
-    private List<ChatMessage> messages = new ArrayList<>();
+    private transient List<ChatMessage> messages = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -82,11 +83,6 @@ public class Chat {
         this.group = group;
         this.user1 = user1;
         this.user2 = user2;
-    }
-
-    //FIXME: escape this, add quotes around attributes in final string, try having this parsed as JSON
-    public String toString() {
-        return "Chat{group=" + group + ", id=" + id + ", user1=" + user1 + ", user2=" + user2 + "}";
     }
 
     public Chat() {

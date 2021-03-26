@@ -1,5 +1,5 @@
 <template>
-     <v-card class="mx-auto rounded-lg" width=50%>
+     <v-card class="rounded-lg" width=50%>
         <v-container>
             <v-form class="ma-3">
                 <v-row justify="center">
@@ -74,27 +74,6 @@ export default {
         }
 
     },
-    created: function() {
-
-
-        //check if token exists and validate. Redirect if valid. TODO: extend token/regenerate? Possibly implement refresh tokens?
-        var cookie = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)')?.pop() || '' //taken from internet 
-        cookie = cookie.split(',')[0];
-
-        if(cookie !== ''){
-
-            window.axios.post(Vue.prototype.$apiBaseUrl + '/api/auth/validate',
-            new URLSearchParams({
-                'token': cookie
-            })
-            ).then(() => {
-
-                this.$router.push('/home');
-
-            })
-        }
-    },
-
     name: 'LoginCard'
 }
 </script>

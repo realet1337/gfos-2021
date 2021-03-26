@@ -21,6 +21,16 @@ public class SessionsFacade {
 
     }
 
+    public static long findUserIdByToken(String token) throws IllegalAccessException{
+
+        Session session = em.find(Session.class, token);
+        if(session != null){
+            return session.getUser().getId();
+        }
+        throw new IllegalAccessException("No session was found");
+
+    }
+
     public static void add(Session session){
 
         em.getTransaction().begin();

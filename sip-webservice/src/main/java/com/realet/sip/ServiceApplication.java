@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class ServiceApplication extends Application {
         Set<Class<?>> set = new HashSet<>();
         set.add( UsersResource.class );
         set.add( AuthResource.class );
-        //set.add(CORSPreflightHandler.class);
+        set.add( ChatsResource.class );
         return set;
     }
 
@@ -67,6 +68,8 @@ public class ServiceApplication extends Application {
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(1).get()));
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(4).get()));
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(3).get()));
+
+        SessionsFacade.add(new Session("aaaaaaa", UsersFacade.findById(4).get(), new Date()));
 
     }
 

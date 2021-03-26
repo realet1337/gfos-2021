@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
+import Login from '@/views/Login.vue'
+import Home from '@/views/Home.vue'
+import HomeDirectChats from '@/components/HomeDirectChats.vue'
+import HomeGroups from '@/components/HomeGroups.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +16,21 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    children: [
+      {
+        path:'',
+        redirect:'direct-chats'
+      },
+      {
+        path: 'direct-chats',
+        component: HomeDirectChats
+      },
+      {
+        path: 'groups',
+        component: HomeGroups
+      }
+    ]
   },
   {
     path: '/about',

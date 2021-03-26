@@ -15,18 +15,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name = "Roles")
 public class Role implements Serializable{
 
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
+    @Expose
     @Column(name = "role_name", nullable = false)
     private String name;
 
+    @Expose
     @Column(name = "role_color", nullable = false)
     private String color;
     
@@ -34,7 +39,7 @@ public class Role implements Serializable{
     @JoinTable(name = "RoleMembership",
     		   joinColumns=@JoinColumn(name="role_id"),
     		   inverseJoinColumns=@JoinColumn(name="user_id"))
-    private transient Set<User> users = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
@@ -83,18 +88,6 @@ public class Role implements Serializable{
         this.permissions = permissions;
     }
 
-    public void addUser(User user){
-
-        users.add(user);
-
-    }
-
-    public void removeUser(User user){
-
-        users.remove(user);
-
-    }
-
     public Set<User> getUsers(){
 
         return users;
@@ -111,6 +104,10 @@ public class Role implements Serializable{
 
     public Role() {
         super();
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
 }

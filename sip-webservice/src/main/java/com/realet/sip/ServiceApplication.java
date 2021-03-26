@@ -20,6 +20,7 @@ public class ServiceApplication extends Application {
         Set<Class<?>> set = new HashSet<>();
         set.add( UsersResource.class );
         set.add( AuthResource.class );
+        //set.add(CORSPreflightHandler.class);
         return set;
     }
 
@@ -67,12 +68,6 @@ public class ServiceApplication extends Application {
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(4).get()));
         ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(3).get()));
 
-        
-
-        
-
     }
-
-    
 
 }

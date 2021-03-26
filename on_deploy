@@ -1,1 +1,8 @@
 change all interfaces to private
+
+make vue's url property '' and change all requests. Here's a list:
+    LoginCard.vue - 1 request (login)
+
+IMPORTANT CONFIGS:
+    -DATASOURCE
+    -CORS

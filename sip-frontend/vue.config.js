@@ -1,7 +1,9 @@
 module.exports = {
-
-	devServer: {
-		public: "192.168.178.101",
+    devServer: {
+		public: '0.0.0.0:8081',
 	},
 
-}
+    transpileDependencies: [
+      'vuetify'
+    ]
+};

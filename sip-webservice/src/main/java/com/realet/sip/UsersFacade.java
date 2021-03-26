@@ -35,10 +35,10 @@ public class UsersFacade {
 
     }
 
-    public static Optional<User> findByEMail(String eMail){
+    public static Optional<User> findByEmail(String email){
 
         try{
-            User user = em.createNamedQuery("User.findByEMail", User.class).setParameter("eMail", eMail).getSingleResult();
+            User user = em.createNamedQuery("User.findByEmail", User.class).setParameter("email", email).getSingleResult();
             return Optional.of(user);
         }catch(NoResultException e){
 

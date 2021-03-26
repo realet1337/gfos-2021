@@ -14,28 +14,36 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name = "ChatMessages")
 public class ChatMessage implements Serializable{
 
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
+    @Expose
     @Column(nullable = false)
     private String content;
 
+    @Expose
     @Temporal(TemporalType.TIMESTAMP)
     private Date expires;
 
+    @Expose
     @Temporal(TemporalType.TIMESTAMP)
     private Date sent;
     
+    @Expose
     @ManyToOne
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;

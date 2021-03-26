@@ -27,9 +27,9 @@ public class AuthResource {
     @Path("/login")    
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(@FormParam("eMail") String eMail, @FormParam("password") String password) {
+    public Response login(@FormParam("email") String email, @FormParam("password") String password) {
 
-        Optional<User> user = UsersFacade.findByEMail(eMail);
+        Optional<User> user = UsersFacade.findByEmail(email);
 
         if(!user.isEmpty() && BCrypt.verifyer().verify(password.getBytes(), user.get().getPass().getBytes()).verified ){
         
@@ -70,7 +70,6 @@ public class AuthResource {
     @POST
     @Path("/logout")    
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response login(@FormParam("token") String token) {
 
         Optional<Session> session = SessionsFacade.findByToken(token);
@@ -81,6 +80,22 @@ public class AuthResource {
         }
         else{
             return Response.status(404).build();
+        }
+
+    }
+
+    @POST
+    @Path("/validate")    
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response validate(@FormParam("token") String token) {
+
+        Optional<Session> session = SessionsFacade.findByToken(token);
+
+        if(session.isPresent()){
+            return Response.ok().build();
+        }
+        else{
+            return Response.status(403).build();
         }
 
     }

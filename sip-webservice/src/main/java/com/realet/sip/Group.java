@@ -18,24 +18,31 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="`Groups`")
 
 public class Group implements Serializable{
 
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
+    @Expose
     @Column(name = "group_name", nullable = false)
     private String name;
 
+    @Expose
     @Column(name = "group_description")
     private String description;
 
+    @Expose
     private String picture;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
@@ -44,13 +51,13 @@ public class Group implements Serializable{
     @JoinTable(name = "GroupMembership",
     		   joinColumns=@JoinColumn(name="group_id"),
     		   inverseJoinColumns=@JoinColumn(name="user_id"))
-    private transient Set<User> users = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "group")
-    private transient List<Role> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private transient List<Chat> chat = new ArrayList<>();
+    private List<Chat> chats = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -92,24 +99,6 @@ public class Group implements Serializable{
         this.owner = owner;
     }
 
-    public void addUser(User user){
-
-        users.add(user);
-
-    }
-
-    public void removeUser(User user){
-
-        users.remove(user);
-
-    }
-
-    public Set<User> getUsers(){
-
-        return users;
-
-    }
-
     public Group(String name, String description, String picture, User owner, Set<User> users) {
         this.name = name;
         this.description = description;
@@ -120,6 +109,30 @@ public class Group implements Serializable{
 
     public Group() {
         super();
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
     }
     
 }

@@ -17,57 +17,63 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name = "Users")
 @NamedQueries({
 
     //FIXME: make this "like"
     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.username = :name"),
-    @NamedQuery(name = "User.findByEMail", query = "SELECT u FROM User u WHERE u.eMail = :eMail")
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 
 })
 
 public class User implements Serializable{
     
     //directly matching database column names
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
     
+    @Expose
     @Column(nullable = false)
     private String username;
 
-    @Column(name = "e_mail", nullable = false)
-    private transient String eMail;
+    @Column(name = "e_mail", nullable = false, unique = true)
+    private String email;
 
-    private transient String pass;
+    private String pass;
 
+    @Expose
     private String info;
 
+    @Expose
     @Column(name = "profile_picture")
     private String profilePicture;
     
     @ManyToMany(mappedBy = "users")
-    private transient  Set<Group> groups = new HashSet<>();
+    private Set<Group> groups = new HashSet<>();
     
     @ManyToMany(mappedBy = "users")
-    private transient Set<Role> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
     
     @OneToMany(mappedBy = "owner")
-    private transient List<Group> ownedGroups = new ArrayList<>();
+    private List<Group> ownedGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "user1")
-    private transient List<Chat> directChats1 = new ArrayList<>();
+    private List<Chat> directChats1 = new ArrayList<>();
 
     @OneToMany(mappedBy = "user2")
-    private transient List<Chat> directChats2 = new ArrayList<>();
+    private List<Chat> directChats2 = new ArrayList<>();
 
     @OneToMany(mappedBy = "author")
-    private transient List<ChatMessage> chatMessages = new ArrayList<>();
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private transient List<Session> sessions = new ArrayList<>();
+    private List<Session> sessions = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -101,17 +107,17 @@ public class User implements Serializable{
         this.profilePicture = profilePicture;
     }
 
-    public String geteMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public User(String username, String eMail, String pass, String info, String profilePicture) {
+    public User(String username, String email, String pass, String info, String profilePicture) {
         this.username = username;
-        this.eMail = eMail;
+        this.email = email;
         this.info = info;
         this.profilePicture = profilePicture;
         this.pass = pass;
@@ -129,8 +135,60 @@ public class User implements Serializable{
         this.pass = pass;
     }
 
+    public Set<Group> getGroups() {
+        return groups;
+    }
 
-    
-    
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<Group> getOwnedGroups() {
+        return ownedGroups;
+    }
+
+    public void setOwnedGroups(List<Group> ownedGroups) {
+        this.ownedGroups = ownedGroups;
+    }
+
+    public List<Chat> getDirectChats1() {
+        return directChats1;
+    }
+
+    public void setDirectChats1(List<Chat> directChats1) {
+        this.directChats1 = directChats1;
+    }
+
+    public List<Chat> getDirectChats2() {
+        return directChats2;
+    }
+
+    public void setDirectChats2(List<Chat> directChats2) {
+        this.directChats2 = directChats2;
+    }
+
+    public List<ChatMessage> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
 
 }

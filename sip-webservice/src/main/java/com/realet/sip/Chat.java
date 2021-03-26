@@ -16,6 +16,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name = "Chats")
 @NamedQueries({
@@ -27,25 +29,29 @@ import javax.persistence.Table;
 
 public class Chat implements Serializable{
     
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name = "user1_id")
     private User user1;
 
+    @Expose
     @ManyToOne
     @JoinColumn(name = "user2_id")
     private User user2;
 
     @OneToMany(mappedBy = "chat")
-    private transient List<ChatMessage> messages = new ArrayList<>();
+    private List<ChatMessage> messages = new ArrayList<>();
 
     public long getId() {
         return id;

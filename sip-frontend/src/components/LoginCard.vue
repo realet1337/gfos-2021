@@ -63,6 +63,8 @@ export default {
                     nextDay.setDate(nextDay.getDate() + 1);
 
                     document.cookie = "token=" + response.data.token + ", expires=" + nextDay.toUTCString();
+                    this.$store.commit('setToken',response.data.token);
+                    this.$store.commit('setUserId',response.data.userId);
                     this.$router.push('/home');
 
                 }, () => {
@@ -77,33 +79,3 @@ export default {
     name: 'LoginCard'
 }
 </script>
-
-<style>
-    .label-text{
-
-        font-size: 70%;
-        color: var(--v-secondary-lighten2);
-
-    }
-    .header{
-
-        color: var(--v-secondary-lighten4)
-
-    }
-    .subheader{
-
-        color: var(--v-secondary-lighten3)
-
-    }
-    .input-field input[type="text"]{
-
-        color: var(--v-secondary-lighten4)!important;
-
-    }
-    .error-message{
-
-        color: var(--v-error-base);
-        font-size: 90%;
-
-    }
-</style>

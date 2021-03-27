@@ -22,6 +22,8 @@ public class ServiceApplication extends Application {
         set.add( UsersResource.class );
         set.add( AuthResource.class );
         set.add( ChatsResource.class );
+        set.add( ChatMessagesResource.class );
+        set.add( CORSPreflightHandler.class );
         return set;
     }
 
@@ -39,7 +41,7 @@ public class ServiceApplication extends Application {
         UsersFacade.add(new User("Gerd","gerd@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin gerd",null));
         UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter",null));
         UsersFacade.remove(UsersFacade.findById(2).get());
-        UsersFacade.add(new User("Frederik","frederik@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin Frederik",null));
+        UsersFacade.add(new User("Frederik","frederik@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin Frederik","7053bf6dc83b9b50d95c6e19eb23b850"));
         UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter",null));
 
         Set<User> group_users = new HashSet<User>(UsersFacade.findAll());
@@ -61,13 +63,13 @@ public class ServiceApplication extends Application {
 
         ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(3).get()));
 
-        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(2).get(), UsersFacade.findById(4).get()));
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(4).get()));
 
-        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, null, ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi general kenobi general kenobi general kenobi general kenobi general kenobi general kenobi general kenobi ", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
 
-        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(1).get()));
-        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(4).get()));
-        ChatMessagesFacade.add(new ChatMessage("hi there", null, null, ChatsFacade.findById(1).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(1).get(), UsersFacade.findById(1).get()));
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(1).get(), UsersFacade.findById(4).get()));
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(1).get(), UsersFacade.findById(3).get()));
 
         SessionsFacade.add(new Session("aaaaaaa", UsersFacade.findById(4).get(), new Date()));
 

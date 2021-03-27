@@ -42,9 +42,15 @@ export default {
             new URLSearchParams({
                 'token': cookie
             })
-            ).then(() => {
+            ).then((response) => {
 
+                this.$store.commit('setToken', cookie);
+                this.$store.commit('setUserId', response.data.userId);
                 this.$router.push('/home');
+
+            }, () => {
+
+                document.cookie = 'token=; Max-Age=-99999999;';
 
             })
         }

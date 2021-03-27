@@ -1,8 +1,9 @@
 change all interfaces to private
 
-make vue's url property '' and change all requests. Here's a list:
-    LoginCard.vue - 1 request (login)
+make vue's url property ''
 
 IMPORTANT CONFIGS:
     -DATASOURCE
     -CORS
+    -SYSTEM PROPERTY (IN STANDALONE.XML): sip.uploadDir (set path to correct dir)
+    -IMAGE HANDLER (IN STANDALONE.XML):  path MUST MATCH ABOVE PATH

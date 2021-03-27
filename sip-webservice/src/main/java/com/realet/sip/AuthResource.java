@@ -57,7 +57,7 @@ public class AuthResource {
 
             SessionsFacade.add(new Session(token, user.get(), Date.from(new Date().toInstant().plus(1, ChronoUnit.DAYS))));
 
-            return Response.ok(new JSONObject().put("token", token).toString(), MediaType.APPLICATION_JSON).build();
+            return Response.ok(new JSONObject().put("token", token).put("userId", user.get().getId()).toString(), MediaType.APPLICATION_JSON).build();
         
         }else{
 
@@ -92,7 +92,7 @@ public class AuthResource {
         Optional<Session> session = SessionsFacade.findByToken(token);
 
         if(session.isPresent()){
-            return Response.ok().build();
+            return Response.ok(new JSONObject().put("userId", session.get().getUser().getId()).toString()).build();
         }
         else{
             return Response.status(403).build();

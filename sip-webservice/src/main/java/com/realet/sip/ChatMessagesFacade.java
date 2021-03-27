@@ -1,9 +1,11 @@
 package com.realet.sip;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 public class ChatMessagesFacade {
 
@@ -19,6 +21,16 @@ public class ChatMessagesFacade {
 
         ChatMessage chatMessage = em.find(ChatMessage.class, id);
         return chatMessage != null ? Optional.of(chatMessage) : Optional.empty();
+
+    }
+
+    public static Optional<ChatMessage> findMostRecentByChat(Chat chat){
+
+        List<ChatMessage> chatMessages = em.createNamedQuery("ChatMessage.findMostRecentByChat", ChatMessage.class)
+        .setParameter("chat", chat).getResultList();
+        return chatMessages.isEmpty() ? Optional.empty() : Optional.of(chatMessages.get(chatMessages.size()-1));
+
+        
 
     }
 

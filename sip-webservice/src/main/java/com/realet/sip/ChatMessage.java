@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,6 +20,9 @@ import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name = "ChatMessages")
+@NamedQueries({
+    @NamedQuery(name = "ChatMessage.findMostRecentByChat", query = "select cm from ChatMessage cm where cm.sent = (select max(cm1.sent) from ChatMessage cm1 where cm1.chat = :chat) and cm.chat = :chat")
+})
 public class ChatMessage implements Serializable{
 
     @Expose

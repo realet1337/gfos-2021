@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,7 +24,9 @@ import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name="`Groups`")
-
+@NamedQueries({
+    @NamedQuery(name = "Group.findShared", query = "SELECT g FROM Group g JOIN g.users user1 JOIN g.users user2 WHERE user1 = :user1 AND user2 = :user2")
+})
 public class Group implements Serializable{
 
     @Expose

@@ -3,11 +3,8 @@ package com.realet.sip;
 import java.util.List;
 import java.util.Optional;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,8 +15,6 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONObject;
-
 @Path("/chats")
 public class ChatsResource {
 
@@ -27,8 +22,11 @@ public class ChatsResource {
     @Path("/{id}")    
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChat(@PathParam("id") long id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
-        
         //TODO: (LATER) REMOVE THIS METHOD IT ISN'T NECESSARY
+
+        if(token == null){
+            return Response.status(403).build();
+        }
 
         token = token.split(" ")[1];
 
@@ -61,6 +59,10 @@ public class ChatsResource {
     @Path("/directchats-by-user/{userId}")    
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDirectChatsByUser(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
+
+        if(token == null){
+            return Response.status(403).build();
+        }
 
         token = token.split(" ")[1];
         try {

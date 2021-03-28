@@ -1,6 +1,7 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Group.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/CORSPreflightHandler.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatsFacade.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GroupsResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/AuthResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatsResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatMessagesResource.java
@@ -11,6 +12,7 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/RolesFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UsersResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatMessagesFacade.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/GroupAdapter.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ServiceApplication.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Session.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/User.java

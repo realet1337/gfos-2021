@@ -24,6 +24,7 @@ public class ServiceApplication extends Application {
         set.add( ChatsResource.class );
         set.add( ChatMessagesResource.class );
         set.add( CORSPreflightHandler.class );
+        set.add( GroupsResource.class );
         return set;
     }
 

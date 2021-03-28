@@ -14,9 +14,46 @@
     color: var(--v-primary-base)
 
 }
+.link-not-stylised{
+
+    text-decoration: none;
+    color: inherit;
+
+}
+.highlighted-portion{
+
+    background-color: var(--v-primary-base);
+
+}
+.clickable{
+
+    cursor: pointer;
+
+}
 .subheader{
 
     color: var(--v-secondary-lighten3)
+
+}
+.max-2-lines{
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 24px;     /* fallback */
+    max-height: 48px;      /* fallback */
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+
+}
+.max-1-line{
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 24px;     /* fallback */
+    max-height: 24px;      /* fallback */
+    -webkit-line-clamp: 1; /* number of lines to show */
 
 }
 .input-field input[type="text"]{

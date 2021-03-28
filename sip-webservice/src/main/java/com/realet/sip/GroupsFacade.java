@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,12 @@ public class GroupsFacade {
 
         Group group = em.find(Group.class, id);
         return group != null ? Optional.of(group) : Optional.empty();
+
+    }
+
+    public static List<Group> findShared(User user1, User user2){
+
+        return em.createNamedQuery("Group.findShared", Group.class).setParameter("user1", user1).setParameter("user2", user2).getResultList();
 
     }
 

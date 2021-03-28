@@ -23,6 +23,10 @@ public class ChatMessagesResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMostRecentByChat(@PathParam("chatId") long chatId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
 
+        if(token == null){
+            return Response.status(403).build();
+        }
+
         token = token.split(" ")[1];
         Optional<Chat> chat = ChatsFacade.findById(chatId);
         if(chat.isPresent()){

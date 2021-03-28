@@ -72,6 +72,10 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(@FormParam("token") String token) {
 
+        if(token == null){
+            return Response.status(404).build();
+        }
+
         Optional<Session> session = SessionsFacade.findByToken(token);
 
         if(session.isPresent()){
@@ -88,6 +92,10 @@ public class AuthResource {
     @Path("/validate")    
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response validate(@FormParam("token") String token) {
+
+        if(token == null){
+            return Response.status(403).build();
+        }
 
         Optional<Session> session = SessionsFacade.findByToken(token);
 

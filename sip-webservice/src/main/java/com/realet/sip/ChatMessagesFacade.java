@@ -5,19 +5,22 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
 public class ChatMessagesFacade {
 
-    static EntityManager em;
+    static EntityManagerFactory emf;
 
-    public static void initialize(EntityManager em){
+    public static void initialize(EntityManagerFactory emf){
 
-        ChatMessagesFacade.em = em;
+        ChatMessagesFacade.emf = emf;
 
     }
 
     public static Optional<ChatMessage> findById(long id){
+
+        EntityManager em = emf.createEntityManager();
 
         ChatMessage chatMessage = em.find(ChatMessage.class, id);
         return chatMessage != null ? Optional.of(chatMessage) : Optional.empty();
@@ -25,6 +28,8 @@ public class ChatMessagesFacade {
     }
 
     public static Optional<ChatMessage> findMostRecentByChat(Chat chat){
+
+        EntityManager em = emf.createEntityManager();
 
         List<ChatMessage> chatMessages = em.createNamedQuery("ChatMessage.findMostRecentByChat", ChatMessage.class)
         .setParameter("chat", chat).getResultList();
@@ -36,6 +41,8 @@ public class ChatMessagesFacade {
 
     public static void add(ChatMessage chatMessage){
 
+        EntityManager em = emf.createEntityManager();
+
         em.getTransaction().begin();
         em.persist(chatMessage);
         em.getTransaction().commit();
@@ -43,6 +50,8 @@ public class ChatMessagesFacade {
     }
 
     public static void update(ChatMessage chatMessage){
+
+        EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
         em.merge(chatMessage);
@@ -52,7 +61,10 @@ public class ChatMessagesFacade {
 
     public static void remove(ChatMessage chatMessage){
 
+        EntityManager em = emf.createEntityManager();
+
         em.getTransaction().begin();
+        chatMessage = em.merge(chatMessage);
         em.remove(chatMessage);
         em.getTransaction().commit();
 

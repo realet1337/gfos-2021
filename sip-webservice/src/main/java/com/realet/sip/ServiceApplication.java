@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -30,14 +31,14 @@ public class ServiceApplication extends Application {
 
     public ServiceApplication() {
 
-        EntityManager em = Persistence.createEntityManagerFactory("sip-webservicePersistenceUnit").createEntityManager();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("sip-webservicePersistenceUnit");
 
-        UsersFacade.initialize(em);
-        GroupsFacade.initialize(em);
-        RolesFacade.initialize(em);
-        ChatsFacade.initialize(em);
-        ChatMessagesFacade.initialize(em);
-        SessionsFacade.initialize(em);
+        UsersFacade.initialize(emf);
+        GroupsFacade.initialize(emf);
+        RolesFacade.initialize(emf);
+        ChatsFacade.initialize(emf);
+        ChatMessagesFacade.initialize(emf);
+        SessionsFacade.initialize(emf);
 
         UsersFacade.add(new User("Gerd","gerd@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin gerd",null));
         UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter",null));

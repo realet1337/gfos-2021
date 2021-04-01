@@ -3,18 +3,21 @@ package com.realet.sip;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 public class SessionsFacade {
 
-    static EntityManager em;
+    static EntityManagerFactory emf;
 
-    public static void initialize(EntityManager em){
+    public static void initialize(EntityManagerFactory emf){
 
-        SessionsFacade.em = em;
+        SessionsFacade.emf = emf;
 
     }
 
     public static Optional<Session> findByToken(String token){
+
+        EntityManager em = emf.createEntityManager();
 
         Session session = em.find(Session.class, token);
         return session != null ? Optional.of(session) : Optional.empty();
@@ -22,6 +25,8 @@ public class SessionsFacade {
     }
 
     public static long findUserIdByToken(String token) throws IllegalAccessException{
+
+        EntityManager em = emf.createEntityManager();
 
         Session session = em.find(Session.class, token);
         if(session != null){
@@ -33,6 +38,8 @@ public class SessionsFacade {
 
     public static void add(Session session){
 
+        EntityManager em = emf.createEntityManager();
+
         em.getTransaction().begin();
         em.persist(session);
         em.getTransaction().commit();
@@ -42,8 +49,11 @@ public class SessionsFacade {
     //!! doesn't need update method
 
     public static void remove(Session session){
+        
+        EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
+        session = em.merge(session);
         em.remove(session);
         em.getTransaction().commit();
 

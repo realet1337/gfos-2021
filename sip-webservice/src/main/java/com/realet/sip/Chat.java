@@ -23,7 +23,7 @@ import com.google.gson.annotations.Expose;
 @NamedQueries({
 
     @NamedQuery(name = "Chat.findByUsers", query = "SELECT c FROM Chat c WHERE c.user1 = :user1 AND c.user2 = :user2 OR c.user1 = :user2 AND c.user2 = :user1"),
-    @NamedQuery(name = "Chat.findDirectChatByUser", query = "SELECT c FROM Chat c WHERE c.user1 = :user OR c.user2 = :user")
+    @NamedQuery(name = "Chat.findDirectChatsByUser", query = "SELECT c FROM Chat c WHERE c.user1 = :user OR c.user2 = :user")
 
 })
 

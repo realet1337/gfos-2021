@@ -17,7 +17,7 @@
                     <v-btn depressed large color="error darken-2" class="white--text">block</v-btn>
                 </v-col>
                 <v-col cols="auto" class="ml-2" align-self="center">
-                    <v-btn depressed large color="white" class="primary--text">message</v-btn>
+                    <v-btn @click="openDirectChat" depressed large color="white" class="primary--text">message</v-btn>
                 </v-col>
                 <v-col cols="auto" class="mr-3 ml-2" align-self="center">
                     <v-icon size="150%">mdi-dots-vertical</v-icon>
@@ -95,6 +95,7 @@ export default {
             open: false,
             sharedGroups: [],
             tab: 0,
+            directChat: {},
         }
     },methods: {
         show: function(){
@@ -109,6 +110,10 @@ export default {
             }
             return;
             
+        },
+
+        openDirectChat: function(){
+            this.$router.push('/chat/' + this.$data.directChat.id)
         }
     },created: function(){
 
@@ -120,6 +125,22 @@ export default {
             }
         }).then((response) => {
             this.$data.sharedGroups = response.data;
+        },(error) => {
+
+            if(error.response.status == 403){
+                this.$router.push('/login');
+            }
+        })
+
+
+        //load chat. This is necessary to make the "block" button have the correct label
+        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats/directchat-by-users/' + this.$store.state.userId +
+        '/' + this.$props.user.id, {
+            headers:{
+                'Authorization': 'Bearer ' + this.$store.state.token
+            }
+        }).then((response) => {
+            this.$data.directChat = response.data;
         },(error) => {
 
             if(error.response.status == 403){

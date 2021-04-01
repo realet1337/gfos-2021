@@ -41,11 +41,11 @@ public class ChatsFacade {
 
     }
 
-    public static List<Chat> findDirectChatByUser(User user){
+    public static List<Chat> findDirectChatsByUser(User user){
 
         EntityManager em = emf.createEntityManager();
 
-        List<Chat> chats = em.createNamedQuery("Chat.findDirectChatByUser", Chat.class).setParameter("user", user).getResultList();
+        List<Chat> chats = em.createNamedQuery("Chat.findDirectChatsByUser", Chat.class).setParameter("user", user).getResultList();
         return chats;
 
     }

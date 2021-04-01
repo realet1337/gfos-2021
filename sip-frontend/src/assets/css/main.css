@@ -67,3 +67,24 @@
     font-size: 90%;
 
 }
+
+
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--v-secondary-darken4);
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4a4d52;
+    border-radius: 10px;
+}

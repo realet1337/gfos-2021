@@ -47,7 +47,7 @@ public class ServiceApplication extends Application {
 
         Set<User> group_users = new HashSet<User>(UsersFacade.findAll());
 
-        GroupsFacade.add(new Group("coole gruppe", "beschreibung", null, UsersFacade.findById(1).get(), group_users));
+        GroupsFacade.add(new Group("coole gruppe", "beschreibung", "7053bf6dc83b9b50d95c6e19eb23b850", UsersFacade.findById(1).get(), group_users));
 
         Set<User> role_users = new HashSet<User>();
         role_users.add(UsersFacade.findById(1).get());

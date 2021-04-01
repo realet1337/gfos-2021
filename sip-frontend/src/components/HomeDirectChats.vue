@@ -1,7 +1,9 @@
 <template>
     <v-container>
         <ChatCard v-for="chat in chats" :key="chat.id" :chat="chat" @show-user="showUserDialog"></ChatCard>
-        <UserProfileDialog :user="$data.selectedUser" ref="UserProfileDialog"></UserProfileDialog>
+        <v-dialog width="850" v-model="userDialogIsOpen">
+            <UserProfileDialog v-if="userDialogIsOpen" :user="$data.selectedUser"></UserProfileDialog>
+        </v-dialog>
     </v-container>
 </template>
 <script>
@@ -19,6 +21,7 @@ export default {
         return {
             chats: [],
             selectedUser: false,
+            userDialogIsOpen: false,
         }
     },
     created: function(){
@@ -35,7 +38,7 @@ export default {
         showUserDialog: function(user){
 
             this.$data.selectedUser = user;
-            this.$refs.UserProfileDialog.show();
+            this.$data.userDialogIsOpen = true;
 
         }
     }

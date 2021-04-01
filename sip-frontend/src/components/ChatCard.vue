@@ -32,7 +32,7 @@ export default {
     props: ['chat'],
     computed:{
         imageUrl: function(){
-            return Vue.prototype.$apiBaseUrl + "/upload/images/" + this.$data.user.profilePicture + ".jpg";
+            return Vue.prototype.$apiBaseUrl + "/upload/pic/user/" + this.$data.user.profilePicture + ".jpg";
         }
     },
     data: function(){

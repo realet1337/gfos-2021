@@ -1,10 +1,11 @@
 <template>
-    <v-card>
+    <v-card min-width="550" width="850">
         <v-container>
             <v-row no-gutters class="ma-n3 highlighted-portion">
                 <v-col cols="auto" justify="center" align="center">
-                    <v-avatar class="mx-4 my-4" size="100">
-                        <img :src="getAvatarUrl('user',$props.user)">
+                    <v-avatar class="mx-4 my-4" size="100" color="secondary darken-4">
+                        <img v-if="$props.user.profilePicture" :src="getAvatarUrl('user', $props.user)">
+                        <span v-else>{{$props.user.username.substring(0,1)}}</span>
                     </v-avatar>
                 </v-col>
                 <v-col cols="auto" align-self="center">
@@ -64,9 +65,10 @@
                         <template v-slot:default="{ item }">
                             <v-list nav :key="item.id">
                                 <v-list-item @click="$router.push('/group/' + item.id)">
-                                    <v-list-item-avatar>
-                                        <img :src="getAvatarUrl('group',item)">
-                                    </v-list-item-avatar>
+                                    <v-avatar color="secondary darken-4" size="40" class="mr-3">
+                                        <img v-if="item.picture" :src="getAvatarUrl('group',item)">
+                                        <span v-else>{{item.name.substring(0,1)}}</span>
+                                    </v-avatar>
                                     <v-list-item-content>
                                         <v-list-item-title>{{item.name}}</v-list-item-title>
                                     </v-list-item-content>

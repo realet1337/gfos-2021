@@ -75,6 +75,8 @@ public class ServiceApplication extends Application {
 
         SessionsFacade.add(new Session("aaaaaaa", UsersFacade.findById(4).get(), new Date()));
 
+        ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(1).get()));
+
     }
 
 }

@@ -1,7 +1,11 @@
 <template>
     <v-container>
-        <ChatCard v-for="chat in chats" :key="chat.id" :chat="chat" @show-user="showUserDialog"></ChatCard>
-        <v-dialog width="850" v-model="userDialogIsOpen">
+        <v-row justify="space-between">
+            <v-col v-for="chat in chats" :key="chat.id" cols="auto">
+                <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
+            </v-col>
+        </v-row>
+        <v-dialog min-width="550" width="850" v-model="userDialogIsOpen">
             <UserProfileDialog v-if="userDialogIsOpen" :user="$data.selectedUser"></UserProfileDialog>
         </v-dialog>
     </v-container>
@@ -32,6 +36,11 @@ export default {
             }
         }).then((response) => {
             this.$data.chats = response.data;
+            this.$data.chats = this.$data.chats.concat(this.$data.chats);
+            this.$data.chats = this.$data.chats.concat(this.$data.chats);
+            this.$data.chats = this.$data.chats.concat(this.$data.chats);
+            this.$data.chats = this.$data.chats.concat(this.$data.chats);
+            this.$data.chats = this.$data.chats.concat(this.$data.chats);
         })
     },
     methods: {

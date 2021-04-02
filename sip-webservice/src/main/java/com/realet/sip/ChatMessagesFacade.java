@@ -1,12 +1,20 @@
 package com.realet.sip;
 
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 public class ChatMessagesFacade {
 
@@ -27,15 +35,37 @@ public class ChatMessagesFacade {
 
     }
 
-    public static Optional<ChatMessage> findMostRecentByChat(Chat chat){
+    public static List<ChatMessage> find(Chat chat, int count, Date before){
 
-        EntityManager em = emf.createEntityManager();
+        //this is very annoying but duplicate class names so yea
+        org.hibernate.Session session = emf.unwrap(SessionFactory.class).openSession();
 
-        List<ChatMessage> chatMessages = em.createNamedQuery("ChatMessage.findMostRecentByChat", ChatMessage.class)
-        .setParameter("chat", chat).getResultList();
-        return chatMessages.isEmpty() ? Optional.empty() : Optional.of(chatMessages.get(chatMessages.size()-1));
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<ChatMessage> criteriaQuery = criteriaBuilder.createQuery(ChatMessage.class);
+        ArrayList<Predicate> predicates = new ArrayList<>();
 
+        Root<ChatMessage> root = criteriaQuery.from(ChatMessage.class);
+        criteriaQuery.select(root);
+        predicates.add(criteriaBuilder.equal(root.get("chat"), chat));
         
+        //do not select expired messages
+        predicates.add(criteriaBuilder.or(
+            criteriaBuilder.greaterThan(root.get("expires"), new Date()),
+            criteriaBuilder.isNull(root.get("expires"))
+        ));
+        
+        if(before != null){
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sent"), before));
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
+        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
+
+        Query<ChatMessage> query = session.createQuery(criteriaQuery);
+        query.setMaxResults(count);
+        List<ChatMessage> result = query.getResultList();
+
+        return result;
 
     }
 

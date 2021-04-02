@@ -16,7 +16,7 @@
             <v-sheet class="mx-auto mb-4 rounded-lg" width="85%" color="secondary darken-3" elevation="7">
                 <div class="mx-3 mt-1">
                     <v-row v-if="this.$data.message" class="primary rounded-lg mb-3">
-                        <h3 v-if="this.$data.message.author.id == this.$store.state.userId" class="ml-3 header">You:</h3>
+                        <h3 v-if="this.$data.message.authorId == this.$store.state.userId" class="ml-3 header">You:</h3>
                         <h3 v-else @click="$emit('show-user', $data.user)" class="ml-3 header clickable">Them:</h3>
                     </v-row>
                     <p v-if="this.$data.message" class="max-2-lines">{{message.content}}</p>
@@ -44,23 +44,28 @@ export default {
         }
     },
     created: function(){
-        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chat-messages/most-recent-by-chat/'+this.$props.chat.id, {
+        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chat-messages', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
+            },
+            params: {
+                chat: this.$props.chat.id,
+                count: 1,
             }
         }).then((response) => {
-            this.$data.message = response.data;
+            if(response.data){
+                this.$data.message = response.data[0];
+            }
+            else{
+                this.$data.message = undefined;
+            }
         }, (error) => {
 
             if(error.response.status == 403){
                 this.$router.push('/login');
             }
-            else if(error.response.status == 404){
-                this.$data.message = undefined;
-            }
 
-        })
-        console.log(this.$data.message);
+        });
     }
     
 }

@@ -20,9 +20,6 @@ import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name = "ChatMessages")
-@NamedQueries({
-    @NamedQuery(name = "ChatMessage.findMostRecentByChat", query = "select cm from ChatMessage cm where cm.sent = (select max(cm1.sent) from ChatMessage cm1 where cm1.chat = :chat) and cm.chat = :chat")
-})
 public class ChatMessage implements Serializable{
 
     @Expose
@@ -41,16 +38,17 @@ public class ChatMessage implements Serializable{
 
     @Expose
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     private Date sent;
     
     @Expose
     @ManyToOne
-    @JoinColumn(name = "chat_id")
+    @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
     @Expose
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     public long getId() {

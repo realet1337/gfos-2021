@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row justify="space-between">
+        <v-row justify="center" >
             <v-col v-for="chat in chats" :key="chat.id" cols="auto">
                 <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
             </v-col>
@@ -30,7 +30,7 @@ export default {
     },
     created: function(){
 
-        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats/directchats-by-user/' + this.$store.state.userId, {
+        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/users/' + this.$store.state.userId + '/direct-chats/', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
             }

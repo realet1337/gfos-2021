@@ -8,6 +8,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -57,37 +58,9 @@ public class ChatsResource {
     }
 
     @GET
-    @Path("/directchats-by-user/{userId}")    
+    @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDirectChatsByUser(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
-
-        if(token == null){
-            return Response.status(403).build();
-        }
-
-        token = token.split(" ")[1];
-        try {
-            if( SessionsFacade.findUserIdByToken(token) == userId ){
-                Optional<User> user = UsersFacade.findById(userId);
-                if(user.isPresent()){
-                    List<Chat> directChats = ChatsFacade.findDirectChatsByUser(user.get());
-                    return Response.ok(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(directChats)).build();
-                }else{
-                    return Response.status(404).build();
-                }
-            }else{
-                return Response.status(403).build();
-            }
-        } catch (IllegalAccessException e) {
-            return Response.status(403).build();
-        }
-
-    }
-
-    @GET
-    @Path("/directchat-by-users/{user1Id}/{user2Id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDirectChatByUsers(@PathParam("user1Id") long user1Id, @PathParam("user2Id") long user2Id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+    public Response getChats(@QueryParam("user1Id") long user1Id, @QueryParam("user2Id") long user2Id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
 
         if(token == null){
             return Response.status(403).build();

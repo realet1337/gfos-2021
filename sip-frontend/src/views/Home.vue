@@ -1,7 +1,11 @@
 <template>
     <v-app>
-        <v-app-bar>
-            <p>ogchamp</p>
+        <v-app-bar app hide-on-scroll>
+            <v-row no-gutters justify="center">
+                <v-col cols="auto">
+                    <img src="@/assets/sip-banner.png" width="200">
+                </v-col>
+            </v-row>
             <template v-slot:extension>
                 <v-tabs centered>
                     <v-tab to="/home/direct-chats">DIRECT CHATS</v-tab>

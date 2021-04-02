@@ -7,19 +7,22 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.GroupAdapter;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 
 
 @Path("/groups")
 public class GroupsResource {
-
-    @Path("/shared-groups/{user1Id}/{user2Id}")
+    
     @GET
+    @Path("/shared-groups/{user1Id}/{user2Id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getSharedGroups(@PathParam("user1Id") long user1Id, @PathParam("user2Id") long user2Id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
 
         if(token == null){
@@ -55,8 +58,7 @@ public class GroupsResource {
         return Response.ok(
             new GsonBuilder().registerTypeAdapter(Group.class, new GroupAdapter()).create().toJson(groups)
         ).build();
-
-
-    }    
+        
+    }
     
 }

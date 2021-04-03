@@ -136,10 +136,13 @@ export default {
 
 
         //load chat. This is necessary to make the "block" button have the correct label
-        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats/directchat-by-users/' + this.$store.state.userId +
-        '/' + this.$props.user.id, {
+        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token
+            },
+            params:{
+                user1: this.$props.user.id,
+                user2: this.$store.state.userId
             }
         }).then((response) => {
             this.$data.directChat = response.data;

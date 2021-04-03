@@ -14,9 +14,11 @@
         <v-divider class="mt-3 mb-9"></v-divider>
         <v-row>
             <v-sheet class="mx-auto mb-4 rounded-lg" width="85%" color="secondary darken-3" elevation="7">
-                <div class="mx-3 mt-1">
-                    <p v-if="this.$props.group.info" class="max-2-lines">{{$props.group.info}}</p>
-                    <p v-else class="ml-6 my-9 secondary--text">This group doesn't have a description.</p>
+                <div class="mx-3 mt-1" style="display: block; height: 70px">
+                    <v-col cols="auto" align-self="center">
+                        <p v-if="this.$props.group.description" class="max-2-lines">{{$props.group.description}}</p>
+                        <p v-else class="ml-3 secondary--text">This group doesn't have a description.</p>
+                    </v-col>
                 </div>
             </v-sheet>
         </v-row>

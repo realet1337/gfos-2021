@@ -36,11 +36,6 @@ export default {
             }
         }).then((response) => {
             this.$data.chats = response.data;
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
         })
     },
     methods: {

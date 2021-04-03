@@ -23,17 +23,17 @@ export default {
     },
     created: function(){
 
-        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/groups/groups-by-user/' + this.$store.state.userId, {
+        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/users/' + this.$store.state.userId + '/groups', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
             }
         }).then((response) => {
-            this.$data.chats = response.data;
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
-            this.$data.chats = this.$data.chats.concat(this.$data.chats);
+            this.$data.groups = response.data;
+            //testing
+            var noDescGroup = Object.assign({},this.$data.groups[0]);
+            noDescGroup.description = undefined;
+            this.$data.groups.push(noDescGroup);
+            console.log(this.$data.groups)
         })
     },
 

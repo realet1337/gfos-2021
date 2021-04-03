@@ -60,7 +60,7 @@ public class ChatsResource {
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChats(@QueryParam("user1Id") long user1Id, @QueryParam("user2Id") long user2Id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+    public Response getChats(@QueryParam("user1") long user1Id, @QueryParam("user2") long user2Id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
 
         if(token == null){
             return Response.status(403).build();

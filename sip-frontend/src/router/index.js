@@ -19,20 +19,22 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'Home',
     component: Home,
     children: [
       {
         path:'',
-        redirect:'direct-chats'
+        redirect:'direct-chats',
+        name: 'Home',
       },
       {
         path: 'direct-chats',
-        component: HomeDirectChats
+        component: HomeDirectChats,
+        name: "HomeDirectChats",
       },
       {
         path: 'groups',
-        component: HomeGroups
+        component: HomeGroups,
+        name: "HomeGroups",
       }
     ]
   },

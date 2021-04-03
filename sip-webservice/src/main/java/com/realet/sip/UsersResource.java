@@ -90,7 +90,7 @@ public class UsersResource {
         Set<Group> groups = user.getGroups();
 
         return Response.ok(
-            new GsonBuilder().registerTypeAdapter(User.class, new GroupAdapter()).create()
+            new GsonBuilder().registerTypeAdapter(Group.class, new GroupAdapter()).create()
             .toJson(groups)
         ).build();
 

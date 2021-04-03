@@ -67,7 +67,7 @@ public class ServiceApplication extends Application {
 
         ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(4).get()));
 
-        ChatMessagesFacade.add(new ChatMessage("general kenobi general kenobi general kenobi general kenobi general kenobi general kenobi general kenobi general kenobi ", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
 
         ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(1).get(), UsersFacade.findById(1).get()));
         ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(1).get(), UsersFacade.findById(4).get()));

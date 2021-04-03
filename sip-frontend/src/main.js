@@ -9,6 +9,7 @@ import './assets/css/main.css'
 Vue.config.productionTip = false
 
 Vue.prototype.$apiBaseUrl = "http://192.168.178.102:8080"; //make this an empty string to point to same url
+Vue.prototype.$messageChunkSize = 50;
 
 Vue.use(Vuex);
 

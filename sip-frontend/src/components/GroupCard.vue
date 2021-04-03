@@ -11,15 +11,13 @@
                 <v-card-title class="mx-auto">{{ this.$props.group.name}}</v-card-title>
             </v-row>
         </div>
-        <v-divider class="mt-3 mb-9"></v-divider>
+        <v-divider class="mt-3 mb-6"></v-divider>
         <v-row>
             <v-sheet class="mx-auto mb-4 rounded-lg" width="85%" color="secondary darken-3" elevation="7">
-                <div class="mx-3 mt-1" style="display: block; height: 70px">
-                    <v-col cols="auto" align-self="center">
-                        <p v-if="this.$props.group.description" class="max-2-lines">{{$props.group.description}}</p>
-                        <p v-else class="ml-3 secondary--text">This group doesn't have a description.</p>
-                    </v-col>
-                </div>
+                <v-row no-gutters style="display: block; height: 100px;">
+                    <p v-if="$props.group.description" class="ml-3 pt-2 max-2-lines">{{$props.group.description}}</p>
+                    <p v-else class="ml-13 pt-9 secondary--text">This group has no description</p>
+                </v-row>
             </v-sheet>
         </v-row>
     </v-card>

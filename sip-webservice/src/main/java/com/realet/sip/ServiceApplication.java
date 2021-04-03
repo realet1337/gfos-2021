@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,6 +66,8 @@ public class ServiceApplication extends Application {
 
         ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(3).get()));
 
+        ChatMessagesFacade.add(new ChatMessage("hi there", null, Date.from(new Date().toInstant().plus(-1, ChronoUnit.DAYS)), ChatsFacade.findById(2).get(), UsersFacade.findById(4).get()));
+
         ChatMessagesFacade.add(new ChatMessage("hi there", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(4).get()));
 
         ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
@@ -76,6 +79,42 @@ public class ServiceApplication extends Application {
         SessionsFacade.add(new Session("aaaaaaa", UsersFacade.findById(4).get(), new Date()));
 
         ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(1).get()));
+
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+        ChatMessagesFacade.add(new ChatMessage("general kenobi", null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
+
 
     }
 

@@ -5,12 +5,12 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-import javax.print.attribute.standard.MediaSize.Other;
-
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.realet.sip.ChatMessage;
+import com.realet.sip.User;
 
 public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
 
@@ -27,8 +27,8 @@ public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
         out.value(value.getExpires() != null ? value.getExpires().toInstant().toString() : null);
         out.name("chatId");
         out.value(value.getChat().getId());
-        out.name("authorId");
-        out.value(value.getAuthor().getId());
+        out.name("author");
+        out.jsonValue(new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create().toJson(value.getAuthor()));
         out.endObject();
         
     }

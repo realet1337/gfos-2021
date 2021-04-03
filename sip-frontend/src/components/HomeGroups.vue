@@ -29,11 +29,12 @@ export default {
             }
         }).then((response) => {
             this.$data.groups = response.data;
-            //testing
+            //testing (left here because will get removed at build)
+            /*
             var noDescGroup = Object.assign({},this.$data.groups[0]);
             noDescGroup.description = undefined;
             this.$data.groups.push(noDescGroup);
-            console.log(this.$data.groups)
+            console.log(this.$data.groups)*/
         })
     },
 

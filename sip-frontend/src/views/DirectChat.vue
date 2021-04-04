@@ -1,22 +1,20 @@
 <template>
-    <v-app>
-        <v-main>
-            <v-container fluid>
-                <v-row>
-                    <v-col cols="auto">
-                        <v-responsive max-width="250" min-width="250">
-                            <p>ogchamp</p>
-                        </v-responsive>
-                    </v-col>
-                    <v-col cols="auto">
-                        <v-responsive>
-                            <ChatWindow/>
-                        </v-responsive>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-main>
-    </v-app>
+    <v-main>
+        <v-container fluid>
+            <v-row no-gutters>
+                <v-col cols="auto">
+                    <div style="max-width:250px; min-width:250px">
+                        <p>ogchamp</p>
+                    </div>
+                </v-col>
+                <v-col>
+                    <div>
+                        <ChatWindow @showUser="showUser"/>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-main>
 </template>
 
 <script>
@@ -30,5 +28,10 @@ export default {
     data: function(){
         return {}
     },
+    methods: {
+        showUser: function(user){
+            console.log(user);
+        }
+    }
 }
 </script>

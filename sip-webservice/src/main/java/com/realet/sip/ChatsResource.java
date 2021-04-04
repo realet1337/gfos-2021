@@ -1,14 +1,19 @@
 package com.realet.sip;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -105,6 +110,54 @@ public class ChatsResource {
             new GsonBuilder().registerTypeAdapter(Chat.class, new ChatAdapter()).create().toJson(newChat)
         ).build();
 
+
+    }
+
+    @POST
+    @Path("/{chatId}/chat-messages")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addChatMessage(ChatMessage chatMessage, @PathParam("chatId") long chatId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+
+        //lol
+        chatMessage.setSent(new Date());
+
+        ChatMessagesFacade.add(chatMessage);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n");
+        System.out.println(chatMessage.getId());
+        System.out.println("\n\n\n\n\n\n\n\n\n\n");
+
+        ArrayList<AsyncResponse> responses = PollingResource.getResponses(chatId);
+        if(responses == null){
+            return Response.status(201).build();
+        }
+        
+        while(!responses.isEmpty()){
+            AsyncResponse response = responses.get(0);
+            
+            /*
+            READ BEFORE YOU JUDGE
+            ---------------------
+            The reason this is done in this way (returning added ID) instead of just returning the message is so that
+            the client doesn't "miss" any messages. If two messages are sent very quickly after one another, it would be
+            possible for the second message to reach the server and be added to the database before the client reestablishes
+            the polling connection. The client would therefore not know that this second message arrived. Bad.
+            
+            Here's a visualization:
+
+            -->message 1 reaches server
+            -->message 1 persisted
+            -->polling returns message 1
+            -->message 2 reaches server
+            -->message 2 is persisted
+            -->polling connection is reestablished
+            -->whoops
+            */
+
+            response.resume(Response.ok(chatMessage.getId()).build());
+            responses.remove(response); 
+        }
+
+        return Response.status(201).build();
 
     }
 

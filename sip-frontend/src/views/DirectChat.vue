@@ -8,7 +8,7 @@
                     </div>
                 </v-col>
                 <v-col>
-                    <div>
+                    <div style="height: 95vh;">
                         <ChatWindow @showUser="showUser"/>
                     </div>
                 </v-col>

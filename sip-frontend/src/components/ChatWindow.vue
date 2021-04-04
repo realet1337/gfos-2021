@@ -1,6 +1,8 @@
 <template>
-    <v-container fluid>
-        <v-responsive style="overflow: auto;">
+    <div style="height: 100%;">
+
+        <!-- message section -->
+        <div style="height: 100%; overflow:auto;">
             <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id" no-gutters>
                 <v-row v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
                     <v-divider class="mt-3 mb-1"></v-divider>
@@ -35,8 +37,11 @@
                     </v-col>
                 </v-row>
             </div>
-        </v-responsive>
-    </v-container>
+        </div>
+        <div class="primary">
+            <p>aaaaaaaaaa</p>
+        </div>
+    </div>
 </template>
 <script>
 import Vue from 'vue'

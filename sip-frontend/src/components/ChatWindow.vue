@@ -1,8 +1,8 @@
 <template>
-    <div style="height: 100%;">
+    <div class="d-flex flex-column fill-height">
 
         <!-- message section -->
-        <div style="height: 100%; overflow:auto;">
+        <div class="flex-grow-1 overflow-y-auto" id="messages">
             <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id" no-gutters>
                 <v-row v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
                     <v-divider class="mt-3 mb-1"></v-divider>
@@ -38,9 +38,18 @@
                 </v-row>
             </div>
         </div>
-        <div class="primary">
-            <p>aaaaaaaaaa</p>
+
+        <div class="flex-shrink-1 mt-3 mb-n4">
+            <v-row no-gutters>
+                <v-col>
+                    <v-text-field
+                    @keyup.enter="sendMessage"
+                    v-model="message"
+                    outlined></v-text-field>
+                </v-col>
+            </v-row>
         </div>
+
     </div>
 </template>
 <script>
@@ -53,16 +62,17 @@ export default {
             chatMessages: [],
             hasOldest: false,
             hasNewest: true,
+            showNewest: true,
+            message: "",
         }
     },
     methods: {
         updateMessages: function(){
-            window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chat-messages', {
+            window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },
                 params: {
-                    chat: this.$route.params.chatId,
                     count: Vue.prototype.$messageChunkSize,
                 }
             }).then((response) => {
@@ -70,10 +80,35 @@ export default {
                 if(response.data.length < Vue.prototype.$messageChunkSize){
                     this.$data.hasOldest = true;
                 }
+
+                if(this.$data.showNewest){
+                    //wait for div to update
+                    this.scrollDownMessages();   
+                }
+
             })
         },
         getImageUrl: function(chatMessage){
             return Vue.prototype.$apiBaseUrl + "/upload/pic/user/" + chatMessage.author.profilePicture + ".jpg";
+        },
+        sendMessage: function(){
+            window.axios.post(Vue.prototype.$apiBaseUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
+            {
+                    content: this.$data.message,
+                },
+            {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.$data.message = "";
+            })
+        },
+        scrollDownMessages: function(){
+            this.$nextTick( function(){
+                        var msgDiv = document.getElementById('messages');
+                        msgDiv.scrollTop = msgDiv.scrollHeight;
+            });
         }
     },
     watch: {

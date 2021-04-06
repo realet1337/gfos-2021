@@ -24,17 +24,14 @@
 
 <script>
 import Vue from 'vue'
+import store from '@/store/'
 
 export default {
     name: 'Home',
         components: {
     },
-    created: function(){
-
-        //FIXME: UPON PAGE RELOAD, the vuex store is reset.
-        //Implement before-enter guard to check if token/userid are false and do validation using cookie if they are.
-        //Reject routing if no cookie and no store.
-        if(this.$store.state.token === false){
+    beforeRouteEnter: function(to, from, next){
+        if(store.state.token === false){
 
             var cookie = (document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)')?.pop() || '').split(',')[0];
 
@@ -46,21 +43,22 @@ export default {
                 })
                 ).then((response) => {
 
-                    this.$store.commit('setToken', cookie);
-                    this.$store.commit('setUserId', response.data.userId);
+                    store.commit('setToken', cookie);
+                    store.commit('setUserId', response.data.userId);
+                    next();
 
                 }, () => {
 
                     document.cookie = 'token=; Max-Age=-99999999;';
-                    this.$router.push('/');
+                    next('/');
 
                 })
            }else{
-               this.$router.push('/');
+               next('/');
            }
 
         }
-
+        next();
     }
 }
 </script>

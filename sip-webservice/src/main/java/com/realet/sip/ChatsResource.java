@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
+import com.realet.sip.GsonTypeAdapter.ChatMessageAdapter;
 
 @Path("/chats")
 public class ChatsResource {
@@ -113,18 +114,112 @@ public class ChatsResource {
 
     }
 
+    @GET
+    @Path("/{chatId}/chat-messages")    
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChatMessages(@PathParam("chatId") long chatId, @QueryParam("count") int count, @QueryParam("before") long beforeId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
+
+        if(count > 1000 || count < 1){
+            return Response.status(400).entity("Count must be between 1 and 1000").build();
+        }
+
+        if(token == null){
+            return Response.status(403).build();
+        }
+
+        token = token.split(" ")[1];
+
+        Optional<Chat> chat = ChatsFacade.findById(chatId);
+
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        try {
+            long user_id = SessionsFacade.findUserIdByToken(token);
+
+            //if this is a direct chat, check access
+            if(chat.get().getGroup() == null){
+                if(user_id != chat.get().getUser1().getId() &&
+                user_id != chat.get().getUser2().getId()){
+                    return Response.status(403).build();
+                }
+            }
+            //if this is a group chat, check access (membership)
+            //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
+            else{
+                if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(user_id).get())){
+                    return Response.status(403).build();
+                }
+            }
+
+
+        } catch (IllegalAccessException e) {
+            return Response.status(403).build();
+        }
+
+        //we have ensured access
+
+        Date before = null;
+
+        Optional<ChatMessage> beforeMessage = ChatMessagesFacade.findById(beforeId);
+        if(beforeMessage.isPresent()){
+            before = beforeMessage.get().getSent();
+        }
+
+        List<ChatMessage> messages = ChatMessagesFacade.find(chat.get(), count, before);
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter()).create()
+            .toJson(messages)
+        ).build();
+    }
+
     @POST
     @Path("/{chatId}/chat-messages")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addChatMessage(ChatMessage chatMessage, @PathParam("chatId") long chatId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
 
-        //lol
+        if(token == null){
+            return Response.status(403).build();
+        }
+
+        token = token.split(" ")[1];
+
+        long tokenUserId = 0;
+
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).build();
+           
+        }
+
+        Optional<Chat> chat = ChatsFacade.findById(chatId);
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(chat.get().getGroup() ==  null){
+            if(chat.get().getUser1().getId() != tokenUserId && chat.get().getUser2().getId() != tokenUserId){
+                return Response.status(403).build();
+                                
+            }
+        }
+        //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
+        else{
+            if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(tokenUserId).get())){
+                return Response.status(403).build();               
+            }
+        }
+
+        chatMessage.setAuthor(UsersFacade.findById(tokenUserId).get());
+
+        chatMessage.setChat(chat.get());
+        
         chatMessage.setSent(new Date());
 
         ChatMessagesFacade.add(chatMessage);
-        System.out.println("\n\n\n\n\n\n\n\n\n\n");
-        System.out.println(chatMessage.getId());
-        System.out.println("\n\n\n\n\n\n\n\n\n\n");
 
         ArrayList<AsyncResponse> responses = PollingResource.getResponses(chatId);
         if(responses == null){

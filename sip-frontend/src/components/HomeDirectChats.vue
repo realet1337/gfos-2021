@@ -5,9 +5,7 @@
                 <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
             </v-col>
         </v-row>
-        <v-dialog min-width="550" width="850" v-model="userDialogIsOpen">
-            <UserProfileDialog v-if="userDialogIsOpen" :user="$data.selectedUser"></UserProfileDialog>
-        </v-dialog>
+            <UserProfileDialog ref="userDialog"></UserProfileDialog>
     </v-container>
 </template>
 <script>
@@ -41,8 +39,7 @@ export default {
     methods: {
         showUserDialog: function(user){
 
-            this.$data.selectedUser = user;
-            this.$data.userDialogIsOpen = true;
+            this.$refs.userDialog.show(user);
 
         }
     }

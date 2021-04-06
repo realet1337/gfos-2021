@@ -44,15 +44,14 @@ export default {
         }
     },
     created: function(){
-        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chat-messages', {
-            headers:{
-                'Authorization': 'Bearer ' + this.$store.state.token,
-            },
-            params: {
-                chat: this.$props.chat.id,
-                count: 1,
-            }
-        }).then((response) => {
+        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats/' + this.$props.chat.id + '/chat-messages', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                },
+                params: {
+                    count: Vue.prototype.$messageChunkSize,
+                }
+            }).then((response) => {
             if(response.data){
                 this.$data.message = response.data[0];
             }

@@ -14,7 +14,7 @@
                     <!-- beeg -->
                     <v-col cols="auto">
                         <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable" size="48">
-                            <img v-if="chatMessage.author.profilePicture" :src="getImageUrl(chatMessage)">
+                            <img v-if="chatMessage.author.profilePicture" :src="$getAvatarUrl('user', chatMessage.author)">
                             <span v-else>{{chatMessage.author.username.substring(0,1)}}</span>
                         </v-avatar>
                     </v-col>
@@ -68,7 +68,7 @@ export default {
     },
     methods: {
         updateMessages: function(){
-            window.axios.get(Vue.prototype.$apiBaseUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages', {
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },
@@ -88,11 +88,8 @@ export default {
 
             })
         },
-        getImageUrl: function(chatMessage){
-            return Vue.prototype.$apiBaseUrl + "/upload/pic/user/" + chatMessage.author.profilePicture + ".jpg";
-        },
         sendMessage: function(){
-            window.axios.post(Vue.prototype.$apiBaseUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
+            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
             {
                     content: this.$data.message,
                 },
@@ -109,6 +106,18 @@ export default {
                         var msgDiv = document.getElementById('messages');
                         msgDiv.scrollTop = msgDiv.scrollHeight;
             });
+        },
+        addMessage: function(chatMessage){
+            var msgDiv = document.getElementById('messages');
+            if(msgDiv.scrollHeight - msgDiv.clientHeight == Math.ceil(msgDiv.scrollTop)){
+                this.$data.chatMessages.push(chatMessage);
+                this.$nextTick( function(){
+                        msgDiv.scrollTop = msgDiv.scrollHeight;
+                });
+            }
+            else{
+                this.$data.chatMessages.push(chatMessage);
+            }
         }
     },
     watch: {
@@ -118,6 +127,26 @@ export default {
     },
     created: function(){
         this.updateMessages();
+
+        //create watcher
+        var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/chats/' + this.$route.params.chatId + '/watch');
+        var _this = this;
+        ws.onmessage =  function(message){
+
+            if(message.data.startsWith('new: ')){
+                var chatMessage = JSON.parse(message.data.substring(5));
+                if(_this.$data.hasNewest){
+                    _this.addMessage(chatMessage);
+                }
+            }else{
+                chatMessage = JSON.parse(message.data);
+                var index = _this.$data.chatMessages.find((msg) => chatMessage.id === msg.id );
+                if(index !== -1){
+                    _this.$data.chatMessages[index] = chatMessage;
+                }
+            }
+            
+        };
     },
 }
 </script>

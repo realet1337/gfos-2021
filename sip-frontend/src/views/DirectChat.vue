@@ -13,8 +13,7 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-dialog>
-            </v-dialog>
+            <UserProfileDialog ref="userDialog" @showUser="showUser"></UserProfileDialog>
         </v-container>
     </v-main>
 </template>
@@ -23,18 +22,20 @@
 import ChatWindow from '@/components/ChatWindow'
 import Vue from'vue'
 import store from '@/store/'
+import UserProfileDialog from '@/components/UserProfileDialog'
 
 export default {
     name: 'DirectChat',
     components: {
         ChatWindow,
+        UserProfileDialog,
     },
     data: function(){
         return {}
     },
     methods: {
         showUser: function(user){
-            console.log(user);
+            this.$refs.userDialog.show(user);
         }
     },
     beforeRouteEnter: function(to, from, next){
@@ -44,7 +45,7 @@ export default {
 
             if(cookie !== ''){
 
-                window.axios.post(Vue.prototype.$apiBaseUrl + '/api/auth/validate',
+                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/auth/validate',
                 new URLSearchParams({
                     'token': cookie
                 })

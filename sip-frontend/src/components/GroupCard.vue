@@ -3,7 +3,7 @@
         <div v-ripple class="clickable" @click="$router.push('/group/' + $props.group.id)">
             <v-row>
                 <v-avatar size="130" class="mx-auto mt-6 mb-0" color="primary">
-                    <img v-if="$props.group.picture" :src="imageUrl">
+                    <img v-if="$props.group.picture" :src="$getAvatarUrl('group', $props.group)">
                     <span v-else class="headline">{{$props.group.name.substring(0,1)}}</span>
                 </v-avatar>
             </v-row>

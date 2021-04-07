@@ -23,7 +23,7 @@ export default {
     },
     created: function(){
 
-        window.axios.get(Vue.prototype.$apiBaseUrl + '/api/users/' + this.$store.state.userId + '/groups', {
+        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/groups', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
             }

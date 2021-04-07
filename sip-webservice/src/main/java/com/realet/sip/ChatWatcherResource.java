@@ -10,7 +10,7 @@ import javax.websocket.server.ServerEndpoint;
 public class ChatWatcherResource {
 
     @OnOpen
-    public void onOpen(javax.websocket.Session session/*, @PathParam("chatId") long chatId*/){
+    public void onOpen(javax.websocket.Session session, @PathParam("chatId") long chatId){
         //FIXME: IMPLEMENT AUTHENTICATION
         ChatWatcherManagement.addSession(chatId, session);
     }

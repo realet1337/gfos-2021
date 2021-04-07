@@ -122,10 +122,14 @@ public class ChatsResource {
     @GET
     @Path("/{chatId}/chat-messages")    
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChatMessages(@PathParam("chatId") long chatId, @QueryParam("count") int count, @QueryParam("before") long beforeId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
+    public Response getChatMessages(@PathParam("chatId") long chatId, @QueryParam("count") int count, @QueryParam("before") long beforeId, @QueryParam("after") long afterId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
 
         if(count > 1000 || count < 1){
             return Response.status(400).entity("Count must be between 1 and 1000").build();
+        }
+
+        if(afterId != 0 && beforeId != 0){
+            return Response.status(400).entity("Can't use both \"before\" and \"after\" filters in one request.").build();
         }
 
         if(token == null){
@@ -164,15 +168,21 @@ public class ChatsResource {
         }
 
         //we have ensured access
-
-        Date before = null;
-
-        Optional<ChatMessage> beforeMessage = ChatMessagesFacade.findById(beforeId);
-        if(beforeMessage.isPresent()){
-            before = beforeMessage.get().getSent();
+        if(beforeId != 0){
+            Optional<ChatMessage> beforeMessage = ChatMessagesFacade.findById(beforeId);
+            if(beforeMessage.isEmpty()){
+                return Response.status(404).entity("Limiter not found").build();
+            }
         }
 
-        List<ChatMessage> messages = ChatMessagesFacade.find(chat.get(), count, before);
+        if(afterId != 0){
+            Optional<ChatMessage> afterMessage = ChatMessagesFacade.findById(afterId);
+            if(afterMessage.isEmpty()){
+                return Response.status(404).entity("Limiter not found").build();
+            }
+        }
+
+        List<ChatMessage> messages = ChatMessagesFacade.find(chat.get(), count, beforeId, afterId);
 
         return Response.ok(
             new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter()).create()
@@ -184,6 +194,10 @@ public class ChatsResource {
     @Path("/{chatId}/chat-messages")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addChatMessage(ChatMessage chatMessage, @PathParam("chatId") long chatId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+
+        if(chatMessage.getContent().equals("")){
+            return Response.status(400).build();
+        }
 
         if(token == null){
             return Response.status(403).build();

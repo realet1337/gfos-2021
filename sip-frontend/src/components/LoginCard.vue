@@ -43,7 +43,13 @@ export default {
         return {
             email: '',
             password: '',
-            greeting: ['This is sip... or is it?','Welcome back!','Happy to see you!','Isn\'t life just great?','We missed you!'][Math.floor(Math.random()*5)],
+            greeting: [
+            'This is sip... or is it?',
+            'Welcome back!',
+            'Happy to see you!',
+            'Just because something is a discord clone doesn\'t mean it\'s bad...',
+            'We missed you!'
+            ][Math.floor(Math.random()*5)],
             error: false
         }
     },

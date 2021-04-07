@@ -12,6 +12,7 @@ Vue.config.productionTip = false
 Vue.prototype.$apiHttpUrl = "http://192.168.178.103:8080"; //make this an empty string to point to same url
 Vue.prototype.$apiWsUrl = "ws://192.168.178.103:8080"; //make this an empty string to point to same url
 Vue.prototype.$messageChunkSize = 50;
+Vue.prototype.$maxLoadedMessages = 100; // that is very safe, there's lots of room here
 Vue.prototype.$getAvatarUrl = function (type, obj){
   if(type === "user"){
       return Vue.prototype.$apiHttpUrl + "/upload/pic/user/" + obj.profilePicture + ".jpg";

@@ -3,6 +3,17 @@
 
         <!-- message section -->
         <div class="flex-grow-1 overflow-y-auto" id="messages">
+            <div id="loader-top" v-if="!$data.hasOldest">
+                <v-row no-gutters class="mb-5">
+                    <v-col cols="auto">
+                        <v-skeleton-loader type="avatar"></v-skeleton-loader>
+                    </v-col>
+                    <v-col align-self="center" class="mx-4 mt-2">
+                        <v-skeleton-loader type="text"></v-skeleton-loader>
+                    </v-col>
+                </v-row>
+
+            </div>
             <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id" no-gutters>
                 <v-row v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
                     <v-divider class="mt-3 mb-1"></v-divider>
@@ -37,6 +48,17 @@
                     </v-col>
                 </v-row>
             </div>
+            <div id="loader-bottom" v-if="!$data.hasNewest">
+                <v-row no-gutters class="mb-5">
+                    <v-col cols="auto">
+                        <v-skeleton-loader type="avatar"></v-skeleton-loader>
+                    </v-col>
+                    <v-col align-self="center" class="mx-4 mt-2">
+                        <v-skeleton-loader type="text"></v-skeleton-loader>
+                    </v-col>
+                </v-row>
+
+            </div>
         </div>
 
         <div class="flex-shrink-1 mt-3 mb-n4">
@@ -61,58 +83,114 @@ export default {
         return {
             chatMessages: [],
             hasOldest: false,
-            hasNewest: true,
+            hasNewest: false,
             showNewest: true,
             message: "",
+            ignoreJSScroll: true,
         }
     },
     methods: {
-        updateMessages: function(){
+        updateMessages: function(before, after){
+
+            var queryParams = {
+                count: Vue.prototype.$messageChunkSize,
+            }
+
+            if(before){
+                queryParams.before = before.id;
+            }
+
+            if(after){
+                queryParams.after = after.id;
+            }
+            
             window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },
-                params: {
-                    count: Vue.prototype.$messageChunkSize,
-                }
+                params: queryParams
             }).then((response) => {
-                this.$data.chatMessages = response.data.reverse();
-                if(response.data.length < Vue.prototype.$messageChunkSize){
-                    this.$data.hasOldest = true;
-                }
 
-                if(this.$data.showNewest){
-                    //wait for div to update
-                    this.scrollDownMessages();   
+                if(before){
+                    if(response.data.length < Vue.prototype.$messageChunkSize){
+                        this.$data.hasOldest = true;
+                    }
+
+                    this.$data.ignoreJSScroll = true;
+
+                    if(this.$data.chatMessages.length + response.data.length > Vue.prototype.$maxLoadedMessages){
+                        this.$data.chatMessages = response.data.concat(this.$data.chatMessages.slice(0, Vue.prototype.$maxLoadedMessages - response.data.length));
+                        this.$data.hasNewest = false;
+                    }
+                    else{
+                        this.$data.chatMessages = response.data.concat(this.$data.chatMessages);
+                    }
+
+                    this.$nextTick( function(){
+                        this.$data.ignoreJSScroll = false;
+                    });
+                }
+                else if(after){
+
+                    if(response.data.length < Vue.prototype.$messageChunkSize){
+                        this.$data.hasNewest = true;
+                    }
+
+                    this.$data.ignoreJSScroll = true;
+
+                    if(this.$data.chatMessages.length + response.data.length > Vue.prototype.$maxLoadedMessages){
+                        this.$data.chatMessages = this.$data.chatMessages.slice(this.$data.chatMessages.length + response.data.length - Vue.prototype.$maxLoadedMessages, this.$data.chatMessages.length).concat(response.data);
+                        this.$data.hasOldest = false;
+                    }
+                    else{
+                        this.$data.chatMessages = this.$data.chatMessages.concat(response.data);
+                    }
+
+                    var _this = this;
+
+                    //Yes. This is both functional and necessary. FOR SOME REASON, a scroll event happens after the DOM has
+                    //updated from the $data.chatMessages update. No, I don't know why, yes, it happens across multiple browsers.
+                    //This workaround, while hacky, doesn't have any negative impacts on the user experience.
+                    setTimeout(function(){
+                        _this.$data.ignoreJSScroll = false;
+                    },20);
+                }else{
+                    this.$data.chatMessages = response.data;
+                    this.$data.hasNewest = true;
+                    this.scrollDownMessages();
                 }
 
             })
         },
         sendMessage: function(){
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
-            {
-                    content: this.$data.message,
-                },
-            {
-                headers:{
-                    'Authorization': 'Bearer ' + this.$store.state.token,
-                }
-            }).then(() => {
-                this.$data.message = "";
-            })
+            if(this.$data.message){
+                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
+                {
+                        content: this.$data.message,
+                    },
+                {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    this.$data.message = "";
+                })
+            }
         },
         scrollDownMessages: function(){
+            this.$data.ignoreJSScroll = true;
             this.$nextTick( function(){
-                        var msgDiv = document.getElementById('messages');
-                        msgDiv.scrollTop = msgDiv.scrollHeight;
+                var msgDiv = document.getElementById('messages');
+                msgDiv.scrollTop = msgDiv.scrollHeight;
+                this.$data.ignoreJSScroll = false;
             });
         },
         addMessage: function(chatMessage){
             var msgDiv = document.getElementById('messages');
-            if(msgDiv.scrollHeight - msgDiv.clientHeight == Math.ceil(msgDiv.scrollTop)){
+            if(Math.floor(msgDiv.scrollHeight - msgDiv.scrollTop) === msgDiv.clientHeight){
                 this.$data.chatMessages.push(chatMessage);
                 this.$nextTick( function(){
-                        msgDiv.scrollTop = msgDiv.scrollHeight;
+                        this.scrollDownMessages();
                 });
             }
             else{
@@ -126,6 +204,7 @@ export default {
         }
     },
     created: function(){
+
         this.updateMessages();
 
         //create watcher
@@ -147,6 +226,29 @@ export default {
             }
             
         };
+
+
+        //event listeners for loading new messages
+        this.$nextTick(function(){
+
+            var _this = this;
+            document.getElementById("messages").addEventListener('scroll', function(event){
+                if(_this.$data.ignoreJSScroll === false){
+                    var msgDiv = event.target;
+                    if(Math.floor(msgDiv.scrollHeight - msgDiv.scrollTop) === msgDiv.clientHeight
+                    && !_this.$data.hasNewest){
+                        console.log("Load new below");
+                        _this.updateMessages(false, _this.$data.chatMessages[_this.$data.chatMessages.length-1]);
+                    }
+                    else if(msgDiv.scrollTop === 0 && !_this.$data.hasOldest){
+                        console.log("Load new above");
+                        _this.updateMessages(_this.$data.chatMessages[0]);
+                    }
+                }
+
+            });
+        })
+
     },
 }
 </script>

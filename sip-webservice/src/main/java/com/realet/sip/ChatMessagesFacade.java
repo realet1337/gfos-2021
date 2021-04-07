@@ -2,6 +2,7 @@ package com.realet.sip;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class ChatMessagesFacade {
 
     }
 
-    public static List<ChatMessage> find(Chat chat, int count, Date before){
+    public static List<ChatMessage> find(Chat chat, int count, long before, long after){
 
         //this is very annoying but duplicate class names so yea
         org.hibernate.Session session = emf.unwrap(SessionFactory.class).openSession();
@@ -54,16 +55,31 @@ public class ChatMessagesFacade {
             criteriaBuilder.isNull(root.get("expires"))
         ));
         
-        if(before != null){
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sent"), before));
+        if(before != 0){
+            predicates.add(criteriaBuilder.lessThan(root.get("id"), before));
+        }
+
+        if(after != 0){
+            predicates.add(criteriaBuilder.greaterThan(root.get("id"), after));
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
-        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
+
+        if(after == 0){
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
+        }
+        else{
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("id")));
+        }
 
         Query<ChatMessage> query = session.createQuery(criteriaQuery);
         query.setMaxResults(count);
         List<ChatMessage> result = query.getResultList();
+
+        //small IDs at start
+        if(after == 0){
+            Collections.reverse(result);
+        }
 
         return result;
 

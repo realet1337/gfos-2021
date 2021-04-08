@@ -21,7 +21,7 @@
                     <v-divider inset class="mt-3 ml-0"></v-divider>
                 </v-row>
                 <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
-                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message mt-5" no-gutters>
+                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message mt-5 rounded mr-2" no-gutters>
                     <!-- beeg -->
                     <v-col cols="auto" style="max-width: 63px;">
                         <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable" size="48">
@@ -37,32 +37,31 @@
                             <span class="date ml-2 mt-1">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
                             + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
                         </v-row>
-                        <p class="ml-4 my-auto" style="word-break: break-all;">
-                            {{chatMessage.content}}
-                        </p>
+                        <p class="ml-4 my-auto" style="word-break: break-all; white-space: break-spaces;">{{chatMessage.content}}</p>
                     </v-col>
                     <v-col style="max-width: 20px; min-width: 20px;" class="ml-auto mr-1">
                         <MessageOptionsMenu 
+                        :chatMessage="chatMessage"
                         @deleteMessage="deleteMessage(chatMessage)"
+                        @editMessage="editMessage(chatMessage)"
                         @copyToClipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
                 </v-row>
 
                 <!-- smol -->
-                <v-row class="flat-text-message text-message my-1" v-else no-gutters>
+                <v-row class="flat-text-message text-message my-1 rounded mr-2" v-else no-gutters>
                     <v-col style="max-width: 63px;" align-self="center">
                         <span class="date reveal-on-hover ml-3">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
                             + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
                     </v-col>
                     <v-col>
-                        <p style="word-break: break-all;" class="mb-0">
-                            {{chatMessage.content}}
-                        </p>
+                        <p style="word-break: break-all; white-space: break-spaces;" class="mb-0">{{chatMessage.content}}</p>
                     </v-col>
                     <v-col class="ml-auto mr-1" style="max-width: 20px; min-width: 20px;">
                         <MessageOptionsMenu
                         :chatMessage="chatMessage"
                         @deleteMessage="deleteMessage(chatMessage)"
+                        @editMessage="editMessage(chatMessage)"
                         @copyToClipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
                 </v-row>
@@ -81,13 +80,34 @@
         </div>
 
         <div class="flex-shrink-1 mt-3 mb-n4">
-            <p v-if="$data.editing" class="mb-1 ml-1 mt-n2">Editing: {{$data.editing}}</p>
+            <v-row v-if="$data.editing.id" no-gutters class="mb-2">
+                <v-col cols="auto" align-self="center">
+                    <v-icon 
+                    small 
+                    color="secondary lighten-2" 
+                    class="mb-1"
+                    @click="$data.editing = {}"
+                    >mdi-close-circle</v-icon>
+                </v-col>
+                <v-col align-self="center">
+                    <p class="my-auto ml-2" style="font-size: 12px;">
+                    <span 
+                    class="secondary--text text--lighten-2 mr-1"
+                    >Editing:</span>
+                    "{{$data.editing.content.substring(0,20) + ($data.editing.content.length > 20 ? '...':'')}}"</p>
+                </v-col>
+            </v-row>
             <v-row no-gutters>
                 <v-col>
-                    <v-text-field
-                    @keyup.enter="sendMessage"
+                    <v-textarea
+                    @keydown.enter.exact.prevent="sendMessage"
                     v-model="message"
-                    outlined></v-text-field>
+                    outlined
+                    rows="1"
+                    auto-grow
+                    no-resize
+                    class="message-textarea"
+                    ></v-textarea>
                 </v-col>
             </v-row>
         </div>
@@ -110,7 +130,7 @@ export default {
             hasNewest: true,
             message: "",
             ignoreJSScroll: true,
-            editing: 0,
+            editing: {},
         }
     },
     methods: {
@@ -172,19 +192,62 @@ export default {
             })
         },
         sendMessage: function(){
-            if(this.$data.message){
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
-                {
-                        content: this.$data.message,
+            if(/\S/.test(this.$data.message)){
+                if(this.$data.editing.id){
+                    window.axios.put(Vue.prototype.$apiHttpUrl + '/api/chat-messages',
+                    {
+                            //removing leading and trailing whitespaces
+                            id: this.$data.editing.id,
+                            content: this.$data.message.match(/\S(.*\S)?/s)[0],
                     },
-                {
-                    headers:{
-                        'Authorization': 'Bearer ' + this.$store.state.token,
-                    }
-                }).then(() => {
-                    this.$data.message = "";
-                })
+                    {
+                        headers:{
+                            'Authorization': 'Bearer ' + this.$store.state.token,
+                        }
+                    }).then(() => {}, (error) => {
+                        if(error.response.status === 403){
+                            if(error.response.data == "Unauthenticated"){
+                                this.$router.push('/');
+                            }
+                            else if(error.response.data == "Unauthorized"){
+                                this.$router.push('/home')
+                            }
+                        }
+                        else if(error.response.status === 404){
+                            this.$router.push('/home')
+                        }
+                    });
+                }
+                else{
+                    window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
+                    {
+                            //removing leading and trailing whitespaces
+                            content: this.$data.message.match(/\S(.*\S)?/s)[0],
+                    },
+                    {
+                        headers:{
+                            'Authorization': 'Bearer ' + this.$store.state.token,
+                        }
+                    }).then(() => {}, (error) => {
+                        if(error.response.status === 403){
+                            if(error.response.data == "Unauthenticated"){
+                                this.$router.push('/');
+                            }
+                            else if(error.response.data == "Unauthorized"){
+                                this.$router.push('/home')
+                            }
+                        }
+                        else if(error.response.status === 404){
+                            this.$router.push('/home')
+                        }
+                    });
+                }
             }
+            
+            this.$nextTick(function(){
+                this.$data.message = "";
+                this.$data.editing = {};
+            });
         },
         scrollDownMessages: function(){
             var msgDiv = document.getElementById('messages');
@@ -291,14 +354,31 @@ export default {
                 }
             });
         },
-        removeMessage: function(index){
-            this.$data.ignoreJSScroll = false;
+        removeMessage: function(chatMessage){
+            var index = this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id );
+            this.$data.ignoreJSScroll = true;
             
             this.$data.chatMessages.splice(index, 1);
             
             this.$nextTick(function(){
                 this.$data.ignoreJSScroll = false;
             });
+        },
+        editMessage: function(chatMessage){
+            this.$data.editing = chatMessage;
+            this.$data.message = chatMessage.content;
+        },
+        updateMessage: function(chatMessage){
+            var index = this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id );
+
+            this.$data.ignoreJSScroll = true;
+
+            this.$data.chatMessages.splice(index, 1, chatMessage);
+
+            this.$nextTick(function(){
+                this.$data.ignoreJSScroll = false;
+            });
+
         }
     },
     watch: {
@@ -322,12 +402,14 @@ export default {
                 if(_this.$data.hasNewest){
                     _this.addMessages([chatMessage]);
                 }
-            }else if(message.data.startsWith('removed: ')){
+            }
+            else if(message.data.startsWith('updated: ')){
                 chatMessage = JSON.parse(message.data.substring(9));
-                var index = _this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id );
-                if(index !== -1){
-                    _this.removeMessage(index);
-                }
+                _this.updateMessage(chatMessage);
+            }
+            else if(message.data.startsWith('removed: ')){
+                chatMessage = JSON.parse(message.data.substring(9));
+                _this.removeMessage(chatMessage);
             }
         };
 

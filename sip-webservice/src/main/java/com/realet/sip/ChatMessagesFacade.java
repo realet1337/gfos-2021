@@ -105,6 +105,17 @@ public class ChatMessagesFacade {
 
     }
 
+    public static ChatMessage updateContent(ChatMessage chatMessage){
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        ChatMessage currentMessage = em.find(ChatMessage.class, chatMessage.getId());
+        currentMessage.setContent(chatMessage.getContent());
+        em.getTransaction().commit();
+
+        return currentMessage;
+    }
+
     public static void remove(ChatMessage chatMessage){
 
         EntityManager em = emf.createEntityManager();

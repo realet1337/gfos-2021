@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -200,7 +202,7 @@ public class ChatsResource {
         }
 
         if(token == null){
-            return Response.status(403).build();
+            return Response.status(403).entity("Unauthenticated").build();
         }
 
         token = token.split(" ")[1];
@@ -210,7 +212,7 @@ public class ChatsResource {
         try {
             tokenUserId = SessionsFacade.findUserIdByToken(token);
         } catch (IllegalAccessException e) {
-            return Response.status(403).build();
+            return Response.status(403).entity("Unauthenticated").build();
            
         }
 
@@ -221,15 +223,32 @@ public class ChatsResource {
 
         if(chat.get().getGroup() ==  null){
             if(chat.get().getUser1().getId() != tokenUserId && chat.get().getUser2().getId() != tokenUserId){
-                return Response.status(403).build();
+                return Response.status(403).entity("Unauthorized").build();
                                 
             }
         }
         //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
         else{
             if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(tokenUserId).get())){
-                return Response.status(403).build();               
+                return Response.status(403).entity("Unauthorized").build();               
             }
+        }
+
+        if(chatMessage.getContent() == null){
+            return Response.status(400).entity("Message must contain text").build();
+        }
+
+        //bit of sanitization (and some more validation)
+        //this pattern just strips whitespaces at the start/end of string
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(chatMessage.getContent());
+
+        if(m.find()){
+            chatMessage.setContent(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Message cannot entirely consist of whitespaces").build();
         }
 
         chatMessage.setAuthor(UsersFacade.findById(tokenUserId).get());

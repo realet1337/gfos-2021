@@ -93,6 +93,13 @@
     color: var(--v-secondary-lighten2);
 }
 
+.message-textarea textarea{
+    max-height: 150px;
+    overflow: auto;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
 ::-webkit-scrollbar {
     height: 10px;
     width: 10px;

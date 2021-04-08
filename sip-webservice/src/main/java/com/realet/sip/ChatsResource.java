@@ -133,7 +133,7 @@ public class ChatsResource {
         }
 
         if(token == null){
-            return Response.status(403).build();
+            return Response.status(403).entity("Unauthenticated").build();
         }
 
         token = token.split(" ")[1];
@@ -141,7 +141,7 @@ public class ChatsResource {
         Optional<Chat> chat = ChatsFacade.findById(chatId);
 
         if(chat.isEmpty()){
-            return Response.status(404).build();
+            return Response.status(404).entity("Chat not found").build();
         }
 
         try {
@@ -151,20 +151,20 @@ public class ChatsResource {
             if(chat.get().getGroup() == null){
                 if(user_id != chat.get().getUser1().getId() &&
                 user_id != chat.get().getUser2().getId()){
-                    return Response.status(403).build();
+                    return Response.status(403).entity("Unauthorized").build();
                 }
             }
             //if this is a group chat, check access (membership)
             //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
             else{
                 if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(user_id).get())){
-                    return Response.status(403).build();
+                    return Response.status(403).entity("Unauthorized").build();
                 }
             }
 
 
         } catch (IllegalAccessException e) {
-            return Response.status(403).build();
+            return Response.status(403).entity("Unauthenticated").build();
         }
 
         //we have ensured access

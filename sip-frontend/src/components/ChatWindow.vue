@@ -21,7 +21,7 @@
                     <v-divider inset class="mt-3 ml-0 mb-1"></v-divider>
                 </v-row>
                 <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
-                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" :class="'mb-4 ' + 'mt-5'" no-gutters>
+                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message mt-5" no-gutters>
                     <!-- beeg -->
                     <v-col cols="auto">
                         <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable" size="48">
@@ -40,11 +40,20 @@
                 </v-row>
 
                 <!-- smol -->
-                <v-row class="ml-16 mt-n3" v-else no-gutters>    
+                <v-row style="height: 25px;" class="flat-text-message text-message my-1" v-else no-gutters>
+                    <v-col style="max-width: 63px;">
+                        <span class="date reveal-on-hover ml-2 pt-1">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
+                            + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
+                    </v-col>
                     <v-col>
                         <p>
                             {{chatMessage.content}}
                         </p>
+                    </v-col>
+                    <v-col style="max-width: 63px;" class="ml-auto mr-1" cols="auto">
+                        <MessageOptionsMenu 
+                        @deleteMessage="deleteMessage(chatMessage)"
+                        @copyToClipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
                 </v-row>
             </div>
@@ -76,15 +85,18 @@
 </template>
 <script>
 import Vue from 'vue'
+import MessageOptionsMenu from './MessageOptionsMenu'
 
 export default {
     name: 'ChatWindow',
+    components: {
+        MessageOptionsMenu
+    },
     data: function(){
         return {
             chatMessages: [],
-            hasOldest: false,
-            hasNewest: false,
-            showNewest: true,
+            hasOldest: true,
+            hasNewest: true,
             message: "",
             ignoreJSScroll: true,
         }
@@ -125,11 +137,22 @@ export default {
                     if(response.data.length < Vue.prototype.$messageChunkSize){
                         this.$data.hasOldest = true;
                     }
+                    else{
+                        this.$data.hasOldest = false;
+                    }
                     this.$data.hasNewest = true;
                 }
 
                 this.addMessages(response.data);
 
+            }, (error) => {
+                if(error.response.status === 403){
+                    console.log("IMPLEMENT ERROR HANDLING BASED ON RESPONSE BODY");
+                    console.log(error);
+                }else if(error.response.status === 404){
+                    console.log("IMPLEMENT ERROR HANDLING BASED ON RESPONSE BODY");
+                    console.log(error);
+                }
             })
         },
         sendMessage: function(){
@@ -216,19 +239,39 @@ export default {
                 });
             }
 
-            //Yes. This is both functional and necessary. FOR SOME REASON, a scroll event happens even after the DOM has
-            //updated from the $data.chatMessages update. No, I don't know why, yes, it happens across multiple browsers.
-            //This workaround, while hacky, doesn't have any negative impacts on the user experience.
-            var _this = this;
-            setTimeout(function(){
-                _this.$data.ignoreJSScroll = false;
-            },20);
+            this.$nextTick(function(){
+                this.$data.ignoreJSScroll = false;
+            });
 
             
+        },
+        copyToClipboard: function(text){
+            //random blog posts coming in clutch once again
+            var el = document.createElement('textarea');
+            el.value = text;
+            el.setAttribute('readonly', '');
+            el.style = {position: 'absolute', left: '-9999px'};
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        },
+        deleteMessage: function(chatMessage){
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/chat-messages/' + chatMessage.id, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                console.log("server ate delete req");
+            }, (error) => {
+                console.log(error);
+            });
         }
     },
     watch: {
         $route: function () {
+            this.$data.hasOldest = true;
+            this.$data.hasNewest = true;
             this.updateMessages();
         }
     },

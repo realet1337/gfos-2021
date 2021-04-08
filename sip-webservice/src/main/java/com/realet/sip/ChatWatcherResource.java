@@ -2,6 +2,7 @@ package com.realet.sip;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnOpen;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -17,6 +18,12 @@ public class ChatWatcherResource {
 
     @OnClose
     public void onClose(javax.websocket.Session session, CloseReason closeReason, @PathParam("chatId") long chatId){
+        ChatWatcherManagement.removeSession(chatId, session);
+    }
+
+    //we outttt
+    @OnError
+    public void onClose(javax.websocket.Session session, Throwable throwable, @PathParam("chatId") long chatId){
         ChatWatcherManagement.removeSession(chatId, session);
     }
 

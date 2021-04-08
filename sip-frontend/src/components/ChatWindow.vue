@@ -147,11 +147,15 @@ export default {
 
             }, (error) => {
                 if(error.response.status === 403){
-                    console.log("IMPLEMENT ERROR HANDLING BASED ON RESPONSE BODY");
-                    console.log(error);
-                }else if(error.response.status === 404){
-                    console.log("IMPLEMENT ERROR HANDLING BASED ON RESPONSE BODY");
-                    console.log(error);
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
                 }
             })
         },
@@ -191,10 +195,10 @@ export default {
 
             //adding some extra spaces where it considers the div to be scrolled all the way down. This also conveniently fixes a
             //(browser?/vuetify?) bug where scrolling the div all the way down using javascript isn't possible.
-            //                                                     ||
-            //                                                     ||
-            //                                                    \  /
-            //                                                     \/
+            //                                                   ||
+            //                                                   ||
+            //                                                  \  /
+            //                                                   \/
 
             if(msgDiv.scrollHeight - Math.ceil(msgDiv.scrollTop) -5 <= msgDiv.clientHeight && this.$data.hasNewest){
                 scrollFlag = true;
@@ -261,10 +265,27 @@ export default {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
-            }).then(() => {
-                console.log("server ate delete req");
-            }, (error) => {
-                console.log(error);
+            }).then(() => {}, (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            });
+        },
+        removeMessage: function(index){
+            this.$data.ignoreJSScroll = false;
+            
+            this.$data.chatMessages.splice(index, 1);
+            
+            this.$nextTick(function(){
+                this.$data.ignoreJSScroll = false;
             });
         }
     },
@@ -289,11 +310,11 @@ export default {
                 if(_this.$data.hasNewest){
                     _this.addMessages([chatMessage]);
                 }
-            }else{
-                chatMessage = JSON.parse(message.data);
-                var index = _this.$data.chatMessages.find((msg) => chatMessage.id === msg.id );
+            }else if(message.data.startsWith('removed: ')){
+                chatMessage = JSON.parse(message.data.substring(9));
+                var index = _this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id );
                 if(index !== -1){
-                    _this.$data.chatMessages[index] = chatMessage;
+                    _this.removeMessage(index);
                 }
             }
         };

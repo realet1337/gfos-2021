@@ -81,11 +81,6 @@ public class ServiceApplication extends Application {
 
         ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(1).get()));
 
-        for(int i =0; i <250; i++){
-            ChatMessagesFacade.add(new ChatMessage(String.valueOf(i), null, new Date(), ChatsFacade.findById(2).get(), UsersFacade.findById(3).get()));
-        }
-
-
     }
 
 }

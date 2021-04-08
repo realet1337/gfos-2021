@@ -149,7 +149,7 @@ export default {
         },
         scrollDownMessages: function(){
             var msgDiv = document.getElementById('messages');
-            msgDiv.scrollTop = msgDiv.scrollHeight;
+            msgDiv.scrollTop = msgDiv.scrollHeight - msgDiv.clientHeight;
         },
         addMessages: function(chatMessages){
 
@@ -161,19 +161,39 @@ export default {
             var scrollFlag = false;
 
             var msgDiv = document.getElementById("messages");
-            if(Math.floor(msgDiv.scrollHeight - msgDiv.scrollTop) === msgDiv.clientHeight && this.$data.hasNewest){
+
+            let relativeNode;
+            let preOffsetTop;
+            let preScrollTop;
+
+            //adding some extra spaces where it considers the div to be scrolled all the way down. This also conveniently fixes a
+            //(browser?/vuetify?) bug where scrolling the div all the way down using javascript isn't possible.
+            //                                                     ||
+            //                                                     ||
+            //                                                    \  /
+            //                                                     \/
+
+            if(msgDiv.scrollHeight - Math.ceil(msgDiv.scrollTop) -5 <= msgDiv.clientHeight && this.$data.hasNewest){
                 scrollFlag = true;
             }
 
             //either all IDs are lower, or none
             if(this.$data.chatMessages.length > 0){
                 if(this.$data.chatMessages[0].id > chatMessages[0].id){
+                    //just pick an element
+                    relativeNode = msgDiv.childNodes[1];
+                    preOffsetTop = relativeNode.offsetTop;
+                    preScrollTop = msgDiv.scrollTop;
                     if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
                         this.$data.hasNewest = false;
                     }
                     this.$data.chatMessages = chatMessages.concat(this.$data.chatMessages.slice(0,Vue.prototype.$maxLoadedMessages - chatMessages.length))
                 }
                 else{
+                    //just pick an element
+                    relativeNode = msgDiv.childNodes[msgDiv.childNodes.length-2];
+                    preOffsetTop = relativeNode.offsetTop;
+                    preScrollTop = msgDiv.scrollTop;
                     if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
                         this.$data.hasOldest = false;
                     }
@@ -190,8 +210,13 @@ export default {
                     this.scrollDownMessages();
                 });
             }
+            else{
+                this.$nextTick(function(){
+                    msgDiv.scrollTop = preScrollTop + relativeNode.offsetTop - preOffsetTop;
+                });
+            }
 
-            //Yes. This is both functional and necessary. FOR SOME REASON, a scroll event happens after the DOM has
+            //Yes. This is both functional and necessary. FOR SOME REASON, a scroll event happens even after the DOM has
             //updated from the $data.chatMessages update. No, I don't know why, yes, it happens across multiple browsers.
             //This workaround, while hacky, doesn't have any negative impacts on the user experience.
             var _this = this;
@@ -240,11 +265,9 @@ export default {
                     var msgDiv = event.target;
                     if(Math.floor(msgDiv.scrollHeight - msgDiv.scrollTop) === msgDiv.clientHeight
                     && !_this.$data.hasNewest){
-                        console.log("Load new below");
                         _this.updateMessages(false, _this.$data.chatMessages[_this.$data.chatMessages.length-1]);
                     }
                     else if(msgDiv.scrollTop === 0 && !_this.$data.hasOldest){
-                        console.log("Load new above");
                         _this.updateMessages(_this.$data.chatMessages[0]);
                     }
                 }

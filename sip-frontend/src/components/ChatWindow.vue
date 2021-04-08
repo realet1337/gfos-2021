@@ -15,43 +15,53 @@
 
             </div>
             <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id" no-gutters>
-                <v-row v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
+                <v-row class="mt-3 mb-1" v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
                     <v-divider class="mt-3 mb-1"></v-divider>
                     <span class="date-divider-label mx-2">{{new Date(chatMessage.sent).toDateString()}}</span>
-                    <v-divider inset class="mt-3 ml-0 mb-1"></v-divider>
+                    <v-divider inset class="mt-3 ml-0"></v-divider>
                 </v-row>
                 <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
                 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message mt-5" no-gutters>
                     <!-- beeg -->
-                    <v-col cols="auto">
+                    <v-col cols="auto" style="max-width: 63px;">
                         <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable" size="48">
                             <img v-if="chatMessage.author.profilePicture" :src="$getAvatarUrl('user', chatMessage.author)">
                             <span v-else>{{chatMessage.author.username.substring(0,1)}}</span>
                         </v-avatar>
                     </v-col>
-                    <v-col cols="auto" align-self="center">
-                        <p @click="$emit('showUser', chatMessage.author)" class="ml-4 my-auto clickable underline-on-hover">
-                            <b>{{chatMessage.author.username}}</b>
-                        </p>
-                        <p class="ml-4 my-auto">
+                    <v-col align-self="center">
+                        <v-row no-gutters>
+                            <p @click="$emit('showUser', chatMessage.author)" class="ml-4 my-auto clickable underline-on-hover">
+                                <b>{{chatMessage.author.username}}</b>
+                            </p>
+                            <span class="date ml-2 mt-1">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
+                            + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
+                        </v-row>
+                        <p class="ml-4 my-auto" style="word-break: break-all;">
                             {{chatMessage.content}}
                         </p>
+                    </v-col>
+                    <v-col style="max-width: 20px; min-width: 20px;" class="ml-auto mr-1">
+                        <MessageOptionsMenu 
+                        @deleteMessage="deleteMessage(chatMessage)"
+                        @copyToClipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
                 </v-row>
 
                 <!-- smol -->
-                <v-row style="height: 25px;" class="flat-text-message text-message my-1" v-else no-gutters>
-                    <v-col style="max-width: 63px;">
-                        <span class="date reveal-on-hover ml-2 pt-1">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
+                <v-row class="flat-text-message text-message my-1" v-else no-gutters>
+                    <v-col style="max-width: 63px;" align-self="center">
+                        <span class="date reveal-on-hover ml-3">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
                             + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
                     </v-col>
                     <v-col>
-                        <p>
+                        <p style="word-break: break-all;" class="mb-0">
                             {{chatMessage.content}}
                         </p>
                     </v-col>
-                    <v-col style="max-width: 63px;" class="ml-auto mr-1" cols="auto">
-                        <MessageOptionsMenu 
+                    <v-col class="ml-auto mr-1" style="max-width: 20px; min-width: 20px;">
+                        <MessageOptionsMenu
+                        :chatMessage="chatMessage"
                         @deleteMessage="deleteMessage(chatMessage)"
                         @copyToClipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
@@ -71,6 +81,7 @@
         </div>
 
         <div class="flex-shrink-1 mt-3 mb-n4">
+            <p v-if="$data.editing" class="mb-1 ml-1 mt-n2">Editing: {{$data.editing}}</p>
             <v-row no-gutters>
                 <v-col>
                     <v-text-field
@@ -99,6 +110,7 @@ export default {
             hasNewest: true,
             message: "",
             ignoreJSScroll: true,
+            editing: 0,
         }
     },
     methods: {

@@ -49,7 +49,7 @@ export default {
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },
                 params: {
-                    count: Vue.prototype.$messageChunkSize,
+                    count: 1,
                 }
             }).then((response) => {
             if(response.data){

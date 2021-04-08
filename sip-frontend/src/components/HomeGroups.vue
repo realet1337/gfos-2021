@@ -29,7 +29,7 @@ export default {
             }
         }).then((response) => {
             this.$data.groups = response.data;
-            //testing (left here because will get removed at build)
+            //testing
             /*
             var noDescGroup = Object.assign({},this.$data.groups[0]);
             noDescGroup.description = undefined;

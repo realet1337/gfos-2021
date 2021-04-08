@@ -75,17 +75,17 @@
     background-color: var(--v-secondary-darken4);
 }
 
-.flat-text-message .reveal-on-hover{
+.text-message .reveal-on-hover{
     display: none;
 }
 
-.flat-text-message:hover .reveal-on-hover{
+.text-message:hover .reveal-on-hover{
     display: block;
 }
 
 .date{
     color: var(--v-secondary-lighten1);
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .date-divider-label{

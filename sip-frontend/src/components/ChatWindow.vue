@@ -115,50 +115,20 @@ export default {
                     if(response.data.length < Vue.prototype.$messageChunkSize){
                         this.$data.hasOldest = true;
                     }
-
-                    this.$data.ignoreJSScroll = true;
-
-                    if(this.$data.chatMessages.length + response.data.length > Vue.prototype.$maxLoadedMessages){
-                        this.$data.chatMessages = response.data.concat(this.$data.chatMessages.slice(0, Vue.prototype.$maxLoadedMessages - response.data.length));
-                        this.$data.hasNewest = false;
-                    }
-                    else{
-                        this.$data.chatMessages = response.data.concat(this.$data.chatMessages);
-                    }
-
-                    this.$nextTick( function(){
-                        this.$data.ignoreJSScroll = false;
-                    });
                 }
                 else if(after){
-
                     if(response.data.length < Vue.prototype.$messageChunkSize){
                         this.$data.hasNewest = true;
                     }
-
-                    this.$data.ignoreJSScroll = true;
-
-                    if(this.$data.chatMessages.length + response.data.length > Vue.prototype.$maxLoadedMessages){
-                        this.$data.chatMessages = this.$data.chatMessages.slice(this.$data.chatMessages.length + response.data.length - Vue.prototype.$maxLoadedMessages, this.$data.chatMessages.length).concat(response.data);
-                        this.$data.hasOldest = false;
-                    }
-                    else{
-                        this.$data.chatMessages = this.$data.chatMessages.concat(response.data);
-                    }
-
-                    var _this = this;
-
-                    //Yes. This is both functional and necessary. FOR SOME REASON, a scroll event happens after the DOM has
-                    //updated from the $data.chatMessages update. No, I don't know why, yes, it happens across multiple browsers.
-                    //This workaround, while hacky, doesn't have any negative impacts on the user experience.
-                    setTimeout(function(){
-                        _this.$data.ignoreJSScroll = false;
-                    },20);
-                }else{
-                    this.$data.chatMessages = response.data;
-                    this.$data.hasNewest = true;
-                    this.scrollDownMessages();
                 }
+                else{
+                    if(response.data.length < Vue.prototype.$messageChunkSize){
+                        this.$data.hasOldest = true;
+                    }
+                    this.$data.hasNewest = true;
+                }
+
+                this.addMessages(response.data);
 
             })
         },
@@ -178,24 +148,58 @@ export default {
             }
         },
         scrollDownMessages: function(){
-            this.$data.ignoreJSScroll = true;
-            this.$nextTick( function(){
-                var msgDiv = document.getElementById('messages');
-                msgDiv.scrollTop = msgDiv.scrollHeight;
-                this.$data.ignoreJSScroll = false;
-            });
-        },
-        addMessage: function(chatMessage){
             var msgDiv = document.getElementById('messages');
-            if(Math.floor(msgDiv.scrollHeight - msgDiv.scrollTop) === msgDiv.clientHeight){
-                this.$data.chatMessages.push(chatMessage);
-                this.$nextTick( function(){
-                        this.scrollDownMessages();
-                });
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+        },
+        addMessages: function(chatMessages){
+
+            if(chatMessages.length === 0){
+                return;
+            }
+            
+            this.$data.ignoreJSScroll = true;
+            var scrollFlag = false;
+
+            var msgDiv = document.getElementById("messages");
+            if(Math.floor(msgDiv.scrollHeight - msgDiv.scrollTop) === msgDiv.clientHeight && this.$data.hasNewest){
+                scrollFlag = true;
+            }
+
+            //either all IDs are lower, or none
+            if(this.$data.chatMessages.length > 0){
+                if(this.$data.chatMessages[0].id > chatMessages[0].id){
+                    if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
+                        this.$data.hasNewest = false;
+                    }
+                    this.$data.chatMessages = chatMessages.concat(this.$data.chatMessages.slice(0,Vue.prototype.$maxLoadedMessages - chatMessages.length))
+                }
+                else{
+                    if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
+                        this.$data.hasOldest = false;
+                    }
+                    this.$data.chatMessages = this.$data.chatMessages.slice(chatMessages.length + this.$data.chatMessages.length - 
+                    Vue.prototype.$maxLoadedMessages, this.$data.chatMessages.length).concat(chatMessages);
+                }
             }
             else{
-                this.$data.chatMessages.push(chatMessage);
+                this.$data.chatMessages = chatMessages;
             }
+
+            if(scrollFlag){
+                this.$nextTick(function(){
+                    this.scrollDownMessages();
+                });
+            }
+
+            //Yes. This is both functional and necessary. FOR SOME REASON, a scroll event happens after the DOM has
+            //updated from the $data.chatMessages update. No, I don't know why, yes, it happens across multiple browsers.
+            //This workaround, while hacky, doesn't have any negative impacts on the user experience.
+            var _this = this;
+            setTimeout(function(){
+                _this.$data.ignoreJSScroll = false;
+            },20);
+
+            
         }
     },
     watch: {
@@ -215,7 +219,7 @@ export default {
             if(message.data.startsWith('new: ')){
                 var chatMessage = JSON.parse(message.data.substring(5));
                 if(_this.$data.hasNewest){
-                    _this.addMessage(chatMessage);
+                    _this.addMessage([chatMessage]);
                 }
             }else{
                 chatMessage = JSON.parse(message.data);

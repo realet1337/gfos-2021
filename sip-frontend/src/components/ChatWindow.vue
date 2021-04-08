@@ -219,7 +219,7 @@ export default {
             if(message.data.startsWith('new: ')){
                 var chatMessage = JSON.parse(message.data.substring(5));
                 if(_this.$data.hasNewest){
-                    _this.addMessage([chatMessage]);
+                    _this.addMessages([chatMessage]);
                 }
             }else{
                 chatMessage = JSON.parse(message.data);
@@ -228,7 +228,6 @@ export default {
                     _this.$data.chatMessages[index] = chatMessage;
                 }
             }
-            
         };
 
 

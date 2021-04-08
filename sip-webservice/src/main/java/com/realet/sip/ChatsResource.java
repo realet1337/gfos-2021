@@ -242,7 +242,7 @@ public class ChatsResource {
 
         ArrayList<javax.websocket.Session> list = ChatWatcherManagement.getSessions(chatId);
 
-        if(list != null){
+        if(!(list == null || list.isEmpty())){
             for(javax.websocket.Session s: list){
                 try {
                     s.getBasicRemote().sendText("new: " + 

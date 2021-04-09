@@ -58,14 +58,14 @@ public class ChatMessagesResource {
 
         ChatMessagesFacade.remove(chatMessage.get());
 
-        ArrayList<javax.websocket.Session> list = ChatWatcherManagement.getSessions(chatId);
+        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getChatSessions(chatId);
 
         if(!(list == null || list.isEmpty())){
             for(javax.websocket.Session s: list){
                 try {
                     s.getBasicRemote().sendText("removed: " + chatMessageJSON );
                 } catch (IOException e) {
-                    ChatWatcherManagement.removeSession(chatId, s);
+                    ChatWebsocketManagement.removeSession(chatId, s);
                 }
             }
             
@@ -134,7 +134,7 @@ public class ChatMessagesResource {
 
         long chatId = oldMessage.get().getChat().getId();
 
-        ArrayList<javax.websocket.Session> list = ChatWatcherManagement.getSessions(chatId);
+        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getChatSessions(chatId);
 
         if(!(list == null || list.isEmpty())){
             for(javax.websocket.Session s: list){
@@ -144,7 +144,7 @@ public class ChatMessagesResource {
                         .toJson(chatMessage)
                     );
                 } catch (IOException e) {
-                    ChatWatcherManagement.removeSession(chatId, s);
+                    ChatWebsocketManagement.removeSession(chatId, s);
                 }
             }
             

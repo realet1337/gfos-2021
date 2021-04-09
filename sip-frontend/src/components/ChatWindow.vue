@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-column fill-height">
+    <div class="d-flex flex-column fill-height mt-n3">
 
         <!-- message section -->
         <div class="flex-grow-1 overflow-y-auto" id="messages">
@@ -176,7 +176,6 @@ export default {
                 else{
                     if(response.data.length === 0){
                         this.$data.isEmpty = true;
-                        console.log("ping!");
                     }
                     if(response.data.length < Vue.prototype.$messageChunkSize){
                         this.$data.hasOldest = true;
@@ -405,8 +404,11 @@ export default {
         this.updateMessages();
 
         //create watcher
-        var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/chats/' + this.$route.params.chatId + '/watch');
         var _this = this;
+        var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/chats/' + this.$route.params.chatId + '/watch');
+        ws.onopen = function(){
+            ws.send('Bearer ' + _this.$store.state.token);
+        }
         ws.onmessage =  function(message){
 
             if(message.data.startsWith('new: ')){

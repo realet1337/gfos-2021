@@ -258,7 +258,7 @@ public class ChatsResource {
 
         ChatMessagesFacade.add(chatMessage);
 
-        ArrayList<javax.websocket.Session> list = ChatWatcherManagement.getSessions(chatId);
+        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getChatSessions(chatId);
 
         if(!(list == null || list.isEmpty())){
             for(javax.websocket.Session s: list){

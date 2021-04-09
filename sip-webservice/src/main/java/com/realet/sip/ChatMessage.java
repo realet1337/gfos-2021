@@ -1,6 +1,5 @@
 package com.realet.sip;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,46 +9,39 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.google.gson.annotations.Expose;
-
 @Entity
 @Table(name = "ChatMessages")
-public class ChatMessage implements Serializable{
+public class ChatMessage{
 
-    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
-    @Expose
     @Column(nullable = false)
     private String content;
 
-    @Expose
     @Temporal(TemporalType.TIMESTAMP)
     private Date expires;
 
-    @Expose
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date sent;
     
-    @Expose
     @ManyToOne
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
-    @Expose
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date edited;
 
     public long getId() {
         return id;
@@ -99,12 +91,13 @@ public class ChatMessage implements Serializable{
         this.sent = sent;
     }
 
-    public ChatMessage(String content, Date expires, Date sent, Chat chat, User author) {
+    public ChatMessage(String content, Date expires, Date sent, Chat chat, User author, Date edited) {
         this.content = content;
         this.expires = expires;
         this.sent = sent;
         this.chat = chat;
         this.author = author;
+        this.edited = edited;
     }
 
 
@@ -112,6 +105,12 @@ public class ChatMessage implements Serializable{
         super();
     }
 
+    public Date getEdited() {
+        return edited;
+    }
 
+    public void setEdited(Date edited) {
+        this.edited = edited;
+    }
     
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.GroupAdapter;
 
 @Path("/users")
@@ -53,7 +54,7 @@ public class UsersResource {
                 Optional<User> user = UsersFacade.findById(userId);
                 if(user.isPresent()){
                     List<Chat> directChats = ChatsFacade.findDirectChatsByUser(user.get());
-                    return Response.ok(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(directChats)).build();
+                    return Response.ok(new GsonBuilder().registerTypeAdapter(Chat.class, new ChatAdapter()).create().toJson(directChats)).build();
                 }else{
                     return Response.status(404).build();
                 }

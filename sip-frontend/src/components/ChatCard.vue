@@ -19,7 +19,7 @@
                         <h3 v-if="this.$data.message.author.id == this.$store.state.userId" class="ml-3 header">You:</h3>
                         <h3 v-else @click="$emit('show-user', $data.user)" class="ml-3 header clickable">Them:</h3>
                     </v-row>
-                    <p v-if="this.$data.message" class="ml-3 max-2-lines">{{message.content}}</p>
+                    <p v-if="this.$data.message" class="mx-3 max-2-lines">{{message.content}}</p>
                     <p v-else-if="this.$data.message === undefined" class="ml-8 pt-9 secondary--text">You have yet to chat with this user</p>
                 </v-row>
             </v-sheet>

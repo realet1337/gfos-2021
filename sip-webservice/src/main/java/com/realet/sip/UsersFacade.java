@@ -30,7 +30,7 @@ public class UsersFacade {
 
         EntityManager em = emf.createEntityManager();
 
-        return em.createQuery("from User").getResultList();
+        return em.createQuery("from User", User.class).getResultList();
 
     }
 

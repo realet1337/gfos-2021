@@ -2,10 +2,13 @@ package com.realet.sip.GsonTypeAdapter;
 
 import java.io.IOException;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.realet.sip.Chat;
+import com.realet.sip.Group;
+import com.realet.sip.User;
 
 public class ChatAdapter extends TypeAdapter<Chat>{
 
@@ -14,12 +17,21 @@ public class ChatAdapter extends TypeAdapter<Chat>{
         out.beginObject();
         out.name("id");
         out.value(value.getId());
-        out.name("groupId");
-        out.value(value.getGroup() != null ? value.getGroup().getId() : null);
-        out.name("user1Id");
-        out.value(value.getUser1() != null ? value.getUser1().getId() : null);
-        out.name("user2Id");
-        out.value(value.getUser2() != null ? value.getUser2().getId() : null);
+        if(value.getGroup() != null){
+            out.name("group");
+            out.jsonValue(new GsonBuilder().registerTypeAdapter(Group.class, new GroupAdapter()).create()
+            .toJson(value.getGroup()));
+        }
+        if(value.getUser1() != null){
+            out.name("user1");
+            out.jsonValue(new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+            .toJson(value.getUser1()));
+        }
+        if(value.getUser2() != null){
+            out.name("user2");
+            out.jsonValue(new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+            .toJson(value.getUser2()));
+        }
         out.endObject();
 
         

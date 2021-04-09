@@ -111,6 +111,7 @@ public class ChatMessagesFacade {
         em.getTransaction().begin();
         ChatMessage currentMessage = em.find(ChatMessage.class, chatMessage.getId());
         currentMessage.setContent(chatMessage.getContent());
+        currentMessage.setEdited(new Date());
         em.getTransaction().commit();
 
         return currentMessage;

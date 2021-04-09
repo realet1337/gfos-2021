@@ -1,6 +1,5 @@
 package com.realet.sip;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,8 +16,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
-
 @Entity
 @Table(name = "Users")
 @NamedQueries({
@@ -29,16 +26,14 @@ import com.google.gson.annotations.Expose;
 
 })
 
-public class User implements Serializable{
+public class User{
     
     //directly matching database column names
-    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
     
-    @Expose
     @Column(nullable = false)
     private String username;
 
@@ -47,10 +42,8 @@ public class User implements Serializable{
 
     private String pass;
 
-    @Expose
     private String info;
 
-    @Expose
     @Column(name = "profile_picture")
     private String profilePicture;
     

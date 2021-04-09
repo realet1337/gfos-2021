@@ -23,8 +23,8 @@
                 <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
                 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message mt-5 rounded mr-2" no-gutters>
                     <!-- beeg -->
-                    <v-col cols="auto" style="max-width: 63px;">
-                        <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable" size="48">
+                    <v-col cols="auto" style="max-width: 63px;" align-self="center">
+                        <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable my-auto ml-2" size="40">
                             <img v-if="chatMessage.author.profilePicture" :src="$getAvatarUrl('user', chatMessage.author)">
                             <span v-else>{{chatMessage.author.username.substring(0,1)}}</span>
                         </v-avatar>
@@ -37,7 +37,7 @@
                             <span class="date ml-2 mt-1">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
                             + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
                         </v-row>
-                        <p class="ml-4 my-auto" style="word-break: break-all; white-space: break-spaces;">{{chatMessage.content}}</p>
+                        <p class="ml-4 my-auto" style="word-break: break-all; white-space: break-spaces;">{{chatMessage.content}}<span v-if="chatMessage.edited" class="date ml-1" style="white-space: nowrap;">(edited: {{new Date(chatMessage.edited).toLocaleString()}})</span></p>
                     </v-col>
                     <v-col style="max-width: 20px; min-width: 20px;" class="ml-auto mr-1">
                         <MessageOptionsMenu 
@@ -50,12 +50,13 @@
 
                 <!-- smol -->
                 <v-row class="flat-text-message text-message my-1 rounded mr-2" v-else no-gutters>
-                    <v-col style="max-width: 63px;" align-self="center">
+                    <v-col style="max-width: 64px;" align-self="center">
                         <span class="date reveal-on-hover ml-3">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
                             + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>
                     </v-col>
                     <v-col>
-                        <p style="word-break: break-all; white-space: break-spaces;" class="mb-0">{{chatMessage.content}}</p>
+                        <!-- yes, this needs to be one line because of the css white space tag -->
+                        <p style="word-break: break-all; white-space: break-spaces;" class="mb-0">{{chatMessage.content}}<span v-if="chatMessage.edited" class="date ml-1" style="white-space: nowrap;">(edited: {{new Date(chatMessage.edited).toLocaleString()}})</span></p>
                     </v-col>
                     <v-col class="ml-auto mr-1" style="max-width: 20px; min-width: 20px;">
                         <MessageOptionsMenu
@@ -86,7 +87,7 @@
                     small 
                     color="secondary lighten-2" 
                     class="mb-1"
-                    @click="$data.editing = {}"
+                    @click="$data.editing = {}; $data.message = ''"
                     >mdi-close-circle</v-icon>
                 </v-col>
                 <v-col align-self="center">

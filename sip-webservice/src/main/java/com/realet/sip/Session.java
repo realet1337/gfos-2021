@@ -1,6 +1,5 @@
 package com.realet.sip;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,7 +13,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "Sessions")
-public class Session implements Serializable{
+public class Session{
 
     @Id
     private String token;

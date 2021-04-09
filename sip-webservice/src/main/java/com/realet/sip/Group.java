@@ -1,6 +1,5 @@
 package com.realet.sip;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,33 +19,26 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
-
 @Entity
 @Table(name="`Groups`")
 @NamedQueries({
     @NamedQuery(name = "Group.findShared", query = "SELECT g FROM Group g JOIN g.users user1 JOIN g.users user2 WHERE user1 = :user1 AND user2 = :user2")
 })
-public class Group implements Serializable{
+public class Group{
 
-    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
-    @Expose
     @Column(name = "group_name", nullable = false)
     private String name;
 
-    @Expose
     @Column(name = "group_description")
     private String description;
 
-    @Expose
     private String picture;
 
-    @Expose
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
@@ -91,7 +83,7 @@ public class Group implements Serializable{
         return picture;
     }
 
-    public void setPicture(String image) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 

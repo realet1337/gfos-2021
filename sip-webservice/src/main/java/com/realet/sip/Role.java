@@ -1,6 +1,5 @@
 package com.realet.sip;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,23 +14,18 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
-
 @Entity
 @Table(name = "Roles")
-public class Role implements Serializable{
+public class Role{
 
-    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 
-    @Expose
     @Column(name = "role_name", nullable = false)
     private String name;
 
-    @Expose
     @Column(name = "role_color", nullable = false)
     private String color;
     

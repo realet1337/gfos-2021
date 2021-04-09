@@ -1,9 +1,6 @@
 package com.realet.sip.GsonTypeAdapter;
 
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -29,6 +26,8 @@ public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
         out.value(value.getChat().getId());
         out.name("author");
         out.jsonValue(new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create().toJson(value.getAuthor()));
+        out.name("edited");
+        out.value(value.getEdited() != null ? value.getEdited().toInstant().toString() : null);
         out.endObject();
         
     }

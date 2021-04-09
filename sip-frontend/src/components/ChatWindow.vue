@@ -3,6 +3,11 @@
 
         <!-- message section -->
         <div class="flex-grow-1 overflow-y-auto" id="messages">
+            <v-row v-if="$data.isEmpty" class="fill-height" no-gutters justify="center">
+                <v-col cols="auto" class="mx-auto" align-self="center">
+                    <span class="my-auto secondary--text text--darken3">{{voidMessage}}</span>
+                </v-col>
+            </v-row>
             <div id="loader-top" v-if="!$data.hasOldest">
                 <v-row no-gutters class="mb-5">
                     <v-col cols="auto">
@@ -12,7 +17,6 @@
                         <v-skeleton-loader type="text"></v-skeleton-loader>
                     </v-col>
                 </v-row>
-
             </div>
             <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id" no-gutters>
                 <v-row class="mt-3 mb-1" v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
@@ -20,11 +24,13 @@
                     <span class="date-divider-label mx-2">{{new Date(chatMessage.sent).toDateString()}}</span>
                     <v-divider inset class="mt-3 ml-0"></v-divider>
                 </v-row>
+
+                <!-- different user or 5 min apart -->
                 <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
-                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message mt-5 rounded mr-2" no-gutters>
+                || new Date(chatMessages[index - 1].sent).getTime() + 300000 < new Date(chatMessage.sent).getTime()" class="text-message mt-5 rounded mr-2" no-gutters>
                     <!-- beeg -->
-                    <v-col cols="auto" style="max-width: 63px;" align-self="center">
-                        <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable my-auto ml-2" size="40">
+                    <v-col cols="auto" style="max-width: 63px;">
+                        <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable mt-1 ml-2" size="40">
                             <img v-if="chatMessage.author.profilePicture" :src="$getAvatarUrl('user', chatMessage.author)">
                             <span v-else>{{chatMessage.author.username.substring(0,1)}}</span>
                         </v-avatar>
@@ -132,6 +138,7 @@ export default {
             message: "",
             ignoreJSScroll: true,
             editing: {},
+            isEmpty: false,
         }
     },
     methods: {
@@ -167,13 +174,16 @@ export default {
                     }
                 }
                 else{
+                    if(response.data.length === 0){
+                        this.$data.isEmpty = true;
+                        console.log("ping!");
+                    }
                     if(response.data.length < Vue.prototype.$messageChunkSize){
                         this.$data.hasOldest = true;
                     }
                     else{
                         this.$data.hasOldest = false;
                     }
-                    this.$data.hasNewest = true;
                 }
 
                 this.addMessages(response.data);
@@ -269,14 +279,14 @@ export default {
             let preOffsetTop;
             let preScrollTop;
 
-            //adding some extra spaces where it considers the div to be scrolled all the way down. This also conveniently fixes a
+            //adding some extra space where it considers the div to be scrolled all the way down. This also conveniently fixes a
             //(browser?/vuetify?) bug where scrolling the div all the way down using javascript isn't possible.
             //                                                   ||
             //                                                   ||
             //                                                  \  /
             //                                                   \/
 
-            if(msgDiv.scrollHeight - Math.ceil(msgDiv.scrollTop) -5 <= msgDiv.clientHeight && this.$data.hasNewest){
+            if(msgDiv && msgDiv.scrollHeight - Math.ceil(msgDiv.scrollTop) -5 <= msgDiv.clientHeight && this.$data.hasNewest){
                 scrollFlag = true;
             }
 
@@ -323,6 +333,10 @@ export default {
                 this.$data.ignoreJSScroll = false;
             });
 
+            if(this.$data.chatMessages.length >= 0){
+                this.$data.isEmpty = false;
+            }
+
             
         },
         copyToClipboard: function(text){
@@ -361,6 +375,10 @@ export default {
             
             this.$data.chatMessages.splice(index, 1);
             
+            if(this.$data.chatMessages.length === 0){
+                this.$data.isEmpty = true;
+            }
+
             this.$nextTick(function(){
                 this.$data.ignoreJSScroll = false;
             });
@@ -380,14 +398,7 @@ export default {
                 this.$data.ignoreJSScroll = false;
             });
 
-        }
-    },
-    watch: {
-        $route: function () {
-            this.$data.hasOldest = true;
-            this.$data.hasNewest = true;
-            this.updateMessages();
-        }
+        },
     },
     created: function(){
 
@@ -435,5 +446,10 @@ export default {
         })
 
     },
+    computed: {
+        voidMessage: function(){
+            return Vue.prototype.$void[Math.floor(Math.random()*Vue.prototype.$void.length)];
+        }
+    }
 }
 </script>

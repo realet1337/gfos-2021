@@ -23,42 +23,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import store from '@/store/'
 
 export default {
     name: 'Home',
         components: {
     },
-    beforeRouteEnter: function(to, from, next){
-        if(store.state.token === false){
-
-            var cookie = (document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)')?.pop() || '').split(',')[0];
-
-            if(cookie !== ''){
-
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/auth/validate',
-                new URLSearchParams({
-                    'token': cookie
-                })
-                ).then((response) => {
-
-                    store.commit('setToken', cookie);
-                    store.commit('setUserId', response.data.userId);
-                    next();
-
-                }, () => {
-
-                    document.cookie = 'token=; Max-Age=-99999999;';
-                    next('/');
-
-                })
-           }else{
-               next('/');
-           }
-
-        }
-        next();
-    }
 }
 </script>

@@ -45,7 +45,7 @@ public class UsersResource {
     public Response getDirectChats(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
 
         if(token == null){
-            return Response.status(403).build();
+            return Response.status(403).entity("Unauthenticated").build();
         }
 
         token = token.split(" ")[1];
@@ -59,10 +59,10 @@ public class UsersResource {
                     return Response.status(404).build();
                 }
             }else{
-                return Response.status(403).build();
+                return Response.status(403).entity("Unauthorized").build();
             }
         } catch (IllegalAccessException e) {
-            return Response.status(403).build();
+            return Response.status(403).entity("Unauthenticated").build();
         }
 
     }

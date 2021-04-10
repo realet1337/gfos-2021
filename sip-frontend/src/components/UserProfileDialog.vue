@@ -5,10 +5,12 @@
             <v-container>
                 <v-row no-gutters class="ma-n3 highlighted-portion">
                     <v-col cols="auto" justify="center" align="center">
-                        <v-avatar class="mx-4 my-4" size="100" color="secondary darken-4">
-                            <img v-if="$data.user.profilePicture" :src="$getAvatarUrl('user', $data.user)">
-                            <span v-else>{{$data.user.username.substring(0,1)}}</span>
-                        </v-avatar>
+                        <v-badge bottom bordered offset-x="45" offset-y="40" :color="$data.user.isOnline ? 'green' : 'red'">
+                            <v-avatar class="mx-4 my-4" size="100" color="secondary darken-4">
+                                <img v-if="$data.user.profilePicture" :src="$getAvatarUrl('user', $data.user)">
+                                <span v-else>{{$data.user.username.substring(0,1)}}</span>
+                            </v-avatar>
+                        </v-badge>
                     </v-col>
                     <v-col cols="auto" align-self="center">
                         <v-card-title><h2>{{ $data.user.username }}</h2>

@@ -25,16 +25,24 @@
                         </h3>
                     </v-row>
                 </v-col>
+                <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-5 mr-1">
+                    <v-icon size="10" :color="$data.chat.notSelf.isOnline ? 'green' : 'red'">mdi-checkbox-blank-circle</v-icon>
+                </v-col>
+                <v-col v-if="$data.chat" cols="auto" align-self="center">
+                    <p :class="'my-auto ' + ($data.chat.notSelf.isOnline ? 'green--text ' : 'red--text ')">{{$data.chat.notSelf.isOnline ? 'ONLINE' : 'OFFLINE'}}</p>
+                </v-col>
             </v-row>
         </v-app-bar>
         <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
             <v-list nav>
                 <v-list-item-group v-model="$data.chatIndex">
                     <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
-                        <v-list-item-avatar color="primary">
-                            <img v-if="chat.notSelf.profilePicture" :src="$getAvatarUrl('user', chat.notSelf)">
-                            <span v-else>{{chat.notSelf.username.substring(0,1)}}</span>
-                        </v-list-item-avatar>
+                        <v-badge bottom dot bordered offset-x="25" offset-y="20" :color="chat.notSelf.isOnline ? 'green' : 'red'">
+                            <v-list-item-avatar color="primary" class="ml-0" >
+                                <img v-if="chat.notSelf.profilePicture" :src="$getAvatarUrl('user', chat.notSelf)">
+                                <span v-else>{{chat.notSelf.username.substring(0,1)}}</span>
+                            </v-list-item-avatar>
+                        </v-badge>
                         <v-list-item-title>
                             {{chat.notSelf.username}}
                         </v-list-item-title>

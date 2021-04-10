@@ -20,6 +20,14 @@ public class UserAdapter extends TypeAdapter<User>{
         out.value(value.getInfo());
         out.name("profilePicture");
         out.value(value.getProfilePicture());
+        out.name("isOnline");
+        out.value(value.isOnline());
+        out.name("status");
+        out.value(value.getStatus());
+        if(value.getLastSeen() != null){
+            out.name("lastSeen");
+            out.value(value.getLastSeen().toInstant().toString());
+        }
         out.endObject();
         
     }

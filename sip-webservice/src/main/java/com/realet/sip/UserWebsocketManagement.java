@@ -2,6 +2,7 @@ package com.realet.sip;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class UserWebsocketManagement {
 
@@ -17,6 +18,9 @@ public class UserWebsocketManagement {
             list = new ArrayList<>();
             list.add(session);
             sessions.put(Long.valueOf(userId), list);
+            Optional<User> user = UsersFacade.findById(userId);
+            user.get().setOnline(true);
+            UsersFacade.update(user.get());
         }
         else{
             list.add(session);
@@ -31,6 +35,9 @@ public class UserWebsocketManagement {
 
         if(list.isEmpty()){
             sessions.remove(Long.valueOf(userId));
+            Optional<User> user = UsersFacade.findById(userId);
+            user.get().setOnline(false);
+            UsersFacade.update(user.get());
         }
     }
     

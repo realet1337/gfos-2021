@@ -120,14 +120,6 @@ public class User{
         this.email = email;
     }
 
-    public User(String username, String email, String pass, String info, String profilePicture) {
-        this.username = username;
-        this.email = email;
-        this.info = info;
-        this.profilePicture = profilePicture;
-        this.pass = pass;
-    }
-
     public User() {
         super();
     }
@@ -194,6 +186,47 @@ public class User{
 
     public void setSessions(List<Session> sessions) {
         this.sessions = sessions;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(Date lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public User(String username, String email, String pass, String info, String status, Date lastSeen,
+            boolean isOnline, String profilePicture) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.pass = pass;
+        this.info = info;
+        this.status = status;
+        this.lastSeen = lastSeen;
+        this.isOnline = isOnline;
+        this.profilePicture = profilePicture;
     }
 
 }

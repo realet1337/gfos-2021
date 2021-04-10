@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -30,6 +31,10 @@ public class SessionsFacade {
 
         Session session = em.find(Session.class, token);
         if(session != null){
+            em.getTransaction().begin();
+            session.getUser().setLastSeen(new Date());
+            em.getTransaction().commit();
+            
             return session.getUser().getId();
         }
         throw new IllegalAccessException("No session was found");

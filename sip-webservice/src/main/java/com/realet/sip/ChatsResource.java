@@ -186,7 +186,7 @@ public class ChatsResource {
         List<ChatMessage> messages = ChatMessagesFacade.find(chat.get(), count, beforeId, afterId);
 
         return Response.ok(
-            new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter()).create()
+            new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(1)).create()
             .toJson(messages)
         ).build();
     }
@@ -258,21 +258,41 @@ public class ChatsResource {
 
         ChatMessagesFacade.add(chatMessage);
 
-        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getChatSessions(chatId);
-
-        if(!(list == null || list.isEmpty())){
-            for(javax.websocket.Session s: list){
-                try {
-                    s.getBasicRemote().sendText("new: " + 
-                        new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter()).create()
-                        .toJson(chatMessage)
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if(chat.get().getGroup() == null){
+            ArrayList<javax.websocket.Session> list = UserWebsocketManagement.getSessions(chat.get().getUser1().getId());
+            if(!(list == null || list.isEmpty())){
+                for(javax.websocket.Session s: list){
+                    try {
+                        s.getBasicRemote().sendText("new: " + 
+                            new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(2)).create()
+                            .toJson(chatMessage)
+                        );
+                    }catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }  
             }
-            
+
+            list = UserWebsocketManagement.getSessions(chat.get().getUser2().getId());
+            if(!(list == null || list.isEmpty())){
+                for(javax.websocket.Session s: list){
+                    try {
+                        s.getBasicRemote().sendText("new: " + 
+                            new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(2)).create()
+                            .toJson(chatMessage)
+                        );
+                    }catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }  
+            }
         }
+        else{
+            //FIXME: IMPLEMENT GROUP PUSH
+        }
+
+
+        
         
         return Response.status(201).build();
 

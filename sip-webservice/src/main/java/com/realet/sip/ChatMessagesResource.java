@@ -51,7 +51,7 @@ public class ChatMessagesResource {
             return Response.status(403).entity("Unauthorized").build();
         }
 
-        String chatMessageJSON = new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter()).create()
+        String chatMessageJSON = new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(1)).create()
         .toJson(chatMessage.get());
 
         long chatId = chatMessage.get().getChat().getId();
@@ -140,7 +140,7 @@ public class ChatMessagesResource {
             for(javax.websocket.Session s: list){
                 try {
                     s.getBasicRemote().sendText("updated: " + 
-                        new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter()).create()
+                        new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(1)).create()
                         .toJson(chatMessage)
                     );
                 } catch (IOException e) {

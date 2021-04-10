@@ -45,7 +45,7 @@ public class ChatsFacade {
 
         EntityManager em = emf.createEntityManager();
 
-        List<Chat> chats = em.createNamedQuery("Chat.findDirectChatsByUser", Chat.class).setParameter("user", user).getResultList();
+        List<Chat> chats = em.createNamedQuery("Chat.findDirectChatsByUser", Chat.class).setParameter(1, user.getId()).setParameter(2, user.getId()).getResultList();
         return chats;
 
     }

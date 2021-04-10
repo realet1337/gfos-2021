@@ -139,6 +139,7 @@ export default {
             ignoreJSScroll: true,
             editing: {},
             isEmpty: false,
+            ws: undefined,
         }
     },
     methods: {
@@ -398,34 +399,42 @@ export default {
             });
 
         },
+        createWatcher: function(){
+            //create watcher
+            var _this = this;
+            var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/chats/' + this.$route.params.chatId + '/websockets');
+            ws.onopen = function(){
+                ws.send('Bearer ' + _this.$store.state.token);
+            }
+            ws.onmessage =  function(message){
+
+                if(message.data.startsWith('updated: ')){
+                    var chatMessage = JSON.parse(message.data.substring(9));
+                    _this.updateMessage(chatMessage);
+                }
+                else if(message.data.startsWith('removed: ')){
+                    chatMessage = JSON.parse(message.data.substring(9));
+                    _this.removeMessage(chatMessage);
+                }
+            };
+            ws.onerror = function(){
+                setTimeout(_this.createWatcher,10000);
+            }
+            this.$data.ws = ws;
+        },
+        onNewMessage: function(chatMessage){
+            if(this.$data.hasNewest && chatMessage.chat.id == this.$route.params.chatId){
+                this.addMessages([chatMessage]);
+            }
+        },
     },
     created: function(){
 
         this.updateMessages();
 
-        //create watcher
-        var _this = this;
-        var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/chats/' + this.$route.params.chatId + '/watch');
-        ws.onopen = function(){
-            ws.send('Bearer ' + _this.$store.state.token);
-        }
-        ws.onmessage =  function(message){
+        this.createWatcher();
 
-            if(message.data.startsWith('new: ')){
-                var chatMessage = JSON.parse(message.data.substring(5));
-                if(_this.$data.hasNewest){
-                    _this.addMessages([chatMessage]);
-                }
-            }
-            else if(message.data.startsWith('updated: ')){
-                chatMessage = JSON.parse(message.data.substring(9));
-                _this.updateMessage(chatMessage);
-            }
-            else if(message.data.startsWith('removed: ')){
-                chatMessage = JSON.parse(message.data.substring(9));
-                _this.removeMessage(chatMessage);
-            }
-        };
+        this.$eventHub.$on('new-message', this.onNewMessage);
 
 
         //event listeners for loading new messages
@@ -445,8 +454,14 @@ export default {
                 }
 
             });
-        })
+        });
 
+    },
+    beforeDestroy: function(){
+        if(this.$data.ws){
+            this.$data.ws.close();
+        }
+        this.$eventHub.$off('new-message', this.onNewMessage);
     },
     computed: {
         voidMessage: function(){

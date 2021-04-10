@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -19,9 +21,11 @@ import javax.persistence.Table;
 @Table(name = "Chats")
 @NamedQueries({
 
-    @NamedQuery(name = "Chat.findByUsers", query = "SELECT c FROM Chat c WHERE c.user1 = :user1 AND c.user2 = :user2 OR c.user1 = :user2 AND c.user2 = :user1"),
-    @NamedQuery(name = "Chat.findDirectChatsByUser", query = "SELECT c FROM Chat c WHERE c.user1 = :user OR c.user2 = :user")
+    @NamedQuery(name = "Chat.findByUsers", query = "SELECT c FROM Chat c WHERE c.user1 = :user1 AND c.user2 = :user2 OR c.user1 = :user2 AND c.user2 = :user1")
 
+})
+@NamedNativeQueries({
+    @NamedNativeQuery(name = "Chat.findDirectChatsByUser", query = "SELECT * from Chats WHERE user1_id = ? OR user2_id = ? ORDER BY (SELECT MAX(sent) FROM ChatMessages WHERE chat_id = Chats.id) DESC", resultClass = Chat.class)
 })
 
 public class Chat{

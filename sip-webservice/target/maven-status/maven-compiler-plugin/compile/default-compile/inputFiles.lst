@@ -2,8 +2,8 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/AuthResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatsResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatMessagesResource.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatWebsocketResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/ChatAdapter.java
-/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatWatcherManagement.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UsersFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Role.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/SessionsFacade.java
@@ -13,13 +13,15 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/CORSPreflightHandler.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatsFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/UserAdapter.java
-/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatWatcherResource.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatWebsocketManagement.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GroupsFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/ChatMessageAdapter.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UserWebsocketManagement.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/RolesFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UsersResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Session.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatMessagesFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ServiceApplication.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Chat.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UserWebsocketResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatMessage.java

@@ -11,7 +11,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/chats/{chatId}/watch")
+@ServerEndpoint("/chats/{chatId}/websockets")
 public class ChatWebsocketResource {
 
     @OnOpen
@@ -101,7 +101,4 @@ public class ChatWebsocketResource {
     public void onClose(javax.websocket.Session session, Throwable throwable, @PathParam("chatId") long chatId){
         ChatWebsocketManagement.removeSession(chatId, session);
     }
-
-    //no need for message handler, the client isn't supposed to send any messages
-    
 }

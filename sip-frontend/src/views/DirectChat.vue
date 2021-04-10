@@ -18,7 +18,7 @@
                         <span v-else class="headline">{{$data.chat.notSelf.username.substring(0,1)}}</span>
                     </v-avatar>
                 </v-col>
-                <v-col cols="auto" align-self="center" class="ml-3">
+                <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
                     <v-row no-gutters class="my-auto">
                         <h3 @click="showUser($data.chat.notSelf)" class="clickable">
                         {{$data.chat.notSelf.username}}
@@ -29,15 +29,17 @@
         </v-app-bar>
         <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
             <v-list nav>
-                <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
-                    <v-list-item-avatar color="primary">
-                        <img v-if="chat.notSelf.profilePicture" :src="$getAvatarUrl('user', chat.notSelf)">
-                        <span v-else>{{chat.notSelf.username.substring(0,1)}}</span>
-                    </v-list-item-avatar>
-                    <v-list-item-title>
-                        {{chat.notSelf.username}}
-                    </v-list-item-title>
-                </v-list-item>
+                <v-list-item-group v-model="$data.chatIndex">
+                    <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
+                        <v-list-item-avatar color="primary">
+                            <img v-if="chat.notSelf.profilePicture" :src="$getAvatarUrl('user', chat.notSelf)">
+                            <span v-else>{{chat.notSelf.username.substring(0,1)}}</span>
+                        </v-list-item-avatar>
+                        <v-list-item-title>
+                            {{chat.notSelf.username}}
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list-item-group>
             </v-list>
         </v-navigation-drawer>
         <v-main>
@@ -67,6 +69,7 @@ export default {
         return {
             chats: [],
             chat: undefined,
+            chatIndex: 0,
         }
     },
     methods: {
@@ -78,6 +81,7 @@ export default {
                 this.findNotSelf(chat);
             }
             this.$data.chat = chat;
+            this.$data.chatIndex = this.$data.chats.findIndex(listChat => chat.id == listChat.id);
             this.$router.push('/chat/' + chat.id);
         },
         findNotSelf: function(chat){
@@ -88,6 +92,17 @@ export default {
                 chat.notSelf = chat.user1;
             }
             return chat;
+        },
+        onNewMessage: function(message){
+            //prepare for usage
+            this.findNotSelf(message.chat);
+
+            var chatIndex = this.$data.chats.findIndex(chat => chat.id == message.chat.id);
+            if(chatIndex != -1){
+                this.$data.chats.splice(chatIndex,1);
+                this.$data.chats = [message.chat].concat(this.$data.chats);
+
+            }
         }
     },
     created: function(){
@@ -99,16 +114,15 @@ export default {
             response.data.forEach(chat => {
                 this.findNotSelf(chat);
             });
-            this.$data.find = response.data.find(chat => {
-                if(chat.id == this.$route.params.chatId){
-                    this.$data.chat = chat;
-                }
-            });
-            if(!this.$data.chat){
+            var chatIndex = response.data.findIndex(chat => chat.id == this.$route.params.chatId);
+            if(chatIndex == -1){
 
                 //can't open this chat
-                this.$router.push('/home')
+                this.$router.push('/home');
+                return;
             }
+            this.$data.chatIndex = chatIndex;
+            this.$data.chat = response.data[this.$data.chatIndex];
             this.$data.chats = response.data;
         },  
         (error) => {
@@ -124,6 +138,10 @@ export default {
                 this.$router.push('/home')
             }
         })
+        this.$eventHub.$on('new-message', this.onNewMessage);
+    },
+    beforeDestroy: function(){
+        this.$eventHub.$off('new-message', this.onNewMessage);
     }
 }
 </script>

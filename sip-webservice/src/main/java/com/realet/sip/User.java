@@ -1,6 +1,7 @@
 package com.realet.sip;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "Users")
@@ -43,6 +46,15 @@ public class User{
     private String pass;
 
     private String info;
+
+    private String status;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_seen")
+    private Date lastSeen;
+
+    @Column(name = "is_online")
+    private boolean isOnline;
 
     @Column(name = "profile_picture")
     private String profilePicture;

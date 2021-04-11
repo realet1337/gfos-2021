@@ -12,7 +12,7 @@ export default new Vuex.Store({
     blockedUsers: [],
     blockedBy: [],
     userProfile: {
-      reverseBlocking: 0,
+      reverseBlocking: 1,
     }
   },
   mutations: {

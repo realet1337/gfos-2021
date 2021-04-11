@@ -46,9 +46,15 @@ function createUserWatcher(){
   }
   ws.onmessage = function(message){
 
-    if(message.data.startsWith('new: ')){
-      var chatMessage = JSON.parse(message.data.substring(5));
-      Vue.prototype.$eventHub.$emit('new-message', chatMessage);
+    if(message.data.startsWith('new-message: ')){
+      var chatMessage = JSON.parse(message.data.substring(13));
+      if(store.state.blockedUsers.findIndex(user => user.id == chatMessage.author.id) === -1
+      && (store.state.blockedBy.findIndex(user => user.id == chatMessage.author.id) === -1
+        || store.state.userProfile.reverseBlocking === 0
+        )
+      ){
+        Vue.prototype.$eventHub.$emit('new-message', chatMessage);
+      }
     }
   }
   ws.onerror = function(){

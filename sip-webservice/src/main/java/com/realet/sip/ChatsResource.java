@@ -268,21 +268,21 @@ public class ChatsResource {
             if(!(list == null || list.isEmpty())){
                 for(javax.websocket.Session s: list){
                     try {
-                        s.getBasicRemote().sendText("new: " + 
+                        s.getBasicRemote().sendText("new-message: " + 
                             new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(2)).create()
                             .toJson(chatMessage)
                         );
                     }catch (IOException e) {
                         e.printStackTrace();
                     }
-                }  
+                }
             }
 
             list = UserWebsocketManagement.getSessions(chat.get().getUser2().getId());
             if(!(list == null || list.isEmpty())){
                 for(javax.websocket.Session s: list){
                     try {
-                        s.getBasicRemote().sendText("new: " + 
+                        s.getBasicRemote().sendText("new-message: " + 
                             new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(2)).create()
                             .toJson(chatMessage)
                         );

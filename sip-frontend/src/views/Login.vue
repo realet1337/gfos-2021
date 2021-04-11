@@ -22,6 +22,7 @@
 <script>
 import Vue from 'vue'
 import LoginCard from '@/components/LoginCard.vue'
+import store from '@/store/'
 
 export default {
     components: {
@@ -43,8 +44,8 @@ export default {
             })
             ).then((response) => {
 
-                this.$store.commit('setToken', cookie);
-                this.$store.commit('setUserId', response.data.userId);
+                store.commit('setToken', cookie);
+                store.commit('setUserId', response.data.userId);
                 next('/home');
 
             }, () => {

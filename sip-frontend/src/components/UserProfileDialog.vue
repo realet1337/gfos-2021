@@ -20,7 +20,8 @@
                     </v-col>
                     <v-spacer></v-spacer>
                     <v-col v-if="$data.user.id != $store.state.userId" cols="auto" align-self="center">
-                        <v-btn depressed large color="error darken-2" class="white--text">block</v-btn>
+                        <v-btn v-if="!userIsBlocked" depressed large color="error darken-2" class="white--text" @click="blockUser">block</v-btn>
+                        <v-btn v-else depressed large color="error darken-2" class="white--text" @click="unblockUser">unblock</v-btn>
                     </v-col>
                     <v-col v-if="$data.user.id != $store.state.userId" cols="auto" class="ml-2" align-self="center">
                         <v-btn @click="openDirectChat" depressed large color="white" class="primary--text">message</v-btn>
@@ -103,7 +104,8 @@ export default {
             isOpen: false,
             user: {}
         }
-    },methods: {
+    },
+    methods: {
         openDirectChat: function(){
             if(this.$data.directChat.id != this.$route.params.chatId){
                 this.$router.push('/chat/' + this.$data.directChat.id);
@@ -150,6 +152,24 @@ export default {
                     }
                 })
             }
+        },
+        blockUser: function(){
+            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/blocked-users', this.$data.user, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token
+                }
+            }).then(() => {
+                $store.commit('setBlockedUsers', $store.state.blockedUsers.concat([$data.user]));
+                // var userIndex = $store.state.blockedUsers.find(user => $data.user.id == user.id);
+
+                // //remove from list without having to implement store properly
+                // $store.commit('setBlockedUsers', $store.state.blockedUsers.slice(0, userIndex).concat($store.state.blockedUsers.slice(userIndex + 1)));
+            });
+        }
+    },
+    computed: {
+        userIsBlocked: function(){
+            return this.$store.state.blockedUsers.findIndex(user => user.id == this.$data.user.id) !== -1;
         }
     }
 

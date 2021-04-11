@@ -62,9 +62,18 @@ Vue.prototype.$initApp = function(){
   createUserWatcher();
 
   var abort = false;
+  var todo = 2;
 
-  window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-users').then((response) => {
+  window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-users', {
+    headers:{
+        'Authorization': 'Bearer ' + store.state.token,
+    }
+  }).then((response) => {
     store.commit('setBlockedUsers', response.data);
+    todo--;
+    if(todo == 0){
+      store.commit('setInitialized', true);
+    }
   }, () => {
       //this shouldn't fail so we'll just perform logout
       if(!abort){
@@ -73,8 +82,16 @@ Vue.prototype.$initApp = function(){
         router.push('/');
       }
   });
-  window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-by').then((response) => {
+  window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-by', {
+    headers:{
+        'Authorization': 'Bearer ' + store.state.token,
+    }
+  }).then((response) => {
     store.commit('setBlockedBy', response.data);
+    todo--;
+    if(todo == 0){
+      store.commit('setInitialized', true);
+    }
   }, () => {
       //this shouldn't fail either
       if(!abort){
@@ -83,8 +100,6 @@ Vue.prototype.$initApp = function(){
         router.push('/');
       }
   });
-
-  store.commit('setInitialized', true);
 }
 
 

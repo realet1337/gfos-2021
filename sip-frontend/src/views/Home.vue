@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <v-app v-if="$store.state.initialized">
         <v-app-bar app hide-on-scroll>
             <v-row no-gutters justify="center">
                 <v-col cols="auto">
@@ -14,19 +14,21 @@
             </template>
         </v-app-bar>
         <v-main>
-            <!-- only load view if user is certainly logged in -->
-            <div v-if="this.$store.state.userId">
-                <router-view></router-view>
-            </div>
+            <router-view></router-view>
         </v-main>
+    </v-app>
+    <v-app v-else>
+        <LoadingScreen></LoadingScreen>
     </v-app>
 </template>
 
 <script>
+import LoadingScreen from '@/components/LoadingScreen'
 
 export default {
     name: 'Home',
-        components: {
+    components: {
+        LoadingScreen
     },
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <v-app v-if="$store.state.userId">
+    <v-app v-if="$store.state.initialized">
         <v-app-bar app clipped-left height="62">
             <v-row no-gutters>
                 <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/direct-chats')" class="ml-n4 clickable">
@@ -58,6 +58,9 @@
             </v-container>
         </v-main>
     </v-app>
+    <v-app v-else>
+        <LoadingScreen></LoadingScreen>
+    </v-app>
 </template>
 
 <script>
@@ -65,13 +68,15 @@ import ChatWindow from '@/components/ChatWindow'
 import Vue from'vue'
 import UserProfileDialog from '@/components/UserProfileDialog'
 import MessageAlerts from '@/components/MessageAlerts'
+import LoadingScreen from '@/components/LoadingScreen'
 
 export default {
     name: 'DirectChat',
     components: {
         ChatWindow,
         UserProfileDialog,
-        MessageAlerts
+        MessageAlerts,
+        LoadingScreen
     },
     data: function(){
         return {

@@ -159,11 +159,19 @@ export default {
                     'Authorization': 'Bearer ' + this.$store.state.token
                 }
             }).then(() => {
-                $store.commit('setBlockedUsers', $store.state.blockedUsers.concat([$data.user]));
-                // var userIndex = $store.state.blockedUsers.find(user => $data.user.id == user.id);
+                this.$store.commit('setBlockedUsers', this.$store.state.blockedUsers.concat([this.$data.user]));
+            });
+        },
+        unblockUser: function(){
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/blocked-users/' + this.$data.user.id, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token
+                }
+            }).then(() => {
+                var userIndex = this.$store.state.blockedUsers.find(user => this.$data.user.id == user.id);
 
-                // //remove from list without having to implement store properly
-                // $store.commit('setBlockedUsers', $store.state.blockedUsers.slice(0, userIndex).concat($store.state.blockedUsers.slice(userIndex + 1)));
+                //remove from list without having to implement store properly
+                this.$store.commit('setBlockedUsers', this.$store.state.blockedUsers.slice(0, userIndex).concat(this.$store.state.blockedUsers.slice(userIndex + 1)));
             });
         }
     },

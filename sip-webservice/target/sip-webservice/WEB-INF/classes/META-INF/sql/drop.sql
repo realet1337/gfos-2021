@@ -1,3 +1,4 @@
+DROP TABLE BlockedUsers;
 DROP TABLE GroupMembership;
 DROP TABLE RoleMembership;
 DROP TABLE ChatMessages;

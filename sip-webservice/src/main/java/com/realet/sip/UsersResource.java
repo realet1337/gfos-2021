@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -124,6 +126,80 @@ public class UsersResource {
             new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
             .toJson(user.get().getBlockedUsers())
         ).build();
+
+    }
+
+    @POST
+    @Path("/{userId}/blocked-users")
+    public Response addBlockedUser(@PathParam("userId") long userId, User input, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        token = token.split(" ")[1];
+
+        try {
+            if(SessionsFacade.findUserIdByToken(token) != userId){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<User> user = UsersFacade.findById(userId);
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> toBlock = UsersFacade.findById(input.getId());
+        if(toBlock.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        user.get().getBlockedUsers().add(toBlock.get());
+
+        UsersFacade.update(user.get());
+
+        return Response.ok().build();
+
+    }
+
+    @DELETE
+    @Path("/{userId}/blocked-users/{blockedUserId}")
+    public Response removeBlockedUser(@PathParam("userId") long userId, @PathParam("blockedUserId") long blockedUserId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        token = token.split(" ")[1];
+
+        try {
+            if(SessionsFacade.findUserIdByToken(token) != userId){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<User> user = UsersFacade.findById(userId);
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> blockedUser = UsersFacade.findById(blockedUserId);
+        if(blockedUser.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(!user.get().getBlockedUsers().contains(blockedUser.get())){
+            return Response.status(404).build();
+        }
+
+        user.get().getBlockedUsers().remove(blockedUser.get());
+
+        UsersFacade.update(user.get());
+
+        return Response.ok().build();
 
     }
 

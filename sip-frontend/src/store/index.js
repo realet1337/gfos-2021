@@ -11,6 +11,9 @@ export default new Vuex.Store({
     initialized: false,
     blockedUsers: [],
     blockedBy: [],
+    userProfile: {
+      reverseBlocking: 0,
+    }
   },
   mutations: {
     setToken(state, token) {

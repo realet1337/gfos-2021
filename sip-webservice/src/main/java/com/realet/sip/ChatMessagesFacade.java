@@ -13,6 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
+import javax.persistence.criteria.Subquery;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -36,7 +38,7 @@ public class ChatMessagesFacade {
 
     }
 
-    public static List<ChatMessage> find(Chat chat, int count, long before, long after){
+    public static List<ChatMessage> find(Chat chat, int count, long before, long after, long unblockedById, long reverseBlocking){
 
         //this is very annoying but duplicate class names so yea
         org.hibernate.Session session = emf.unwrap(SessionFactory.class).openSession();
@@ -61,6 +63,38 @@ public class ChatMessagesFacade {
 
         if(after != 0){
             predicates.add(criteriaBuilder.greaterThan(root.get("id"), after));
+        }
+
+        if(unblockedById  != 0){
+
+            Subquery<Long> sub = criteriaQuery.subquery(Long.class);
+            Root<User> subRoot = sub.from(User.class);
+            SetJoin<User, User> subBlockedUsers = subRoot.join(User_.blockedUsers);
+            sub.select(criteriaBuilder.count(subRoot.get(User_.id)));
+            sub.where(
+                criteriaBuilder.and(
+                    criteriaBuilder.equal(subBlockedUsers.get(User_.id), root.get(ChatMessage_.author).get(User_.id)),
+                    criteriaBuilder.equal(subRoot.get(User_.id), Long.valueOf(unblockedById))
+                )
+            );
+
+            predicates.add(criteriaBuilder.lessThan(sub, 1L));
+
+            if(reverseBlocking != 0){
+                sub = criteriaQuery.subquery(Long.class);
+                subRoot = sub.from(User.class);
+                SetJoin<User, User> subBlockedBy = subRoot.join(User_.blockedBy);
+                sub.select(criteriaBuilder.count(subRoot.get(User_.id)));
+                
+                sub.where(
+                    criteriaBuilder.and(
+                        criteriaBuilder.equal(subBlockedBy.get(User_.id), root.get(ChatMessage_.author).get(User_.id)),
+                        criteriaBuilder.equal(subRoot.get(User_.id), Long.valueOf(unblockedById))
+                    )
+                );
+
+                predicates.add(criteriaBuilder.lessThan(sub, 1L));
+            }
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));

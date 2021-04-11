@@ -18,7 +18,8 @@
                     </v-col>
                 </v-row>
             </div>
-            <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id" no-gutters>
+            <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id"
+            no-gutters>
                 <v-row class="mt-3 mb-1" v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
                     <v-divider class="mt-3 mb-1"></v-divider>
                     <span class="date-divider-label mx-2">{{new Date(chatMessage.sent).toDateString()}}</span>
@@ -147,6 +148,8 @@ export default {
 
             var queryParams = {
                 count: Vue.prototype.$messageChunkSize,
+                authorUnblockedBy: this.$store.state.userId,
+                reverseBlocking: this.$store.state.userProfile.reverseBlocking,
             }
 
             if(before){
@@ -281,10 +284,10 @@ export default {
 
             //adding some extra space where it considers the div to be scrolled all the way down. This also conveniently fixes a
             //(browser?/vuetify?) bug where scrolling the div all the way down using javascript isn't possible.
-            //                                                   ||
-            //                                                   ||
-            //                                                  \  /
-            //                                                   \/
+            //                                                             ||
+            //                                                             ||
+            //                                                            \  /
+            //                                                             \/
 
             if(msgDiv && msgDiv.scrollHeight - Math.ceil(msgDiv.scrollTop) -5 <= msgDiv.clientHeight && this.$data.hasNewest){
                 scrollFlag = true;
@@ -294,7 +297,7 @@ export default {
             if(this.$data.chatMessages.length > 0){
                 if(this.$data.chatMessages[0].id > chatMessages[0].id){
                     //just pick an element
-                    relativeNode = msgDiv.childNodes[1];
+                    relativeNode = msgDiv.childNodes[2];
                     preOffsetTop = relativeNode.offsetTop;
                     preScrollTop = msgDiv.scrollTop;
                     if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
@@ -466,7 +469,7 @@ export default {
     computed: {
         voidMessage: function(){
             return Vue.prototype.$void[Math.floor(Math.random()*Vue.prototype.$void.length)];
-        }
+        },
     }
 }
 </script>

@@ -123,7 +123,7 @@ public class ChatsResource {
     @GET
     @Path("/{chatId}/chat-messages")    
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChatMessages(@PathParam("chatId") long chatId, @QueryParam("count") int count, @QueryParam("before") long beforeId, @QueryParam("after") long afterId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
+    public Response getChatMessages(@PathParam("chatId") long chatId, @QueryParam("count") int count, @QueryParam("before") long beforeId, @QueryParam("after") long afterId, @QueryParam("authorUnblockedBy") long userId, @QueryParam("reverseBlocking") long reverseBlocking, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
 
         if(count > 1000 || count < 1){
             return Response.status(400).entity("Count must be between 1 and 1000").build();
@@ -148,6 +148,10 @@ public class ChatsResource {
         try {
             long user_id = SessionsFacade.findUserIdByToken(token);
 
+            if(userId != user_id && userId != 0){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+
             //if this is a direct chat, check access
             if(chat.get().getGroup() == null){
                 if(user_id != chat.get().getUser1().getId() &&
@@ -168,6 +172,7 @@ public class ChatsResource {
             return Response.status(403).entity("Unauthenticated").build();
         }
 
+
         //we have ensured access
         if(beforeId != 0){
             Optional<ChatMessage> beforeMessage = ChatMessagesFacade.findById(beforeId);
@@ -183,7 +188,7 @@ public class ChatsResource {
             }
         }
 
-        List<ChatMessage> messages = ChatMessagesFacade.find(chat.get(), count, beforeId, afterId);
+        List<ChatMessage> messages = ChatMessagesFacade.find(chat.get(), count, beforeId, afterId, userId, reverseBlocking);
 
         return Response.ok(
             new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(1)).create()

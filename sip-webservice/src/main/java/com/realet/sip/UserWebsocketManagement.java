@@ -18,13 +18,13 @@ public class UserWebsocketManagement {
             list = new ArrayList<>();
             list.add(session);
             sessions.put(Long.valueOf(userId), list);
-            Optional<User> user = UsersFacade.findById(userId);
-            user.get().setOnline(true);
-            UsersFacade.update(user.get());
         }
         else{
             list.add(session);
         }
+        Optional<User> user = UsersFacade.findById(userId);
+        user.get().setOnline(true);
+        UsersFacade.update(user.get());
     }
 
     public static void removeSession(long userId, javax.websocket.Session session){

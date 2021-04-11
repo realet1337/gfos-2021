@@ -191,11 +191,9 @@ public class UsersResource {
             return Response.status(404).build();
         }
 
-        if(!user.get().getBlockedUsers().contains(blockedUser.get())){
+        if(!user.get().getBlockedUsers().remove(blockedUser.get())){
             return Response.status(404).build();
         }
-
-        user.get().getBlockedUsers().remove(blockedUser.get());
 
         UsersFacade.update(user.get());
 

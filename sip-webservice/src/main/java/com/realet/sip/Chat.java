@@ -47,8 +47,13 @@ public class Chat{
     @JoinColumn(name = "user2_id")
     private User user2;
 
+    private String name;
+
     @OneToMany(mappedBy = "chat")
     private List<ChatMessage> messages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chat")
+    private List<Permission> permissions;
 
     public long getId() {
         return id;
@@ -82,12 +87,6 @@ public class Chat{
         this.user2 = user2;
     }
 
-    public Chat(Group group, User user1, User user2) {
-        this.group = group;
-        this.user1 = user1;
-        this.user2 = user2;
-    }
-
     public Chat() {
         super();
     }
@@ -112,6 +111,37 @@ public class Chat{
         if (id != other.id)
             return false;
         return true;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ChatMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<ChatMessage> messages) {
+        this.messages = messages;
+    }
+
+    public Chat(Group group, User user1, User user2, String name) {
+        this.group = group;
+        this.user1 = user1;
+        this.user2 = user2;
+        this.name = name;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
     
 

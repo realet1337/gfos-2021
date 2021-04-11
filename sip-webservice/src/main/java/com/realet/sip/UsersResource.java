@@ -1,5 +1,7 @@
 package com.realet.sip;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -160,6 +162,20 @@ public class UsersResource {
 
         UsersFacade.update(user.get());
 
+        ArrayList<javax.websocket.Session> list = UserWebsocketManagement.getSessions(user.get().getId());
+        if(!(list == null || list.isEmpty())){
+            for(javax.websocket.Session s: list){
+                try {
+                    s.getBasicRemote().sendText("blocked: " + 
+                        new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+                        .toJson(toBlock.get())
+                    );
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return Response.ok().build();
 
     }
@@ -196,6 +212,20 @@ public class UsersResource {
         }
 
         UsersFacade.update(user.get());
+
+        ArrayList<javax.websocket.Session> list = UserWebsocketManagement.getSessions(user.get().getId());
+        if(!(list == null || list.isEmpty())){
+            for(javax.websocket.Session s: list){
+                try {
+                    s.getBasicRemote().sendText("unblocked: " + 
+                        new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+                        .toJson(blockedUser.get())
+                    );
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         return Response.ok().build();
 

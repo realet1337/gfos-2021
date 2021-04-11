@@ -1,6 +1,7 @@
 package com.realet.sip;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -39,8 +41,10 @@ public class Role{
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(nullable = false)
-    private long permissions;
+    private boolean administrator;
+
+    @OneToMany(mappedBy = "role")
+    private List<Permission> permissions;
 
     public long getId() {
         return id;
@@ -74,26 +78,10 @@ public class Role{
         this.group = group;
     }
 
-    public long getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(long permissions) {
-        this.permissions = permissions;
-    }
-
     public Set<User> getUsers(){
 
         return users;
 
-    }
-
-    public Role(String name, String color, Group group, long permissions, Set<User> users) {
-        this.name = name;
-        this.color = color;
-        this.group = group;
-        this.permissions = permissions;
-        this.users = users;
     }
 
     public Role() {
@@ -124,6 +112,29 @@ public class Role{
         if (id != other.id)
             return false;
         return true;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public boolean isAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
+    }
+
+    public Role(String name, String color, Group group, boolean administrator) {
+        this.name = name;
+        this.color = color;
+        this.group = group;
+        this.administrator = administrator;
     }
 
 }

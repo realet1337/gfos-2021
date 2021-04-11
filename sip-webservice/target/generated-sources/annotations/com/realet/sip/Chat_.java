@@ -11,12 +11,16 @@ public abstract class Chat_ {
 
 	public static volatile SingularAttribute<Chat, User> user1;
 	public static volatile SingularAttribute<Chat, User> user2;
+	public static volatile ListAttribute<Chat, Permission> permissions;
+	public static volatile SingularAttribute<Chat, String> name;
 	public static volatile ListAttribute<Chat, ChatMessage> messages;
 	public static volatile SingularAttribute<Chat, Long> id;
 	public static volatile SingularAttribute<Chat, Group> group;
 
 	public static final String USER1 = "user1";
 	public static final String USER2 = "user2";
+	public static final String PERMISSIONS = "permissions";
+	public static final String NAME = "name";
 	public static final String MESSAGES = "messages";
 	public static final String ID = "id";
 	public static final String GROUP = "group";

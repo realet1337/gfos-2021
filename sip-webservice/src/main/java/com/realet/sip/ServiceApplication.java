@@ -49,22 +49,33 @@ public class ServiceApplication extends Application {
 
         Set<User> group_users = new HashSet<User>(UsersFacade.findAll());
 
-        GroupsFacade.add(new Group("coole gruppe", "beschreibung", "7053bf6dc83b9b50d95c6e19eb23b850", UsersFacade.findById(1).get(), group_users));
+        Group group = new Group("coole gruppe", "beschreibung", "7053bf6dc83b9b50d95c6e19eb23b850", UsersFacade.findById(1).get());
+
+        group.setUsers(group_users);
+
+        GroupsFacade.add(group);
 
         Set<User> role_users = new HashSet<User>();
         role_users.add(UsersFacade.findById(1).get());
         role_users.add(UsersFacade.findById(4).get());
 
-        RolesFacade.add(new Role("cool role 1","#FFFFFF",GroupsFacade.findById(1).get(),0,role_users));
+        Role role = new Role("cool role 1","#FFFFFF", GroupsFacade.findById(1).get(), false);
+        role.setUsers(role_users);
+
+        RolesFacade.add(role);
 
         role_users = new HashSet<User>();
         role_users.add(UsersFacade.findById(3).get());
 
-        RolesFacade.add(new Role("cool role 1","#FF0000",GroupsFacade.findById(1).get(),0,role_users));
+        role = new Role("cool role 2","#FF0000",GroupsFacade.findById(1).get(), true);
 
-        ChatsFacade.add(new Chat(GroupsFacade.findById(1).get(),null,null));
+        role.setUsers(role_users);
 
-        ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(3).get()));
+        RolesFacade.add(role);
+
+        ChatsFacade.add(new Chat(GroupsFacade.findById(1).get(),null,null, "text-chat"));
+
+        ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(3).get(), null));
 
         ChatMessagesFacade.add(new ChatMessage("hi there", null, Date.from(new Date().toInstant().plus(-1, ChronoUnit.DAYS)), ChatsFacade.findById(2).get(), UsersFacade.findById(4).get(), null));
 
@@ -78,12 +89,8 @@ public class ServiceApplication extends Application {
 
         SessionsFacade.add(new Session("aaaaaaa", UsersFacade.findById(4).get(), new Date()));
 
-        ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(1).get()));
-
-        for(int i = 0; i< 250; i++){
-            ChatMessagesFacade.add(new ChatMessage("yo " + String.valueOf(i), null, new Date(), ChatsFacade.findById(3).get(), UsersFacade.findById(1).get(), null));
-        }
-
+        ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(1).get(), null));
+        
     }
 
 }

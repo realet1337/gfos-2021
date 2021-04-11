@@ -108,7 +108,7 @@ public class ChatsResource {
             ).build();
         }
 
-        Chat newChat = new Chat(null, user1.get(), user2.get());
+        Chat newChat = new Chat(null, user1.get(), user2.get(), null);
         ChatsFacade.add(newChat);
 
 

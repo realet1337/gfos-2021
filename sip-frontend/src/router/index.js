@@ -6,6 +6,7 @@ import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 import FrontPage from '@/views/FrontPage.vue'
 import DirectChat from '@/views/DirectChat.vue'
+import Group from '@/views/DirectChat.vue'
 
 import HomeDirectChats from '@/components/HomeDirectChats.vue'
 import HomeGroups from '@/components/HomeGroups.vue'
@@ -44,6 +45,16 @@ const routes = [
 		path: '/chat/:chatId',
 		component: DirectChat,
 		name: 'DirectChat'
+	},
+	{
+		path: '/group/:groupId/chat/:chatId',
+		component: Group,
+		name: 'GroupChat'
+	},
+	{
+		path: '/group/:groupId',
+		component: Group,
+		name: 'Group'
 	},
 	{
 		path: '',

@@ -1,6 +1,7 @@
 DROP TABLE BlockedUsers;
 DROP TABLE GroupMembership;
 DROP TABLE RoleMembership;
+DROP TABLE Permissions;
 DROP TABLE ChatMessages;
 DROP TABLE Chats;
 DROP TABLE Roles;

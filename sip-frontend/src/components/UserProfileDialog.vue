@@ -159,7 +159,7 @@ export default {
                     'Authorization': 'Bearer ' + this.$store.state.token
                 }
             }).then(() => {
-                this.$store.commit('setBlockedUsers', this.$store.state.blockedUsers.concat([this.$data.user]));
+                //pass
             });
         },
         unblockUser: function(){
@@ -168,9 +168,7 @@ export default {
                     'Authorization': 'Bearer ' + this.$store.state.token
                 }
             }).then(() => {
-                var userIndex = this.$store.state.blockedUsers.findIndex(user => this.$data.user.id == user.id);
-                //remove from list without having to implement store properly
-                this.$store.commit('setBlockedUsers', this.$store.state.blockedUsers.slice(0, userIndex).concat(this.$store.state.blockedUsers.slice(userIndex + 1)));
+                //pass
             });
         }
     },

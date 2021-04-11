@@ -95,12 +95,11 @@ public class Group{
         this.owner = owner;
     }
 
-    public Group(String name, String description, String picture, User owner, Set<User> users) {
+    public Group(String name, String description, String picture, User owner) {
         this.name = name;
         this.description = description;
         this.picture = picture;
         this.owner = owner;
-        this.users = users;
     }
 
     public Group() {

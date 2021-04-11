@@ -15,7 +15,7 @@
             "name": "Debug (Attach)",
             "projectName": "sip-webservice",
             "request": "attach",
-            "hostName": "192.168.178.103",
+            "hostName": "192.168.178.106",
             "port": 8787
         }
     ]

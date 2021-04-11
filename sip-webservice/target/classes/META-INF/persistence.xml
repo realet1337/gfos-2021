@@ -33,6 +33,7 @@
       <class>com.realet.sip.Role</class>
       <class>com.realet.sip.User</class>
       <class>com.realet.sip.Session</class>
+      <class>com.realet.sip.Permission</class>
 
       <properties>
          <!--The database schema is auto created on deployment and dropped before redeploy.

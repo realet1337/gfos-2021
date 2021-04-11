@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class Role{
     private boolean administrator;
 
     @OneToMany(mappedBy = "role")
-    private List<Permission> permissions;
+    private List<Permission> permissions = new ArrayList<>();
 
     public long getId() {
         return id;

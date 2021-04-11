@@ -32,6 +32,8 @@ public class ChatAdapter extends TypeAdapter<Chat>{
             out.jsonValue(new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
             .toJson(value.getUser2()));
         }
+        out.name("name");
+        out.value(value.getName());
         out.endObject();
 
         

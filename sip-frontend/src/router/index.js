@@ -6,7 +6,7 @@ import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 import FrontPage from '@/views/FrontPage.vue'
 import DirectChat from '@/views/DirectChat.vue'
-import Group from '@/views/DirectChat.vue'
+import Group from '@/views/Group.vue'
 
 import HomeDirectChats from '@/components/HomeDirectChats.vue'
 import HomeGroups from '@/components/HomeGroups.vue'

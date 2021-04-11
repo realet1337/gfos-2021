@@ -50,6 +50,11 @@ public class ChatsFacade {
 
     }
 
+    public static List<Chat> findByGroup(Group group){
+        EntityManager em = emf.createEntityManager();
+        return em.createNamedQuery("Chat.findByGroup", Chat.class).setParameter("group", group).getResultList();
+    }
+
     public static void add(Chat chat){
 
         EntityManager em = emf.createEntityManager();

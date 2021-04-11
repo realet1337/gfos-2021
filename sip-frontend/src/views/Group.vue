@@ -2,7 +2,7 @@
     <v-app v-if="$store.state.initialized">
         <v-app-bar app clipped-left height="62">
             <v-row no-gutters>
-                <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/direct-chats')" class="ml-n4 clickable">
+                <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/groups')" class="ml-n4 clickable">
                     <v-row justify="center" no-gutters>
                         <v-col class="mx-auto" cols="auto">
                             <img src="@/assets/sip.png" width="100">
@@ -12,16 +12,10 @@
                 <v-col cols="auto">
                     <v-divider vertical></v-divider>
                 </v-col>
-                <v-col cols="auto" v-if="$data.chat" align-self="center">
-                    <v-avatar @click="showUser($data.chat.notSelf)" class="clickable mx-2" color="primary">
-                        <img v-if="$data.chat.notSelf.profilePicture" :src="$getAvatarUrl('user', $data.chat.notSelf)">
-                        <span v-else class="headline">{{$data.chat.notSelf.username.substring(0,1)}}</span>
-                    </v-avatar>
-                </v-col>
                 <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
                     <v-row no-gutters class="my-auto">
-                        <h3 @click="showUser($data.chat.notSelf)" class="clickable">
-                        {{$data.chat.notSelf.username}}
+                        <h3>
+                        {{$data.chat.name}}
                         </h3>
                     </v-row>
                 </v-col>
@@ -69,6 +63,7 @@ import ChatWindow from '@/components/ChatWindow'
 import UserProfileDialog from '@/components/UserProfileDialog'
 import MessageAlerts from '@/components/MessageAlerts'
 import LoadingScreen from '@/components/LoadingScreen'
+import Vue from 'vue'
 
 export default {
     name: 'DirectChat',
@@ -109,9 +104,36 @@ export default {
         },
     },
     created: function(){
-        if(this.$route.params.chatId){
-            console.log("pong!");
-        }
+        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats/', {
+            headers:{
+                'Authorization': 'Bearer ' + this.$store.state.token,
+            }
+        }).then((response) => {
+            var chatIndex = response.data.findIndex(chat => chat.id == this.$route.params.chatId);
+            if(chatIndex == -1){
+
+                //invalid / no chat
+                chatIndex = 0;
+                this.$router.push(this.$route.path + '/chat/' + response.data[0].id);
+                return;
+            }
+            this.$data.chatIndex = chatIndex;
+            this.$data.chat = response.data[this.$data.chatIndex];
+            this.$data.chats = response.data;
+        },  
+        (error) => {
+            if(error.response.status === 403){
+                if(error.response.data == "Unauthenticated"){
+                    this.$router.push('/');
+                }
+                else if(error.response.data == "Unauthorized"){
+                    this.$router.push('/home')
+                }
+            }
+            else if(error.response.status === 404){
+                this.$router.push('/home')
+            }
+        })
     },
     beforeDestroy: function(){
     }

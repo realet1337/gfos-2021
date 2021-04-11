@@ -119,8 +119,8 @@ export default {
 
             if(user.id != this.$store.state.userId){
                 //load shared groups (performance?)
-                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/shared-groups/' + this.$store.state.userId +
-                '/' + this.$data.user.id, {
+                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId +
+                '/shared-groups/' + this.$data.user.id, {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token
                     }
@@ -133,8 +133,6 @@ export default {
                     }
                 })
 
-
-                //load chat. This is necessary to make the "block" button have the correct label
                 window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats', {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token

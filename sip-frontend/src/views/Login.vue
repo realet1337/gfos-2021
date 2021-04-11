@@ -28,8 +28,7 @@ export default {
         LoginCard
     },
     
-    //TODO: THIS IS BAD! Implement this using vue-router guards to prevent loading of Login page entirely.
-    created: function() {
+    beforeRouteEnter: function(to, from, next) {
 
 
         //check if token exists and validate. Redirect if valid. TODO: extend token/regenerate? Possibly implement refresh tokens?
@@ -46,13 +45,17 @@ export default {
 
                 this.$store.commit('setToken', cookie);
                 this.$store.commit('setUserId', response.data.userId);
-                this.$router.push('/home');
+                next('/home');
 
             }, () => {
 
                 document.cookie = 'token=; Max-Age=-99999999;';
+                next();
 
             })
+        }
+        else{
+            next();
         }
     },
     name: 'LoginPage'

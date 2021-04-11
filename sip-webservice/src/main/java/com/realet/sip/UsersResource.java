@@ -9,7 +9,6 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.HttpHeaders;
@@ -18,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.GroupAdapter;
+import com.realet.sip.GsonTypeAdapter.UserAdapter;
 
 @Path("/users")
 public class UsersResource {
@@ -98,13 +98,62 @@ public class UsersResource {
     }
 
     @GET
-    @Path("/search")
+    @Path("/{userId}/blocked-users")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchForUser(@QueryParam("name") String searchTerm){
+    public Response getBlockedUsers(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
 
-        List<User> users = UsersFacade.findByName(searchTerm);
+        token = token.split(" ")[1];
 
-        return Response.ok(new Gson().toJson(users)).build();
+        try {
+            if(SessionsFacade.findUserIdByToken(token) != userId){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<User> user = UsersFacade.findById(userId);
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+            .toJson(user.get().getBlockedUsers())
+        ).build();
+
+    }
+
+    @GET
+    @Path("/{userId}/blocked-by")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBlockedBy(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        token = token.split(" ")[1];
+
+        try {
+            if(SessionsFacade.findUserIdByToken(token) != userId){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<User> user = UsersFacade.findById(userId);
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+            .toJson(user.get().getBlockedBy())
+        ).build();
 
     }
 

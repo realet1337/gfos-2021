@@ -1,5 +1,5 @@
 <template>
-                <!-- avoid errors -->
+    <!-- avoid errors -->
     <v-dialog v-if="$data.user.id" min-width="550" width="850" v-model="isOpen">
         <v-card min-width="550" width="850">
             <v-container>
@@ -105,7 +105,10 @@ export default {
         }
     },methods: {
         openDirectChat: function(){
-            this.$router.push('/chat/' + this.$data.directChat.id)
+            if(this.$data.directChat.id != this.$route.params.chatId){
+                this.$router.push('/chat/' + this.$data.directChat.id);
+            }
+            this.$data.isOpen = false;
         },
         show: function(user){
 

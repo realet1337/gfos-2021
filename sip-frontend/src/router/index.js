@@ -58,23 +58,7 @@ const router = new VueRouter({
 	routes
 })
 
-function createUserWatcher(){
-	var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/users/' +  store.state.userId + '/websockets');
-	ws.onopen = function(){
-		ws.send('Bearer ' + store.state.token);
-	}
-	ws.onmessage = function(message){
 
-		if(message.data.startsWith('new: ')){
-			var chatMessage = JSON.parse(message.data.substring(5));
-			Vue.prototype.$eventHub.$emit('new-message', chatMessage);
-		}
-	}
-	ws.onerror = function(){
-		setTimeout(createUserWatcher, 10000)
-	}
-	store.commit('setWs', ws);
-}
 
 router.beforeEach((to, from, next) => {
 
@@ -94,11 +78,7 @@ router.beforeEach((to, from, next) => {
 
 					store.commit('setToken', cookie);
 					store.commit('setUserId', response.data.userId);
-					if(!store.state.ws){
-						
-						createUserWatcher();
-
-					}
+					Vue.prototype.$initApp();
 					next();
 
 				}, () => {
@@ -113,18 +93,16 @@ router.beforeEach((to, from, next) => {
 			}
 		}
 		else{
-			if(!store.state.ws){
-						
-				createUserWatcher();
-
+			if(!store.state.initialized){
+				Vue.prototype.$initApp();
 			}
 			next();
 		}
 	}
 	else{
-		if(store.state.ws){
+		if(store.state.initialized){
 			store.state.ws.close();
-			store.commit('setWs', undefined);
+			store.commit('reset');
 		}
 		next();
 	}

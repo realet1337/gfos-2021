@@ -11,8 +11,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import com.google.protobuf.Option;
-
 @ServerEndpoint("/users/{userId}/websockets")
 public class UserWebsocketResource {
 

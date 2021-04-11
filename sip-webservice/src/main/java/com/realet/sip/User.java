@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -58,6 +60,18 @@ public class User{
 
     @Column(name = "profile_picture")
     private String profilePicture;
+
+    @ManyToMany
+    @JoinTable(name = "BlockedUsers",
+    		   joinColumns=@JoinColumn(name="user1_id"),
+    		   inverseJoinColumns=@JoinColumn(name="user2_id"))
+    private Set<User> blockedUsers = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "BlockedUsers",
+    		   joinColumns=@JoinColumn(name="user2_id"),
+    		   inverseJoinColumns=@JoinColumn(name="user1_id"))
+    private Set<User> blockedBy = new HashSet<>();
     
     @ManyToMany(mappedBy = "users")
     private Set<Group> groups = new HashSet<>();
@@ -218,7 +232,6 @@ public class User{
 
     public User(String username, String email, String pass, String info, String status, Date lastSeen,
             boolean isOnline, String profilePicture) {
-        this.id = id;
         this.username = username;
         this.email = email;
         this.pass = pass;
@@ -227,6 +240,22 @@ public class User{
         this.lastSeen = lastSeen;
         this.isOnline = isOnline;
         this.profilePicture = profilePicture;
+    }
+
+    public Set<User> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(Set<User> blockedUsers) {
+        this.blockedUsers = blockedUsers;
+    }
+
+    public Set<User> getBlockedBy() {
+        return blockedBy;
+    }
+
+    public void setBlockedBy(Set<User> blockedBy) {
+        this.blockedBy = blockedBy;
     }
 
 }

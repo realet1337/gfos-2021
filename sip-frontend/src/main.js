@@ -39,6 +39,54 @@ Vue.prototype.$getAvatarUrl = function (type, obj){
   
 }
 
+function createUserWatcher(){
+  var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/users/' +  store.state.userId + '/websockets');
+  ws.onopen = function(){
+    ws.send('Bearer ' + store.state.token);
+  }
+  ws.onmessage = function(message){
+
+    if(message.data.startsWith('new: ')){
+      var chatMessage = JSON.parse(message.data.substring(5));
+      Vue.prototype.$eventHub.$emit('new-message', chatMessage);
+    }
+  }
+  ws.onerror = function(){
+    setTimeout(createUserWatcher, 10000);
+  }
+  store.commit('setWs', ws);
+}
+
+Vue.prototype.$initApp = function(){
+
+  createUserWatcher();
+
+  var abort = false;
+
+  window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-users').then((response) => {
+    store.commit('setBlockedUsers', response.data);
+  }, () => {
+      //this shouldn't fail so we'll just perform logout
+      if(!abort){
+        abort = true;
+        store.commit('reset');
+        router.push('/');
+      }
+  });
+  window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-by').then((response) => {
+    store.commit('setBlockedBy', response.data);
+  }, () => {
+      //this shouldn't fail either
+      if(!abort){
+        abort = true;
+        store.commit('reset');
+        router.push('/');
+      }
+  });
+
+  store.commit('setInitialized', true);
+}
+
 
 new Vue({
   router,

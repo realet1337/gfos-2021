@@ -35,8 +35,6 @@ public class ChatAdapter extends TypeAdapter<Chat>{
         out.name("name");
         out.value(value.getName());
         out.endObject();
-
-        
     }
 
     @Override

@@ -5,7 +5,7 @@
                 <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
             </v-col>
         </v-row>
-            <UserProfileDialog ref="userDialog"></UserProfileDialog>
+            <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
     </v-container>
 </template>
 <script>
@@ -41,7 +41,13 @@ export default {
 
             this.$refs.userDialog.show(user);
 
-        }
+        },
+        openDirectChat: function(chat){
+            this.$router.push('/chat/' + chat.id);
+        },
+        openGroup: function(group){
+            this.$router.push('/group/' + group.id);
+        },
     }
 
 }

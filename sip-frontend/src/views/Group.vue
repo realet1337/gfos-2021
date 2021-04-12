@@ -14,31 +14,30 @@
                 </v-col>
                 <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
                     <v-row no-gutters class="my-auto">
+                        <v-icon class="mx-2" color="secondary">
+                            mdi-message-text
+                        </v-icon>
                         <h3>
                         {{$data.chat.name}}
                         </h3>
                     </v-row>
                 </v-col>
-                <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-5 mr-1">
-                    <v-icon size="10" :color="$data.chat.notSelf.isOnline ? 'green' : 'red'">mdi-checkbox-blank-circle</v-icon>
-                </v-col>
-                <v-col v-if="$data.chat" cols="auto" align-self="center">
-                    <p :class="'my-auto ' + ($data.chat.notSelf.isOnline ? 'green--text ' : 'red--text ')">{{$data.chat.notSelf.isOnline ? 'ONLINE' : 'OFFLINE'}}</p>
+                <v-col class="ml-auto" cols="auto" align-self="center">
+                    <v-icon class="my-auto" color="secondary lighten-2" @click="toggleUserDrawer">mdi-account-multiple</v-icon>
                 </v-col>
             </v-row>
         </v-app-bar>
         <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
-            <v-list nav>
-                <v-list-item-group v-model="$data.chatIndex">
+            <v-list nav dense>
+                <v-list-item-group v-model="$data.chatIndex" mandatory>
                     <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
-                        <v-badge bottom dot bordered offset-x="25" offset-y="20" :color="chat.notSelf.isOnline ? 'green' : 'red'">
-                            <v-list-item-avatar color="primary" class="ml-0" >
-                                <img v-if="chat.notSelf.profilePicture" :src="$getAvatarUrl('user', chat.notSelf)">
-                                <span v-else>{{chat.notSelf.username.substring(0,1)}}</span>
-                            </v-list-item-avatar>
-                        </v-badge>
+                        <v-list-item-icon>
+                            <v-icon class="ml-2" color="secondary">
+                                mdi-message-text
+                            </v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>
-                            {{chat.notSelf.username}}
+                            {{chat.name}}
                         </v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
@@ -49,7 +48,7 @@
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
                 <ChatWindow v-if="$route.params.chatId" @showUser="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
-                <UserProfileDialog ref="userDialog" @showUser="showUser"></UserProfileDialog>
+                <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
             </v-container>
         </v-main>
     </v-app>
@@ -79,19 +78,30 @@ export default {
             chat: undefined,
             chatIndex: 0,
             groupIndex: 0,
+            group: undefined,
         }
     },
     methods: {
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },
-        openChat: function(chat){
-            if(!chat.notSelf){
-                this.findNotSelf(chat);
-            }
-            this.$data.chat = chat;
-            this.$data.chatIndex = this.$data.chats.findIndex(listChat => chat.id == listChat.id);
+        openDirectChat: function(chat){
             this.$router.push('/chat/' + chat.id);
+        },
+        openGroup: function(group){
+            
+            //FIXME: doesn't work, just a placeholder
+            this.$router.push('/group/' + group.id);
+        },
+        openChat: function(chat){
+
+            //FIXME: doesn't work, just a placeholder
+            if(!chat.name){
+                this.openDirectChat(chat);
+            }
+            else{
+                this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
+            }
         },
         findNotSelf: function(chat){
             if(chat.user1.id == this.$store.state.userId){
@@ -115,7 +125,6 @@ export default {
                 //invalid / no chat
                 chatIndex = 0;
                 this.$router.push(this.$route.path + '/chat/' + response.data[0].id);
-                return;
             }
             this.$data.chatIndex = chatIndex;
             this.$data.chat = response.data[this.$data.chatIndex];

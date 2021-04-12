@@ -70,7 +70,7 @@
                         item-height="64">
                             <template v-slot:default="{ item }">
                                 <v-list nav :key="item.id">
-                                    <v-list-item @click="$router.push('/group/' + item.id)">
+                                    <v-list-item @click="openGroup(item)">
                                         <v-avatar color="secondary darken-4" size="40" class="mr-3">
                                             <img v-if="item.picture" :src="$getAvatarUrl('group',item)">
                                             <span v-else>{{item.name.substring(0,1)}}</span>
@@ -107,9 +107,11 @@ export default {
     },
     methods: {
         openDirectChat: function(){
-            if(this.$data.directChat.id != this.$route.params.chatId){
-                this.$router.push('/chat/' + this.$data.directChat.id);
-            }
+            this.$emit('open-direct-chat', this.$data.directChat);
+            this.$data.isOpen = false;
+        },
+        openGroup: function(group){
+            this.$emit('open-group', group);
             this.$data.isOpen = false;
         },
         show: function(user){

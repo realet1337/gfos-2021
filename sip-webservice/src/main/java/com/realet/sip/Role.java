@@ -44,6 +44,8 @@ public class Role{
 
     private boolean administrator;
 
+    private long priority;
+
     @OneToMany(mappedBy = "role")
     private List<Permission> permissions = new ArrayList<>();
 
@@ -131,11 +133,20 @@ public class Role{
         this.administrator = administrator;
     }
 
-    public Role(String name, String color, Group group, boolean administrator) {
+    public Role(String name, String color, Group group, boolean administrator, long priority) {
         this.name = name;
         this.color = color;
         this.group = group;
         this.administrator = administrator;
+        this.priority = priority;
+    }
+
+    public long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(long priority) {
+        this.priority = priority;
     }
 
 }

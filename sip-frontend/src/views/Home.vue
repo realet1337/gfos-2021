@@ -14,6 +14,7 @@
             </template>
         </v-app-bar>
         <v-main>
+            <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <router-view></router-view>
         </v-main>
     </v-app>
@@ -24,11 +25,23 @@
 
 <script>
 import LoadingScreen from '@/components/LoadingScreen'
+import MessageAlerts from '@/components/MessageAlerts'
 
 export default {
     name: 'Home',
     components: {
-        LoadingScreen
+        LoadingScreen,
+        MessageAlerts
     },
+    methods:{
+        openChat: function(chat){
+            if(chat.name){
+                this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
+            }
+            else{
+                this.$router.push('/chat/' + chat.id);
+            }
+        }
+    }
 }
 </script>

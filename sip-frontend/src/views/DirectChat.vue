@@ -55,7 +55,7 @@
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
                 <ChatWindow @showUser="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
-                <UserProfileDialog ref="userDialog" @showUser="showUser"></UserProfileDialog>
+                <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
             </v-container>
         </v-main>
     </v-app>
@@ -91,12 +91,23 @@ export default {
             this.$refs.userDialog.show(user);
         },
         openChat: function(chat){
+            if(!chat.name){
+                this.openDirectChat(chat);
+            }
+            else{
+                this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
+            }
+        },
+        openDirectChat: function(chat){
             if(!chat.notSelf){
                 this.findNotSelf(chat);
             }
             this.$data.chat = chat;
             this.$data.chatIndex = this.$data.chats.findIndex(listChat => chat.id == listChat.id);
             this.$router.push('/chat/' + chat.id);
+        },
+        openGroup: function(group){
+            this.$router.push('/group/' + group.id);
         },
         findNotSelf: function(chat){
             if(chat.user1.id == this.$store.state.userId){

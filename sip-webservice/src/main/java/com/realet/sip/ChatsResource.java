@@ -234,7 +234,6 @@ public class ChatsResource {
                                 
             }
         }
-        //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
         else{
             if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(tokenUserId).get())){
                 return Response.status(403).entity("Unauthorized").build();               
@@ -300,7 +299,21 @@ public class ChatsResource {
             }
         }
         else{
-            //FIXME: IMPLEMENT GROUP PUSH
+            for(User user: UsersFacade.findGroupChatReaders(chat.get().getId(), chat.get().getGroup().getId())){
+                ArrayList<javax.websocket.Session> list = UserWebsocketManagement.getSessions(user.getId());
+                if(list != null){
+                    for(javax.websocket.Session s: list){
+                        try {
+                            s.getBasicRemote().sendText("new-message: " + 
+                                new GsonBuilder().registerTypeAdapter(ChatMessage.class, new ChatMessageAdapter(2)).create()
+                                .toJson(chatMessage)
+                            );
+                        }catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
         }
 
 

@@ -41,7 +41,7 @@ import javax.persistence.TemporalType;
     "Permissions.role_id = Roles.id WHERE Roles.id = (SELECT MIN(priority) FROM Roles AS subRoles JOIN RoleMembership AS subRoleMembership " + 
     "ON subRoleMembership.role_id = subRoles.id JOIN Users AS subUsers ON subRoleMembership.user_id = subUsers.id WHERE " + 
     "subRoles.group_id = ?1 AND subUsers.id = Users.id) AND Permissions.chat_id = (SELECT MAX(chat_id) FROM Permissions AS subPermissions " + 
-    "WHERE subPermissions.role_id = Roles.id AND subPermissions.chat_id = ?2) AND Permissions.canRead = true")
+    "WHERE subPermissions.role_id = Roles.id AND subPermissions.chat_id = ?2) AND Permissions.canRead = true", resultClass = User.class)
 })
 
 public class User{

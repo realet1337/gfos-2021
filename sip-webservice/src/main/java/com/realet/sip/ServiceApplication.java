@@ -103,6 +103,8 @@ public class ServiceApplication extends Application {
 
         PermissionsFacade.add(new Permission(role, ChatsFacade.findById(4).get(), true, true));
 
+        PermissionsFacade.add(new Permission(role, ChatsFacade.findById(1).get(), true, false));
+
         role = RolesFacade.findById(2).get();
 
         PermissionsFacade.add(new Permission(role, null, true, true));

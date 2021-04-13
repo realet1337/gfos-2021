@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -22,6 +23,19 @@ public class PermissionsFacade {
         Permission permission = em.find(Permission.class, id);
         return permission != null ? Optional.of(permission) : Optional.empty();
 
+    }
+
+    public static Optional<Permission> findGroupChatPermissions(long chatId, long groupId, long userId) throws IllegalArgumentException{
+
+        EntityManager em = emf.createEntityManager();
+
+        List<Permission> wList = em.createNamedQuery("Permission.findGroupChatPermissions", Permission.class)
+        .setParameter(1, userId)
+        .setParameter(2, chatId)
+        .setParameter(3, groupId)
+        .getResultList();
+
+        return wList.isEmpty() ? Optional.empty() : Optional.of(wList.get(0));
     }
 
     public static void add(Permission permission){

@@ -82,6 +82,9 @@ export default {
         }
     },
     methods: {
+        toggleUserDrawer: function(){
+            console.log("Toggling user drawer: IMPLEMENT!");
+        },
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },

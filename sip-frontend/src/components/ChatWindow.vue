@@ -8,6 +8,11 @@
                     <span class="my-auto secondary--text text--darken3">{{voidMessage}}</span>
                 </v-col>
             </v-row>
+            <v-row v-if="!$data.canRead" class="fill-height" no-gutters justify="center">
+                <v-col cols="auto" class="mx-auto" align-self="center">
+                    <span class="my-auto secondary--text text--darken3">You don't have permission to read this chat.</span>
+                </v-col>
+            </v-row>
             <div id="loader-top" v-if="!$data.hasOldest">
                 <v-row no-gutters class="mb-5">
                     <v-col cols="auto">
@@ -105,7 +110,7 @@
                     "{{$data.editing.content.substring(0,20) + ($data.editing.content.length > 20 ? '...':'')}}"</p>
                 </v-col>
             </v-row>
-            <v-row no-gutters>
+            <v-row v-if="$data.canWrite" no-gutters>
                 <v-col>
                     <v-textarea
                     @keydown.enter.exact.prevent="sendMessage"
@@ -116,6 +121,11 @@
                     no-resize
                     class="message-textarea"
                     ></v-textarea>
+                </v-col>
+            </v-row>
+            <v-row v-else no-gutters justify="center" class="mb-3">
+                <v-col cols="auto" align-self="center">
+                    <span class="secondary--text text--darken3">You don't have permission to send any messages to this chat.</span>
                 </v-col>
             </v-row>
         </div>
@@ -141,6 +151,8 @@ export default {
             editing: {},
             isEmpty: false,
             ws: undefined,
+            isCanRead: true,
+            isCanWrite: true,
         }
     },
     methods: {
@@ -199,6 +211,9 @@ export default {
                     else if(error.response.data == "Unauthorized"){
                         this.$router.push('/home')
                     }
+                    else if(error.response.data == "Insufficient permissions"){
+                        //pass
+                    }
                 }
                 else if(error.response.status === 404){
                     this.$router.push('/home')
@@ -225,6 +240,9 @@ export default {
                             }
                             else if(error.response.data == "Unauthorized"){
                                 this.$router.push('/home')
+                            }
+                            else if(error.response.data == "Insufficient permissions"){
+                                //pass
                             }
                         }
                         else if(error.response.status === 404){
@@ -430,12 +448,44 @@ export default {
                 this.addMessages([chatMessage]);
             }
         },
+        getPermissions: function(){
+            window.axios.get(this.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats/' + this.$route.params.chatId + '/permissions',{
+                headers: {
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                },
+                params: {
+                    user: this.$store.state.userId
+                }
+            }).then((response) => {
+                if(response.status == 200){
+                    this.$data.canRead = response.data.canRead;
+                    this.$data.canWrite = response.data.canWrite;
+                }
+            }, (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            })
+        }
     },
     created: function(){
 
         this.updateMessages();
 
         this.createWatcher();
+
+        //get permissions only if group chat
+        if(this.$route.params.groupId){
+            this.getPermissions();
+        }
 
         this.$eventHub.$on('new-message', this.onNewMessage);
 

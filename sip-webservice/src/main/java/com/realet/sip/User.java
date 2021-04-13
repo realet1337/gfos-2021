@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -29,6 +31,17 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.username = :name"),
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 
+})
+@NamedNativeQueries({
+    //PARAMETERS:
+    //?1 = groupid
+    //?2 = chatid
+    @NamedNativeQuery(name = "User.findGroupChatReaders", query = "SELECT Users.* FROM Users JOIN RoleMembership ON " + 
+    "Users.id = RoleMembership.user_id JOIN Roles AS Roles ON RoleMembership.role_id = Roles.id JOIN Permissions ON " + 
+    "Permissions.role_id = Roles.id WHERE Roles.id = (SELECT MIN(priority) FROM Roles AS subRoles JOIN RoleMembership AS subRoleMembership " + 
+    "ON subRoleMembership.role_id = subRoles.id JOIN Users AS subUsers ON subRoleMembership.user_id = subUsers.id WHERE " + 
+    "subRoles.group_id = ?1 AND subUsers.id = Users.id) AND Permissions.chat_id = (SELECT MAX(chat_id) FROM Permissions AS subPermissions " + 
+    "WHERE subPermissions.role_id = Roles.id AND subPermissions.chat_id = ?2) AND Permissions.canRead = true")
 })
 
 public class User{

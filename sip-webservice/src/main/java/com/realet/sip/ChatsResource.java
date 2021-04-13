@@ -160,10 +160,13 @@ public class ChatsResource {
                 }
             }
             //if this is a group chat, check access (membership)
-            //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
             else{
                 if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(user_id).get())){
                     return Response.status(403).entity("Unauthorized").build();
+                }
+                Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), user_id);
+                if(permission.isPresent() && !permission.get().isCanRead()){
+                    return Response.status(403).entity("Insufficient permissions").build();
                 }
             }
 
@@ -235,6 +238,10 @@ public class ChatsResource {
         else{
             if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(tokenUserId).get())){
                 return Response.status(403).entity("Unauthorized").build();               
+            }
+            Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), tokenUserId);
+            if(permission.isPresent() && !permission.get().isCanRead()){
+                return Response.status(403).entity("Insufficient permissions").build();
             }
         }
 

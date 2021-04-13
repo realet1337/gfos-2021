@@ -70,11 +70,19 @@ public class ChatWebsocketResource {
                 return;
             }
         }
-        //FIXME: IMPLEMENT ROLE PERMISSION CHECKS
         else{
             if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(tokenUserId).get())){
                 try {
                     session.getBasicRemote().sendText("This session doesn't have access to this chat.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
+            Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), tokenUserId);
+            if(permission.isPresent() && !permission.get().isCanRead()){
+                try {
+                    session.getBasicRemote().sendText("Insufficient permissions.");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

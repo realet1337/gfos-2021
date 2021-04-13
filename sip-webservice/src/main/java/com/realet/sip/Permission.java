@@ -7,10 +7,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Permissions")
+@NamedNativeQueries({
+    //PARAMETERS:
+    //?1 = userid
+    //?2 = chatid
+    //?3 = groupid
+    @NamedNativeQuery(name = "Permission.findGroupChatPermissions", 
+    query = "SELECT Permissions.* FROM Permissions JOIN Roles ON Roles.id = Permissions.role_id " 
+    + "JOIN RoleMembership ON Roles.id = RoleMembership.role_id JOIN Users ON Users.id = RoleMembership.user_id " 
+    + "WHERE Users.id = ?1 AND (Permissions.chat_id = ?2 or Permissions.chat_id IS NULL) AND Roles.group_id = ?3 " 
+    + "ORDER BY Roles.priority ASC, Permissions.chat_id DESC LIMIT 1", 
+    resultClass = Permission.class)
+})
 public class Permission {
 
     @Id
@@ -93,5 +107,8 @@ public class Permission {
 
     public void setCanWrite(boolean canWrite) {
         this.canWrite = canWrite;
+    }
+
+    public Permission() {
     }
 }

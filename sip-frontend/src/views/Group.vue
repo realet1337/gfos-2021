@@ -28,20 +28,44 @@
             </v-row>
         </v-app-bar>
         <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
-            <v-list nav dense>
-                <v-list-item-group v-model="$data.chatIndex" mandatory>
-                    <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
-                        <v-list-item-icon>
-                            <v-icon class="ml-2" color="secondary">
-                                mdi-message-text
-                            </v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>
-                            {{chat.name}}
-                        </v-list-item-title>
-                    </v-list-item>
-                </v-list-item-group>
-            </v-list>
+            <v-row
+                class="fill-height"
+                no-gutters
+            >
+                <v-navigation-drawer
+                    mini-variant
+                    mini-variant-width="56"
+                    permanent
+                    color="secondary darken-3"
+                    floating
+                >
+                    <v-list style="max-height: 100%;" class="hide-scrollbar overflow-x-hidden">
+                        <v-list-item v-for="group in groups" :key="group.id" @click="openGroup(group)">
+                            <v-list-item-avatar size="48" class="ml-n3">
+                                <img v-if="group.picture" :src="$getAvatarUrl('group', group)">
+                                <span v-else>{{group.name.substring(0,1)}}</span>
+                            </v-list-item-avatar>
+                        </v-list-item>
+                    </v-list>
+                </v-navigation-drawer>
+                <v-list nav dense style="max-height: 100%;" width="100" class="overflow-y-auto overflow-x-hidden grow">
+                    <v-row class="mt-1 mb-2 ml-2">
+                        <span class="secondary--text text--lighten-4" style="font-size: 14px;"><b>CHATS</b></span>
+                    </v-row>
+                    <v-list-item-group v-model="$data.chatIndex" mandatory>
+                        <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
+                            <v-list-item-icon>
+                                <v-icon class="ml-2" color="secondary">
+                                    mdi-message-text
+                                </v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>
+                                {{chat.name}}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </v-row>
         </v-navigation-drawer>
         <v-navigation-drawer app clipped floating  right color="grey darken-4" :value="$data.showUserDrawer">
             <v-list nav dense v-for="role in roles" :key="role.id">
@@ -58,7 +82,7 @@
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow v-if="$route.params.chatId" @showUser="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow v-if="$route.params.chatId" @showUser="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 91vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
             </v-container>
         </v-main>
@@ -89,8 +113,8 @@ export default {
             roles: [],
             chat: undefined,
             chatIndex: 0,
-            groupIndex: 0,
             group: undefined,
+            groups: [],
             showUserDrawer: false,
         }
     },
@@ -105,26 +129,32 @@ export default {
             this.$router.push('/chat/' + chat.id);
         },
         openGroup: function(group){
-            
-            //FIXME: doesn't work, just a placeholder
-            this.$router.push('/group/' + group.id);
+            if(group.id !== this.$data.group.id){
+                this.$router.push('/group/' + group.id);
+                this.resetView();
+                this.initGroup();
+            }
         },
         openChat: function(chat){
 
-            //FIXME: doesn't work, just a placeholder
-            if(!chat.name){
-                this.openDirectChat(chat);
-            }
-            else{
-                var chatIndex = this.$data.chats.findIndex(listChat => listChat.id == chat.id);
-                if(chatIndex === -1){
-                    //FIXME: implement handling for different group
+            if(chat.id !== this.$data.chat.id){
+
+                if(!chat.name){
+                    this.openDirectChat(chat);
                 }
                 else{
-                    this.$data.chatIndex = chatIndex;
-                    this.$data.chat = this.$data.chats[chatIndex];
+                    var chatIndex = this.$data.chats.findIndex(listChat => listChat.id == chat.id);
+                    if(chatIndex === -1){
+                        this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
+                        this.resetView();
+                        this.initGroup();
+                    }
+                    else{
+                        this.$data.chatIndex = chatIndex;
+                        this.$data.chat = this.$data.chats[chatIndex];
+                    }
+                    this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
                 }
-                this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
             }
         },
         findNotSelf: function(chat){
@@ -136,25 +166,95 @@ export default {
             }
             return chat;
         },
+        initGroup: function(){
+            //get chats
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                var chatIndex = response.data.findIndex(chat => chat.id == this.$route.params.chatId);
+                if(chatIndex == -1){
+
+                    //invalid / no chat
+                    chatIndex = 0;
+                    this.$router.push(this.$route.path + '/chat/' + response.data[0].id);
+                }
+                this.$data.chatIndex = chatIndex;
+                this.$data.chat = response.data[this.$data.chatIndex];
+                this.$data.chats = response.data;
+            },  
+            (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            });
+
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                //lots of useless traffic here https://youtu.be/B4wUsDozedE
+                // 4 nested loops lmao
+                for(var i = 0; i < response.data.length; i++){
+                    response.data[i].users.forEach(user => {
+                        for(var j = i +1; j < response.data.length; j++){
+                            var index = response.data[j].users.findIndex(subUser => user.id == subUser.id);
+                            if(index !== -1){
+                                response.data[j].users.splice(index, 1);
+                            } 
+                        }
+                    });
+                }
+                this.$data.roles = response.data;
+            },  
+            (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            });
+        },
+        resetView: function(){
+            this.$data.chats = [];
+            this.$data.chat = undefined;
+            this.$data.roles = [];
+            this.$data.showUserDrawer = false;
+        }
     },
     created: function(){
 
-        //get chats
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats', {
+        //get groups
+        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/groups', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
             }
         }).then((response) => {
-            var chatIndex = response.data.findIndex(chat => chat.id == this.$route.params.chatId);
-            if(chatIndex == -1){
+            var groupIndex = response.data.findIndex(group => group.id == this.$route.params.groupId);
+            if(groupIndex == -1){
 
                 //invalid / no chat
-                chatIndex = 0;
-                this.$router.push(this.$route.path + '/chat/' + response.data[0].id);
+                groupIndex = 0;
+                this.$router.push('/home/groups');
             }
-            this.$data.chatIndex = chatIndex;
-            this.$data.chat = response.data[this.$data.chatIndex];
-            this.$data.chats = response.data;
+            this.$data.group = response.data[groupIndex];
+            this.$data.groups = response.data;
         },  
         (error) => {
             if(error.response.status === 403){
@@ -170,41 +270,8 @@ export default {
             }
         });
 
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', {
-            headers:{
-                'Authorization': 'Bearer ' + this.$store.state.token,
-            }
-        }).then((response) => {
-            //lots of useless traffic here https://youtu.be/B4wUsDozedE
-            // 4 nested loops lmao
-            for(var i = 0; i < response.data.length; i++){
-                response.data[i].users.forEach(user => {
-                    for(var j = i +1; j < response.data.length; j++){
-                        var index = response.data[j].users.findIndex(subUser => user.id == subUser.id);
-                        if(index !== -1){
-                            response.data[j].users.splice(index, 1);
-                        } 
-                    }
-                });
-            }
-            this.$data.roles = response.data;
-        },  
-        (error) => {
-            if(error.response.status === 403){
-                if(error.response.data == "Unauthenticated"){
-                    this.$router.push('/');
-                }
-                else if(error.response.data == "Unauthorized"){
-                    this.$router.push('/home')
-                }
-            }
-            else if(error.response.status === 404){
-                this.$router.push('/home')
-            }
-        });
+        this.initGroup();
 
     },
-    beforeDestroy: function(){
-    }
 }
 </script>

@@ -37,13 +37,15 @@
             <v-list nav>
                 <v-list-item-group v-model="$data.chatIndex">
                     <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
-                        <v-badge bottom dot bordered offset-x="25" offset-y="20" :color="chat.notSelf.isOnline ? 'green' : 'red'">
-                            <v-list-item-avatar color="primary" class="ml-0" >
+                        <v-badge bottom dot bordered offset-x="10" offset-y="10" :color="chat.notSelf.isOnline ? 'green' : 'red'">
+                            <!-- i would have ****loved**** to use <v-list-item-avatar> instead of <v-avatar> here but for SOME REASON
+                            that suddenly broke. The text is shifted to the very left of the avatar. Why? No idea. It worked before... -->
+                            <v-avatar color="primary" class="ml-0" size="40">
                                 <img v-if="chat.notSelf.profilePicture" :src="$getAvatarUrl('user', chat.notSelf)">
-                                <span v-else>{{chat.notSelf.username.substring(0,1)}}</span>
-                            </v-list-item-avatar>
+                                <span v-else >{{chat.notSelf.username.substring(0,1)}}</span>
+                            </v-avatar>
                         </v-badge>
-                        <v-list-item-title>
+                        <v-list-item-title class="ml-2">
                             {{chat.notSelf.username}}
                         </v-list-item-title>
                     </v-list-item>

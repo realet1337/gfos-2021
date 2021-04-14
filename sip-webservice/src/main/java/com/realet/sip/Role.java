@@ -14,11 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Roles")
+@NamedQueries({
+    @NamedQuery(name = "Role.findGroupRolesOrderedByPriority", query = "SELECT r FROM Role r WHERE r.group = :group ORDER BY r.priority ASC"),
+    @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users = u WHERE u = :user AND r.group = :group")
+})
 public class Role{
 
     @Id

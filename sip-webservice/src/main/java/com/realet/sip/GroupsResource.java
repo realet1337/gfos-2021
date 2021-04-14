@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
+import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -88,5 +89,40 @@ public class GroupsResource {
         ).build();
 
     }
-    
+
+    @GET
+    @Path("/{groupId}/roles")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRoles(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        } 
+
+        Optional<User> user = UsersFacade.findById(tokenUserId);
+        Optional<Group> group = GroupsFacade.findById(groupId);
+
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(!group.get().getUsers().contains(user.get())){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        List<Role> roles = RolesFacade.findGroupRolesOrderedByPriority(group.get());
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(Role.class, new RoleAdapter(1)).create()
+            .toJson(roles)
+        ).build();
+    }
 }

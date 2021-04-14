@@ -58,7 +58,7 @@ public class ChatMessagesResource {
 
         ChatMessagesFacade.remove(chatMessage.get());
 
-        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getChatSessions(chatId);
+        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getSessions(chatId);
 
         if(!(list == null || list.isEmpty())){
             for(javax.websocket.Session s: list){
@@ -134,7 +134,7 @@ public class ChatMessagesResource {
 
         long chatId = oldMessage.get().getChat().getId();
 
-        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getChatSessions(chatId);
+        ArrayList<javax.websocket.Session> list = ChatWebsocketManagement.getSessions(chatId);
 
         if(!(list == null || list.isEmpty())){
             for(javax.websocket.Session s: list){

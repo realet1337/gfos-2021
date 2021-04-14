@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -22,6 +23,20 @@ public class RolesFacade {
         Role role = em.find(Role.class, id);
         return role != null ? Optional.of(role) : Optional.empty();
 
+    }
+
+    public static List<Role> findGroupRolesOrderedByPriority(Group group){
+        
+        EntityManager em = emf.createEntityManager();
+
+        return em.createNamedQuery("Role.findGroupRolesOrderedByPriority", Role.class).setParameter("group", group).getResultList();
+    }
+
+    public static List<Role> findUserGroupRoles(Group group, User user){
+        
+        EntityManager em = emf.createEntityManager();
+
+        return em.createNamedQuery("Role.findUserGroupRoles", Role.class).setParameter("group", group).setParameter("user", user).getResultList();
     }
 
     public static void add(Role role){

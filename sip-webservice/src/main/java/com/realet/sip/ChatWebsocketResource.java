@@ -90,8 +90,7 @@ public class ChatWebsocketResource {
             }
         }
 
-        session.getUserProperties().put("userId", Long.valueOf(tokenUserId));
-        ChatWebsocketManagement.addSession(chatId, tokenUserId, session);
+        ChatWebsocketManagement.addSession(chatId, session);
         try {
             session.getBasicRemote().sendText("Subscribed.");
         } catch (IOException e) {

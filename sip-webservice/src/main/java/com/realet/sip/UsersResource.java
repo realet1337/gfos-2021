@@ -13,6 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.HttpHeaders;
@@ -21,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.GroupAdapter;
+import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 import com.realet.sip.GsonTypeAdapter.UserAdapter;
 
 @Path("/users")
@@ -298,6 +300,42 @@ public class UsersResource {
         return Response.ok(
             new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
             .toJson(user.get().getBlockedBy())
+        ).build();
+
+    }
+
+    @GET
+    @Path("/{userId}/roles")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRoles(@PathParam("userId") long userId, @QueryParam("group") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        if(userId != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+        
+        Optional<User> user = UsersFacade.findById(userId);
+
+        List<Role> roles = RolesFacade.findUserGroupRoles(group.get(), user.get());
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(Role.class, new RoleAdapter(0)).create()
+            .toJson(roles)
         ).build();
 
     }

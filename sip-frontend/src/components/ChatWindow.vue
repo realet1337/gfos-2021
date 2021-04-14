@@ -8,7 +8,7 @@
                     <span class="my-auto secondary--text text--darken3">{{voidMessage}}</span>
                 </v-col>
             </v-row>
-            <v-row v-if="!$data.canRead" class="fill-height" no-gutters justify="center">
+            <v-row v-if="$data.canRead === false" class="fill-height" no-gutters justify="center">
                 <v-col cols="auto" class="mx-auto" align-self="center">
                     <span class="my-auto secondary--text text--darken3">You don't have permission to read this chat.</span>
                 </v-col>
@@ -123,7 +123,7 @@
                     ></v-textarea>
                 </v-col>
             </v-row>
-            <v-row v-else no-gutters justify="center" class="mb-3">
+            <v-row v-if="$data.canWrite === false" no-gutters justify="center" class="mb-3">
                 <v-col cols="auto" align-self="center">
                     <span class="secondary--text text--darken3">You don't have permission to send any messages to this chat.</span>
                 </v-col>
@@ -151,8 +151,8 @@ export default {
             editing: {},
             isEmpty: false,
             ws: undefined,
-            isCanRead: true,
-            isCanWrite: true,
+            canRead: undefined,
+            canWrite: undefined,
         }
     },
     methods: {
@@ -391,7 +391,7 @@ export default {
             });
         },
         removeMessage: function(chatMessage){
-            var index = this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id );
+            var index = this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id);
             this.$data.ignoreJSScroll = true;
             
             this.$data.chatMessages.splice(index, 1);

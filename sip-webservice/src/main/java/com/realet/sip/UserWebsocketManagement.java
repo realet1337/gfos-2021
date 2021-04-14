@@ -12,19 +12,25 @@ public class UserWebsocketManagement {
         return sessions.get(Long.valueOf(userId));
     }
 
+    //Setting the flag doesn't always work. Race condition?
     public static void addSession(long userId, javax.websocket.Session session){
         ArrayList<javax.websocket.Session> list = sessions.get(Long.valueOf(userId));
         if(list == null){
             list = new ArrayList<>();
             list.add(session);
             sessions.put(Long.valueOf(userId), list);
+
+            Optional<User> user = UsersFacade.findById(userId);
+
+            //attempting to fix absurd bug here
+            user.get().setOnline(sessions.containsKey(Long.valueOf(userId)));
+            
+            UsersFacade.update(user.get());
+            System.out.println("\n\n\n\n\n\n\n\n" + String.valueOf(System.currentTimeMillis()) + "\n\n\n\n\n\n\n\n");
         }
         else{
             list.add(session);
         }
-        Optional<User> user = UsersFacade.findById(userId);
-        user.get().setOnline(true);
-        UsersFacade.update(user.get());
     }
 
     public static void removeSession(long userId, javax.websocket.Session session){
@@ -36,8 +42,9 @@ public class UserWebsocketManagement {
         if(list.isEmpty()){
             sessions.remove(Long.valueOf(userId));
             Optional<User> user = UsersFacade.findById(userId);
-            user.get().setOnline(false);
+            user.get().setOnline(sessions.containsKey(Long.valueOf(userId)));
             UsersFacade.update(user.get());
+            System.out.println("\n\n\n\n\n\n\n\n" + String.valueOf(System.currentTimeMillis()) + "\n\n\n\n\n\n\n\n");
         }
     }
     

@@ -1,6 +1,6 @@
 <template>
     <v-app v-if="$store.state.initialized">
-        <v-app-bar app clipped-left height="62">
+        <v-app-bar app clipped-left clipped-right height="62">
             <v-row no-gutters>
                 <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/groups')" class="ml-n4 clickable">
                     <v-row justify="center" no-gutters>
@@ -43,6 +43,17 @@
                 </v-list-item-group>
             </v-list>
         </v-navigation-drawer>
+        <v-navigation-drawer app clipped floating  right color="grey darken-4" :value="$data.showUserDrawer">
+            <v-list nav dense v-for="role in roles" :key="role.id">
+                <span class="label-text"><b>{{role.name.toUpperCase()}}</b></span>
+                <v-list-item v-for="user in role.users" :key="user.id"
+                @click="showUser(user)">
+                    <v-list-item-title 
+                    :style="'color: ' + role.color"
+                    >{{user.username}}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
         <v-main>
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
@@ -65,7 +76,7 @@ import LoadingScreen from '@/components/LoadingScreen'
 import Vue from 'vue'
 
 export default {
-    name: 'DirectChat',
+    name: 'Group',
     components: {
         ChatWindow,
         UserProfileDialog,
@@ -75,15 +86,17 @@ export default {
     data: function(){
         return {
             chats: [],
+            roles: [],
             chat: undefined,
             chatIndex: 0,
             groupIndex: 0,
             group: undefined,
+            showUserDrawer: false,
         }
     },
     methods: {
         toggleUserDrawer: function(){
-            console.log("Toggling user drawer: IMPLEMENT!");
+            this.$data.showUserDrawer = !this.$data.showUserDrawer;
         },
         showUser: function(user){
             this.$refs.userDialog.show(user);
@@ -103,6 +116,14 @@ export default {
                 this.openDirectChat(chat);
             }
             else{
+                var chatIndex = this.$data.chats.findIndex(listChat => listChat.id == chat.id);
+                if(chatIndex === -1){
+                    //FIXME: implement handling for different group
+                }
+                else{
+                    this.$data.chatIndex = chatIndex;
+                    this.$data.chat = this.$data.chats[chatIndex];
+                }
                 this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
             }
         },
@@ -117,7 +138,9 @@ export default {
         },
     },
     created: function(){
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats/', {
+
+        //get chats
+        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
             }
@@ -145,7 +168,41 @@ export default {
             else if(error.response.status === 404){
                 this.$router.push('/home')
             }
-        })
+        });
+
+        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', {
+            headers:{
+                'Authorization': 'Bearer ' + this.$store.state.token,
+            }
+        }).then((response) => {
+            //lots of useless traffic here https://youtu.be/B4wUsDozedE
+            // 4 nested loops lmao
+            for(var i = 0; i < response.data.length; i++){
+                response.data[i].users.forEach(user => {
+                    for(var j = i +1; j < response.data.length; j++){
+                        var index = response.data[j].users.findIndex(subUser => user.id == subUser.id);
+                        if(index !== -1){
+                            response.data[j].users.splice(index, 1);
+                        } 
+                    }
+                });
+            }
+            this.$data.roles = response.data;
+        },  
+        (error) => {
+            if(error.response.status === 403){
+                if(error.response.data == "Unauthenticated"){
+                    this.$router.push('/');
+                }
+                else if(error.response.data == "Unauthorized"){
+                    this.$router.push('/home')
+                }
+            }
+            else if(error.response.status === 404){
+                this.$router.push('/home')
+            }
+        });
+
     },
     beforeDestroy: function(){
     }

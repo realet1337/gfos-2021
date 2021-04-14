@@ -26,7 +26,7 @@ public class UserWebsocketManagement {
             user.get().setOnline(sessions.containsKey(Long.valueOf(userId)));
             
             UsersFacade.update(user.get());
-            System.out.println("\n\n\n\n\n\n\n\n" + String.valueOf(System.currentTimeMillis()) + "\n\n\n\n\n\n\n\n");
+            System.out.println("\n\n\n\n\n\n\n\n" + "added at: " + String.valueOf(System.currentTimeMillis()) + "\n\n\n\n\n\n\n\n");
         }
         else{
             list.add(session);
@@ -44,7 +44,7 @@ public class UserWebsocketManagement {
             Optional<User> user = UsersFacade.findById(userId);
             user.get().setOnline(sessions.containsKey(Long.valueOf(userId)));
             UsersFacade.update(user.get());
-            System.out.println("\n\n\n\n\n\n\n\n" + String.valueOf(System.currentTimeMillis()) + "\n\n\n\n\n\n\n\n");
+            System.out.println("\n\n\n\n\n\n\n\n" + "removed at: " + String.valueOf(System.currentTimeMillis()) + "\n\n\n\n\n\n\n\n");
         }
     }
     

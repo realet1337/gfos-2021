@@ -52,6 +52,18 @@
                 <!-- css is terrible -->
                 <v-tabs-items v-model="tab" class="mt-3">
                     <v-tab-item>
+                        <v-row no-gutters v-if="$route.params.groupId">
+                            <p class="label-text mt-3"><b>ROLES</b></p>
+                        </v-row>                
+                        <v-row no-gutters v-if="$route.params.groupId">
+                            <v-col v-for="role in roles" :key="role.id" cols="auto">
+                                <v-chip
+                                outlined
+                                :color="role.color"
+                                class="ma-1"
+                                >{{role.name}}</v-chip>
+                            </v-col>
+                        </v-row>
                         <v-row no-gutters>
                             <p class="label-text mt-3"><b>USER INFO</b></p>
                         </v-row>                
@@ -99,6 +111,7 @@ export default {
     data: function(){
         return{
             sharedGroups: [],
+            roles: [],
             tab: 0,
             directChat: {},
             isOpen: false,
@@ -147,6 +160,24 @@ export default {
                     this.$data.directChat = response.data;
                 },(error) => {
 
+                    if(error.response.status == 403){
+                        this.$router.push('/login');
+                    }
+                })
+            }
+
+            if(this.$route.params.groupId){
+                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$data.user.id +
+                '/roles', {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token
+                    },
+                    params:{
+                        group: this.$route.params.groupId
+                    }
+                }).then((response) => {
+                    this.$data.roles = response.data;
+                },(error) => {
                     if(error.response.status == 403){
                         this.$router.push('/login');
                     }

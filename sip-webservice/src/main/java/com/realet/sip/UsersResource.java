@@ -320,16 +320,22 @@ public class UsersResource {
             return Response.status(403).entity("Unauthenticated").build();
         }
 
-        if(userId != tokenUserId){
-            return Response.status(403).entity("Unauthorized").build();
-        }
-
         Optional<Group> group = GroupsFacade.findById(groupId);
         if(group.isEmpty()){
             return Response.status(404).build();
         }
+
+        Optional<User> requestIssuer = UsersFacade.findById(tokenUserId);
+
+        if(!group.get().getUsers().contains(requestIssuer.get())){
+            return Response.status(403).entity("Unauthorized").build();
+        }
         
         Optional<User> user = UsersFacade.findById(userId);
+
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
 
         List<Role> roles = RolesFacade.findUserGroupRoles(group.get(), user.get());
 

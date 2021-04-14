@@ -35,7 +35,9 @@
         </v-app-bar>
         <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
             <v-list nav>
-                <v-list-item-group v-model="$data.chatIndex">
+                <!-- why do we use :key here? We want to force a re-render on array change. See vuetify bug. Dirty workaround! -->
+                <!-- https://github.com/vuetifyjs/vuetify/issues/11405 -->
+                <v-list-item-group v-model="$data.chatIndex" :key="$data.chats.map(chat => chat.id).join()">
                     <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
                         <v-badge bottom dot bordered offset-x="10" offset-y="10" :color="chat.notSelf.isOnline ? 'green' : 'red'">
                             <!-- i would have ****loved**** to use <v-list-item-avatar> instead of <v-avatar> here but for SOME REASON
@@ -101,12 +103,14 @@ export default {
             }
         },
         openDirectChat: function(chat){
-            if(!chat.notSelf){
-                this.findNotSelf(chat);
+            if(chat.id != this.$data.chat.id){
+                if(!chat.notSelf){
+                    this.findNotSelf(chat);
+                }
+                this.$data.chat = chat;
+                this.$data.chatIndex = this.$data.chats.findIndex(findChat => chat.id == findChat.id);
+                this.$router.push('/chat/' + chat.id);
             }
-            this.$data.chat = chat;
-            this.$data.chatIndex = this.$data.chats.findIndex(listChat => chat.id == listChat.id);
-            this.$router.push('/chat/' + chat.id);
         },
         openGroup: function(group){
             this.$router.push('/group/' + group.id);
@@ -130,6 +134,9 @@ export default {
                 this.$data.chats = [message.chat].concat(this.$data.chats);
 
             }
+
+            //fix chatIndex
+            this.$data.chatIndex = this.$data.chats.findIndex(chat => this.$data.chat.id == chat.id);
         }
     },
     created: function(){

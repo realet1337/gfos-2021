@@ -486,6 +486,10 @@ export default {
         if(this.$route.params.groupId){
             this.getPermissions();
         }
+        else{
+            this.$data.canRead = true;
+            this.$data.canWrite = true;
+        }
 
         this.$eventHub.$on('new-message', this.onNewMessage);
 

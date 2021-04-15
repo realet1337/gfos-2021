@@ -56,6 +56,9 @@
     -webkit-line-clamp: 1; /* number of lines to show */
 
 }
+.input-field {
+    min-width: 200px;
+}
 .input-field input[type="text"]{
 
     color: var(--v-secondary-lighten4)!important;

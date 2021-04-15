@@ -30,6 +30,9 @@
                 </div>
                 <p v-if="error" class="error-message"><i>Oops! That didn't work. Did you type your E-Mail and password correctly?</i></p>
                 <v-btn @click="onSubmit" block depressed large color="primary">Login</v-btn>
+                <v-row class="mt-2 ml-3">
+                    <span class="secondary--text text--lighten-2" style="font-size: 11px;">Don't have an account? <router-link to="/register">Register!</router-link></span>
+                </v-row>
             </v-form>
         </v-container>
     </v-card>

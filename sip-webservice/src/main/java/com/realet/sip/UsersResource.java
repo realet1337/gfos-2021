@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.PersistenceException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -344,6 +346,27 @@ public class UsersResource {
             .toJson(roles)
         ).build();
 
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addUser(User user){
+        user.setOnline(false);
+        try{
+            UsersFacade.add(user);
+            return Response.status(201).build();
+        }
+        catch(PersistenceException e){
+            e.printStackTrace();
+            String errorMessage = e.getMessage().split(" ")[1];
+            errorMessage = errorMessage.substring(1, errorMessage.length()-1);
+            if(errorMessage.equals("e_mail")){
+                return Response.status(400).entity("Email is already in use.").build();
+            }
+            else{
+                return Response.status(400).build();
+            }
+        }
     }
 
 }

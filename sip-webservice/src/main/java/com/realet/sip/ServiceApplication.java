@@ -27,6 +27,7 @@ public class ServiceApplication extends Application {
         set.add( CORSPreflightHandler.class );
         set.add( GroupsResource.class );
         set.add( ChatWebsocketResource.class );
+        set.add( UploadResource.class );
         return set;
     }
 

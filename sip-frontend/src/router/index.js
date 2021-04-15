@@ -7,6 +7,7 @@ import Home from '@/views/Home.vue'
 import FrontPage from '@/views/FrontPage.vue'
 import DirectChat from '@/views/DirectChat.vue'
 import Group from '@/views/Group.vue'
+import Register from '@/views/Register.vue'
 
 import HomeDirectChats from '@/components/HomeDirectChats.vue'
 import HomeGroups from '@/components/HomeGroups.vue'
@@ -19,6 +20,11 @@ const routes = [
 		path: '/login',
 		name: 'Login',
 		component: Login
+	},
+	{
+		path: '/register',
+		name: 'Register',
+		component: Register
 	},
 	{
 		path: '/home',

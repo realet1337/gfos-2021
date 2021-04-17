@@ -20,35 +20,40 @@ import javax.ws.rs.FormParam;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
+import org.json.JSONObject;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/upload")
-public class UploadResource {
+@Path("/images")
+public class ImagesResource {
 
     public class FileUploadForm {
-        private byte[] filedata;
+        private byte[] file;
     
         public FileUploadForm() {}
     
-        public byte[] getFileData() {
-            return filedata;
+        public byte[] getFile() {
+            return file;
         }
     
-        @FormParam("filedata")
+        @FormParam("file")
         @PartType("application/octet-stream")
-        public void setFileData(final byte[] filedata) {
-            this.filedata = filedata;
+        public void setFile(final byte[] file) {
+            this.file = file;
         }
     }
     
     @POST
     @Path("/users/pictures")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response uploadUserPicture(@MultipartForm FileUploadForm form){
-        InputStream inputStream = new ByteArrayInputStream(form.filedata);
+        System.out.println(form.getFile());
+        InputStream inputStream = new ByteArrayInputStream(form.getFile());
         BufferedImage image;
         try {
             image = ImageIO.read(inputStream);
@@ -61,7 +66,7 @@ public class UploadResource {
         try {
             do{
 
-                byte[] imgBytes = Arrays.copyOfRange(form.getFileData(), 0, 16);
+                byte[] imgBytes = Arrays.copyOfRange(form.getFile(), 0, 16);
                 byte[] timeBytes = String.valueOf(System.nanoTime()).getBytes(StandardCharsets.UTF_8);
                 byte[] both = Arrays.copyOf(imgBytes, imgBytes.length + timeBytes.length);
                 System.arraycopy(timeBytes, 0, both, imgBytes.length, timeBytes.length);
@@ -91,6 +96,8 @@ public class UploadResource {
             return Response.status(500).entity("Couldn't create image.").build();
         }
 
-        return Response.status(201).build();
+        return Response.status(201).entity(
+            new JSONObject().put("picture", outName).toString()
+        ).build();
     }
 }

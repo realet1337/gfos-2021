@@ -91,7 +91,7 @@
                         <v-form v-model="$data.isValid[1]">
                             <v-row align="center" no-gutters class="mb-6">
                                 <v-avatar class="mx-auto" size="120">
-                                    <img v-if="$data.picture" :src="avatarUrl">
+                                    <img v-if="$data.imgFile" :src="avatarUrl">
                                     <span v-else>No picture</span>
                                 </v-avatar>
                             </v-row>
@@ -216,23 +216,26 @@ export default {
                 emailInUse: false
             },
             cancelTokenSource: undefined,
+            imgFile: undefined,
         }
     },
     methods: {
 
-        updateFile: function(file){
+        updateFile: async function(file){
+            if(this.$data.cancelTokenSource){
+                this.$data.cancelTokenSource.cancel();
+            }
             if(!file){
                 this.$data.picture = undefined;
+                this.$data.imgFile = undefined;
             }
             else{
-                if(this.$data.cancelTokenSource){
-                    this.$data.cancelTokenSource.cancel();
-                }
+                this.$data.imgFile = file;
                 const formData = new FormData();
-                formData.append('file', file.text());
+                formData.append('file', await file.text());
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
-                window.axios.post(Vue.prototype.$apiHtttpUrl + '/api/upload/users/pictures', formData, {
+                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/users/pictures', formData, {
                     headers: {
                         'content-type': 'multipart/form-data'
                     },
@@ -268,7 +271,7 @@ export default {
     },
     computed: {
         avatarUrl: function(){
-            return URL.createObjectURL(this.$data.picture);
+            return URL.createObjectURL(this.$data.imgFile);
         }
     },
     name: 'RegisterCard'

@@ -1,5 +1,6 @@
 package com.realet.sip;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,15 +12,17 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+
 import java.awt.image.BufferedImage;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.jboss.resteasy.annotations.providers.multipart.PartType;
 import org.json.JSONObject;
 
 import javax.ws.rs.POST;
@@ -30,40 +33,35 @@ import javax.ws.rs.core.Response;
 
 @Path("/images")
 public class ImagesResource {
-
-    public class FileUploadForm {
-        private byte[] file;
-    
-        public FileUploadForm() {
-        }
-
-
-
-        public byte[] getFile() {
-            return file;
-        }
-    
-        @FormParam("file")
-        @PartType("application/octet-stream")
-        public void setFile(final byte[] file) {
-            this.file = file;
-        }
-    }
     
     @POST
     @Path("/users/pictures")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadUserPicture(@MultipartForm FileUploadForm form){
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.println(form.getFile().length);
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        InputStream inputStream = new ByteArrayInputStream(form.getFile());
-        BufferedImage image;
+        ImageReader reader = null;
+        ImageInputStream iis = null;
         try {
-            image = ImageIO.read(inputStream);
+            iis = ImageIO.createImageInputStream(new ByteArrayInputStream(form.getData()));
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+            if(!readers.hasNext()){
+                return Response.status(415).entity("Unsupported image format.").build();
+            }
+            reader = readers.next();
         } catch (IOException e) {
             return Response.status(400).build();
+        }
+        
+        BufferedImage image = null;
+        try {
+            reader.setInput(iis);
+            image = reader.read(0);
+        } catch (IOException e) {
+            return Response.status(400).build();
+        }
+
+        if(image == null){
+            return Response.ok("stfu").build();
         }
         
         String outName = "";
@@ -71,7 +69,7 @@ public class ImagesResource {
         try {
             do{
 
-                byte[] imgBytes = Arrays.copyOfRange(form.getFile(), 0, 16);
+                byte[] imgBytes = Arrays.copyOfRange(form.getData(), 0, 16);
                 byte[] timeBytes = String.valueOf(System.nanoTime()).getBytes(StandardCharsets.UTF_8);
                 byte[] both = Arrays.copyOf(imgBytes, imgBytes.length + timeBytes.length);
                 System.arraycopy(timeBytes, 0, both, imgBytes.length, timeBytes.length);

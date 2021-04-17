@@ -232,7 +232,7 @@ export default {
             else{
                 this.$data.imgFile = file;
                 const formData = new FormData();
-                formData.append('file', await file.text());
+                formData.append('file', file, file.name);
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
                 window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/users/pictures', formData, {

@@ -9,9 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
- 
-
-//import com.realet.sip.UsersResource;
 
 @ApplicationPath("/")
 public class ServiceApplication extends Application {
@@ -27,7 +24,8 @@ public class ServiceApplication extends Application {
         set.add( CORSPreflightHandler.class );
         set.add( GroupsResource.class );
         set.add( ChatWebsocketResource.class );
-        set.add( UploadResource.class );
+        set.add( bro.class );
+        set.add( ImagesResource.class );
         return set;
     }
 

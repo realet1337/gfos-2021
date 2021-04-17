@@ -250,12 +250,13 @@ export default {
                 username: this.$data.username,
                 email: this.$data.email,
                 pass: this.$data.password,
+                userProfiles: [this.$data.config]
             };
             if(this.$data.picture){
-                userPayload.profilePicture = await this.$data.picture
+                userPayload.profilePicture = await this.$data.picture;
             }
             if(this.$data.userInfo){
-                userPayload.info = this.$data.userInfo
+                userPayload.info = this.$data.userInfo;
             }
             window.axios.post(Vue.prototype.$apiHttpUrl + '/api/users', userPayload).then(() => {
                 this.$data.processing = false;

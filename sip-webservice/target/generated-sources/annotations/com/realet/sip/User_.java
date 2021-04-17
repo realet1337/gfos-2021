@@ -16,6 +16,7 @@ public abstract class User_ {
 	public static volatile SingularAttribute<User, String> pass;
 	public static volatile ListAttribute<User, ChatMessage> chatMessages;
 	public static volatile SetAttribute<User, Role> roles;
+	public static volatile ListAttribute<User, UserProfile> userProfiles;
 	public static volatile SetAttribute<User, Group> groups;
 	public static volatile ListAttribute<User, Chat> directChats2;
 	public static volatile SingularAttribute<User, Boolean> isOnline;
@@ -35,6 +36,7 @@ public abstract class User_ {
 	public static final String PASS = "pass";
 	public static final String CHAT_MESSAGES = "chatMessages";
 	public static final String ROLES = "roles";
+	public static final String USER_PROFILES = "userProfiles";
 	public static final String GROUPS = "groups";
 	public static final String DIRECT_CHATS2 = "directChats2";
 	public static final String IS_ONLINE = "isOnline";

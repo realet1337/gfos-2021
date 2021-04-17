@@ -161,7 +161,7 @@ export default {
             var queryParams = {
                 count: Vue.prototype.$messageChunkSize,
                 authorUnblockedBy: this.$store.state.userId,
-                reverseBlocking: this.$store.state.userProfile.reverseBlocking,
+                reverseBlocking: this.$store.state.userProfile.reverseBlocking ? 1:0,
             }
 
             if(before){

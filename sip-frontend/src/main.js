@@ -78,7 +78,7 @@ Vue.prototype.$initApp = function(){
 	createUserWatcher();
 
 	var abort = false;
-	var todo = 2;
+	var todo = 4;
 
 	window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-users', {
 		headers:{
@@ -91,12 +91,12 @@ Vue.prototype.$initApp = function(){
 			store.commit('setInitialized', true);
 		}
 	}, () => {
-			//this shouldn't fail so we'll just perform logout
-			if(!abort){
-				abort = true;
-				store.commit('reset');
-				router.push('/');
-			}
+		//this shouldn't fail so we'll just perform logout
+		if(!abort){
+			abort = true;
+			store.commit('reset');
+			router.push('/');
+		}
 	});
 	window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/blocked-by', {
 		headers:{
@@ -109,13 +109,48 @@ Vue.prototype.$initApp = function(){
 			store.commit('setInitialized', true);
 		}
 	}, () => {
-			//this shouldn't fail either
-			if(!abort){
-				abort = true;
-				store.commit('reset');
-				router.push('/');
-			}
+		//this shouldn't fail either
+		if(!abort){
+			abort = true;
+			store.commit('reset');
+			router.push('/');
+		}
 	});
+
+	window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId).then((response) => {
+		store.commit('setUser', response.data);
+		todo--;
+		if(todo == 0){
+			store.commit('setInitialized', true);
+		}
+	}, ()=>{
+		//same thing here
+		if(!abort){
+			abort = true;
+			store.commit('reset');
+			router.push('/');
+		}
+	});
+
+	window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + store.state.userId + '/profile',{
+		headers:{
+				'Authorization': 'Bearer ' + store.state.token,
+		}
+	}).then((response) => {
+		store.commit('setUserProfile', response.data);
+		todo--;
+		if(todo == 0){
+			store.commit('setInitialized', true);
+		}
+	}, ()=>{
+		//same thing here
+		if(!abort){
+			abort = true;
+			store.commit('reset');
+			router.push('/');
+		}
+	});
+
 }
 
 

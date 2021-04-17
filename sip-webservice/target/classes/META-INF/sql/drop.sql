@@ -7,4 +7,5 @@ DROP TABLE Chats;
 DROP TABLE Roles;
 DROP TABLE `Groups`;
 DROP TABLE Sessions;
+DROP TABLE UserProfiles;
 DROP TABLE Users;

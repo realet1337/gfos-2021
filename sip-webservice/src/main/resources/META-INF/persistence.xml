@@ -34,6 +34,7 @@
       <class>com.realet.sip.User</class>
       <class>com.realet.sip.Session</class>
       <class>com.realet.sip.Permission</class>
+      <class>com.realet.sip.UserProfile</class>
 
       <properties>
          <!--The database schema is auto created on deployment and dropped before redeploy.

@@ -29,6 +29,7 @@ import javax.persistence.TemporalType;
 
     //FIXME: make this "like"
     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.username = :name"),
+
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 
 })
@@ -73,6 +74,9 @@ public class User{
 
     @Column(name = "profile_picture")
     private String profilePicture;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserProfile> userProfiles;
 
     @ManyToMany
     @JoinTable(name = "BlockedUsers",
@@ -277,6 +281,14 @@ public class User{
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
         return result;
+    }
+
+    public List<UserProfile> getUserProfiles() {
+        return userProfiles;
+    }
+
+    public void setUserProfiles(List<UserProfile> userProfiles) {
+        this.userProfiles = userProfiles;
     }
 
     @Override

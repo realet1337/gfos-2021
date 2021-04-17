@@ -7,13 +7,12 @@ export default new Vuex.Store({
   state: {
     token: false,
     userId: false,
+    user: undefined,
     ws: undefined,
     initialized: false,
     blockedUsers: [],
     blockedBy: [],
-    userProfile: {
-      reverseBlocking: 1,
-    }
+    userProfile: undefined,
   },
   mutations: {
     setToken(state, token) {
@@ -22,8 +21,15 @@ export default new Vuex.Store({
     setUserId(state, userId) {
       state.userId = userId;
     },
+    setUser(state, user) {
+      state.user = user;
+    },
     setWs(state, ws){
       state.ws = ws;
+    },
+    setUserProfile(state, userProfile){
+      state.userProfile = userProfile;
+      
     },
     setInitialized(state, initialized){
       state.initialized = initialized;
@@ -39,8 +45,13 @@ export default new Vuex.Store({
       Object.assign(state, {
         token: false,
         userId: false,
+        user: undefined,
         ws: undefined,
         initialized: false,
+        blockedUsers: [],
+        blockedBy: [],
+        userProfile: undefined,
+        reverseBlocking: 1,
       });
     }
   }

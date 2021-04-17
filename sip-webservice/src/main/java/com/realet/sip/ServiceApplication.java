@@ -39,12 +39,17 @@ public class ServiceApplication extends Application {
         ChatMessagesFacade.initialize(emf);
         SessionsFacade.initialize(emf);
         PermissionsFacade.initialize(emf);
+        UserProfilesFacade.initialize(emf);
 
         UsersFacade.add(new User("Gerd","gerd@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin gerd", "this is my status", null, false, null));
         UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter", "this is my status", null, false, null));
         UsersFacade.remove(UsersFacade.findById(2).get());
         UsersFacade.add(new User("Frederik","frederik@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin Frederik", "this is my status", null, false, "7053bf6dc83b9b50d95c6e19eb23b850"));
         UsersFacade.add(new User("Peter","pete@a.com","$2y$10$Tm0jjN0GX5bU5WCiCVhX7ekmSBDAbZ35mQSbm4mQ.ByhgY90nzU3i","hallo ich bin peter", "this is my status", null, false, null));
+
+        UserProfilesFacade.add(new UserProfile(UsersFacade.findById(1).get(), false, 100, 50));
+        UserProfilesFacade.add(new UserProfile(UsersFacade.findById(3).get(), false, 100, 50));
+        UserProfilesFacade.add(new UserProfile(UsersFacade.findById(4).get(), false, 100, 50));
 
         Set<User> group_users = new HashSet<User>(UsersFacade.findAll());
 

@@ -20,12 +20,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.HttpHeaders;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.GroupAdapter;
 import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 import com.realet.sip.GsonTypeAdapter.UserAdapter;
+import com.realet.sip.GsonTypeAdapter.UserProfileAdapter;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -39,7 +39,10 @@ public class UsersResource {
         Optional<User> user = UsersFacade.findById(id);
         if (user.isPresent()){
 
-            return Response.ok( new Gson().toJson(user.get()) ).build();
+            return Response.ok( 
+                new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+                .toJson(user.get())
+            ).build();
             
         }
         else{
@@ -355,8 +358,20 @@ public class UsersResource {
     public Response addUser(User user){
         user.setOnline(false);
         user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
+        UserProfile userProfile;
+        if(user.getUserProfiles() != null){
+            userProfile = user.getUserProfiles().get(0);
+            if(userProfile.getMaxLoadedMessages() < userProfile.getMessageChunkSize()){
+                return Response.status(400).entity("maxLoadedMessages must be larger than messageChunkSize").build();
+            }
+            userProfile.setUser(user);
+        }
+        else{
+            userProfile = new UserProfile(user, false, 100, 50);
+        }
         try{
             UsersFacade.add(user);
+            UserProfilesFacade.add(userProfile);
             return Response.status(201).build();
         }
         catch(PersistenceException e){
@@ -372,4 +387,27 @@ public class UsersResource {
         }
     }
 
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{userId}/profile")
+    public Response getProfile(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        if(userId != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(UserProfile.class, new UserProfileAdapter()).create()
+            .toJson(UsersFacade.findById(userId).get().getUserProfiles().get(0))
+        ).build();
+    }
 }

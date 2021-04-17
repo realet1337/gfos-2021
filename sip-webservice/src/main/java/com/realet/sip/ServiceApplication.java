@@ -14,7 +14,7 @@ import javax.ws.rs.core.Application;
 public class ServiceApplication extends Application {
     
     @Override
-    public Set<Class<?>> getClasses() {
+    public Set<Class<?>> getClasses() { 
 
         Set<Class<?>> set = new HashSet<>();
         set.add( UsersResource.class );
@@ -24,7 +24,6 @@ public class ServiceApplication extends Application {
         set.add( CORSPreflightHandler.class );
         set.add( GroupsResource.class );
         set.add( ChatWebsocketResource.class );
-        set.add( bro.class );
         set.add( ImagesResource.class );
         return set;
     }

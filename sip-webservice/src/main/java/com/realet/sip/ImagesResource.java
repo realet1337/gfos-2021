@@ -34,8 +34,11 @@ public class ImagesResource {
     public class FileUploadForm {
         private byte[] file;
     
-        public FileUploadForm() {}
-    
+        public FileUploadForm() {
+        }
+
+
+
         public byte[] getFile() {
             return file;
         }
@@ -52,7 +55,9 @@ public class ImagesResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadUserPicture(@MultipartForm FileUploadForm form){
-        System.out.println(form.getFile());
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println(form.getFile().length);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         InputStream inputStream = new ByteArrayInputStream(form.getFile());
         BufferedImage image;
         try {

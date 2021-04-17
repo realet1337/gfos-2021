@@ -1,11 +1,9 @@
 package com.realet.sip;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -81,7 +79,7 @@ public class ImagesResource {
                 if(path.charAt(path.length()-1) != '/'){
                     path = path + "/";
                 }
-                path = path + outName + ".jpg";
+                path = path + "/pic/user/" + outName + ".jpg";
 
                 outputFile = new File(path);
 

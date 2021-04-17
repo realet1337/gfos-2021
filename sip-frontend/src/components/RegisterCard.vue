@@ -232,7 +232,7 @@ export default {
             else{
                 this.$data.imgFile = file;
                 const formData = new FormData();
-                formData.append('file', file, file.name);
+                formData.append('file', file);
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
                 window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/users/pictures', formData, {
@@ -254,10 +254,10 @@ export default {
             if(this.$data.picture){
                 userPayload.profilePicture = await this.$data.picture
             }
-            if(this.$data.info){
-                userPayload.info = this.$data.info
+            if(this.$data.userInfo){
+                userPayload.info = this.$data.userInfo
             }
-            window.axios.post(Vue.prototype.$apiHtttpUrl + '/api/users', userPayload).then(() => {
+            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/users', userPayload).then(() => {
                 this.$data.processing = false;
                 this.$router.push('/login');
             }, () => {

@@ -27,6 +27,8 @@ import com.realet.sip.GsonTypeAdapter.GroupAdapter;
 import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 import com.realet.sip.GsonTypeAdapter.UserAdapter;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 @Path("/users")
 public class UsersResource {
 
@@ -352,6 +354,7 @@ public class UsersResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user){
         user.setOnline(false);
+        user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
         try{
             UsersFacade.add(user);
             return Response.status(201).build();

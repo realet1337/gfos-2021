@@ -36,14 +36,14 @@
                 || new Date(chatMessages[index - 1].sent).getTime() + 300000 < new Date(chatMessage.sent).getTime()" class="text-message reveal-on-hover-container mt-5 rounded mr-2" no-gutters>
                     <!-- beeg -->
                     <v-col cols="auto" style="max-width: 63px;">
-                        <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable mt-1 ml-2" size="40">
+                        <v-avatar @click="$emit('show-user', chatMessage.author)" color="primary" class="clickable mt-1 ml-2" size="40">
                             <img v-if="chatMessage.author.profilePicture" :src="$getAvatarUrl('user', chatMessage.author)">
                             <span v-else>{{chatMessage.author.username.substring(0,1)}}</span>
                         </v-avatar>
                     </v-col>
                     <v-col align-self="center">
                         <v-row no-gutters>
-                            <p @click="$emit('showUser', chatMessage.author)" class="ml-4 my-auto clickable underline-on-hover">
+                            <p @click="$emit('show-user', chatMessage.author)" class="ml-4 my-auto clickable underline-on-hover">
                                 <b>{{chatMessage.author.username}}</b>
                             </p>
                             <span class="date ml-2 mt-1">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"

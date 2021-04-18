@@ -4,7 +4,7 @@
             <v-col v-for="chat in chats" :key="chat.id" cols="auto">
                 <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
             </v-col>
-            <v-col>
+            <v-col cols="auto">
                 <v-card width="350" min-width="350" class="rounded-xl my-4" elevation="0" color="secondary darken-4">
                     <div v-ripple class="clickable" @click="showUserFinder">
                         <v-row>

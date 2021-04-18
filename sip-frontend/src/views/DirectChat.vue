@@ -37,7 +37,7 @@
             <v-list nav>
                 <!-- why do we use :key here? We want to force a re-render on array change. See vuetify bug. Dirty workaround! -->
                 <!-- https://github.com/vuetifyjs/vuetify/issues/11405 -->
-                <v-list-item-group v-model="$data.chatIndex" :key="$data.chats.map(chat => chat.id).join()">
+                <v-list-item-group v-model="$data.chatIndex" :key="$data.chats.map(chat => chat.id).join()" mandatory>
                     <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
                         <v-badge bottom dot bordered offset-x="10" offset-y="10" :color="chat.notSelf.isOnline ? 'green' : 'red'">
                             <!-- i would have ****loved**** to use <v-list-item-avatar> instead of <v-avatar> here but for SOME REASON
@@ -52,14 +52,24 @@
                         </v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
+                <v-divider class="my-2"></v-divider>
+                <v-list-item @click="showUserFinder">
+                    <v-avatar color="secondary darken-4" class="ml-0" size="40">
+                        <span>+</span>
+                    </v-avatar>
+                    <v-list-item-title class="ml-2">
+                        Start a conversation
+                    </v-list-item-title>
+                </v-list-item>
             </v-list>
         </v-navigation-drawer>
         <v-main>
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow @showUser="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow @show-User="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
+                <UserFinderDialog ref="finderDialog" @show-user="showUser"></UserFinderDialog>
             </v-container>
         </v-main>
     </v-app>
@@ -74,6 +84,7 @@ import Vue from'vue'
 import UserProfileDialog from '@/components/UserProfileDialog'
 import MessageAlerts from '@/components/MessageAlerts'
 import LoadingScreen from '@/components/LoadingScreen'
+import UserFinderDialog from '@/components/UserFinderDialog'
 
 export default {
     name: 'DirectChat',
@@ -81,7 +92,8 @@ export default {
         ChatWindow,
         UserProfileDialog,
         MessageAlerts,
-        LoadingScreen
+        LoadingScreen,
+        UserFinderDialog
     },
     data: function(){
         return {
@@ -137,6 +149,9 @@ export default {
 
             //fix chatIndex
             this.$data.chatIndex = this.$data.chats.findIndex(chat => this.$data.chat.id == chat.id);
+        },
+        showUserFinder: function(){
+            this.$refs.finderDialog.show();
         }
     },
     created: function(){

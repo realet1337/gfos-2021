@@ -37,6 +37,9 @@ public class ImagesResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadUserPicture(@MultipartForm FileUploadForm form){
+        if(form.getData().length > 30000000){
+            return Response.status(400).entity("Image can't be larger than 30 MB").build();
+        }
         ImageReader reader = null;
         ImageInputStream iis = null;
         try {

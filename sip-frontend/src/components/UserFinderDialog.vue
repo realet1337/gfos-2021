@@ -47,7 +47,7 @@ export default {
             }
         },
         close: function(){
-
+            this.$data.isOpen = false;
         }
     }
 }

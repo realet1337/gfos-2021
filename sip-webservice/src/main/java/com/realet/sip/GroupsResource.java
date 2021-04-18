@@ -1,7 +1,5 @@
 package com.realet.sip;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +16,8 @@ import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
 import com.realet.sip.GsonTypeAdapter.RoleAdapter;
+
+import org.json.JSONObject;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -144,17 +144,17 @@ public class GroupsResource {
             return Response.status(403).entity("Unauthenticated").build();
         }
 
-        group.setOwner(UsersFacade.findById(tokenUserId).get());
+        User user = UsersFacade.findById(tokenUserId).get();
+
+        group.setOwner(user);
+
 
         //no, this doesn't allow us to change other users passwords. That will just fail because it's not possible to persist non-managed entities without setting a cascadetype. I think.
+        group.getUsers().add(user);
         GroupsFacade.add(group);
 
-        try {
-            return Response.created(new  URI("/group/" + String.valueOf(group.getId()))).build();
-        } catch (URISyntaxException e) {
-            //won't happen
-            e.printStackTrace();
-            return Response.serverError().build();
-        }
+        ChatsFacade.add(new Chat(group, null, null, "text-chat"));
+
+        return Response.status(201).entity(new JSONObject().put("id", group.getId()).toString()).build();
     }
 }

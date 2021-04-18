@@ -29,7 +29,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <GroupCreatorDialog ref="creatorDialog"/>
+        <GroupCreatorDialog ref="creatorDialog" @open-group-id="openGroupId"/>
     </v-container>
 </template>
 <script>
@@ -56,17 +56,14 @@ export default {
             }
         }).then((response) => {
             this.$data.groups = response.data;
-            //testing
-            /*
-            var noDescGroup = Object.assign({},this.$data.groups[0]);
-            noDescGroup.description = undefined;
-            this.$data.groups.push(noDescGroup);
-            console.log(this.$data.groups)*/
         })
     },
     methods: {
         showGroupCreator: function(){
             this.$refs.creatorDialog.show();
+        },
+        openGroupId: function(id){
+            this.$router.push('/group/' + id);
         }
     },
     computed: {

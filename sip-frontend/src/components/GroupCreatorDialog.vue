@@ -2,7 +2,7 @@
     <v-dialog width="700" v-model="$data.isOpen">
         <v-card>
             <v-container fluid>
-                <v-form>
+                <v-form v-model="$data.isValid">
                     <v-row align="center" no-gutters class="mb-6">
                         <v-avatar class="mx-auto" size="120">
                             <img v-if="$data.imgFile" :src="avatarUrl">
@@ -21,8 +21,10 @@
                         ></v-file-input>
                     </v-row>
                     <p class="secondary--text text--lighten-2"><b>Pick a name:</b></p>
-                    <v-text-field class="mt-5 mb-n3" filled v-model="name" @keydown.enter.prevent="create"></v-text-field>
-                    <p class="error--text">{{this.$data.errorMessage}}</p>
+                    <v-text-field class="mt-5 mb-n3" filled v-model="name" :rules="[v => !!v || 'The group needs a name']"></v-text-field>
+                    <p class="secondary--text text--lighten-2"><b>Describe the group:</b></p>
+                    <v-textarea class="mt-5 mb-n3" filled v-model="description" no-resize rows="4"></v-textarea>
+                    <v-btn block depressed large color="primary" @click="create" :disabled="!$data.isValid">CREATE</v-btn>
                 </v-form>
             </v-container>  
         </v-card>
@@ -36,6 +38,8 @@ export default {
         return {
             isOpen: false,
             name: '',
+            description: '',
+            isValid: false,
             cancelTokenSource: undefined,
             imgFile: undefined,
             picture: undefined,
@@ -68,25 +72,32 @@ export default {
         },
         show: function(){
             this.$data.id = '';
-            this.$data.errorMessage = '';
+            this.$data.cancelTokenSource = undefined;
+            this.$data.imgFile = undefined;
+            this.$data.picture = undefined;
             this.$data.isOpen = true;
         },
         create: function(){
-            if(!isNaN(this.$data.id)){
-                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$data.id,{
-                    headers:{
-                            'Authorization': 'Bearer ' + this.$store.state.token,
-                    }
-                }).then((response) => {
-                    this.close();
-                    this.$emit('show-user', response.data);
-                }, () => {
-                    this.$data.errorMessage = "We're sorry, that user doesn't exist."
-                })
+            const group = {
+                name: this.$data.name,
             }
-            else{
-                this.$data.errorMessage = "That's not a valid ID"
+            if(this.description){
+                group.description = this.description.match(/\S(.*\S)?/s)[0];
             }
+            if(this.picture){
+                group.picture = this.picture;
+            }
+            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/', group, {
+                headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                this.close();
+                this.$emit('open-group-id', response.data.id);
+                // this.$emit('show-group', response.data);
+            }, () => {
+                //no errors possible if request is correct
+            })
         },
         close: function(){
             this.$data.isOpen = false;

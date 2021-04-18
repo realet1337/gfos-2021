@@ -39,7 +39,7 @@
                                             single-line
                                             outlined
                                             class="input-field"
-                                            :rules="[v => !!v || 'Email is required'], v => new Reg(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(v) || 'This email is invalid'"
+                                            :rules="[v => !!v || 'Email is required', testEmail]"
                                         ></v-text-field>
                                     </div>
                                 </v-col>
@@ -81,6 +81,7 @@
                                 <v-btn
                                     class="ml-auto"
                                     color="primary" 
+                                    depressed
                                     @click="step++"
                                     :disabled="!$data.isValid[0]"
                                 >next</v-btn>
@@ -130,6 +131,7 @@
                                 <v-btn
                                     class="ml-1"
                                     color="primary" 
+                                    depressed
                                     @click="step++"
                                     :disabled="!$data.isValid[1]"
                                 >next</v-btn>
@@ -172,6 +174,7 @@
                                 <v-btn
                                     class="ml-18"
                                     color="primary" 
+                                    depressed
                                     @click="onSubmit"
                                     :disabled="!$data.isValid[2]"
                                 >Register</v-btn>
@@ -267,6 +270,10 @@ export default {
                 this.$data.fail.emailInUse = true;
             });
             this.$data.processing = true;
+        },
+        testEmail: function(v){
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(v) || 'Please enter a valid email'
         }
 
     },

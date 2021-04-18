@@ -461,6 +461,10 @@ export default {
                     this.$data.canRead = response.data.canRead;
                     this.$data.canWrite = response.data.canWrite;
                 }
+                else if(response.status == 204){
+                    this.$data.canRead = true;
+                    this.$data.canWrite = true;
+                }
             }, (error) => {
                 if(error.response.status === 403){
                     if(error.response.data == "Unauthenticated"){

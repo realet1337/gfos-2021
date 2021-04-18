@@ -239,7 +239,7 @@ public class ChatsResource {
                 return Response.status(403).entity("Unauthorized").build();               
             }
             Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), tokenUserId);
-            if(permission.isPresent() && !permission.get().isCanRead()){
+            if(permission.isPresent() && !permission.get().isCanWrite()){
                 return Response.status(403).entity("Insufficient permissions").build();
             }
         }

@@ -67,7 +67,7 @@
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow @show-User="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
                 <UserFinderDialog ref="finderDialog" @show-user="showUser"></UserFinderDialog>
             </v-container>

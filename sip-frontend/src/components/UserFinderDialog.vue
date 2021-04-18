@@ -20,7 +20,6 @@ export default {
         return {
             isOpen: false,
             id: '',
-            errorMessage: ''
         }
     },
     methods: {
@@ -49,6 +48,6 @@ export default {
         close: function(){
             this.$data.isOpen = false;
         }
-    }
+    },
 }
 </script>

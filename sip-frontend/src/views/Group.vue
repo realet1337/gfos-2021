@@ -41,10 +41,20 @@
                 >
                     <v-list style="max-height: 100%;" class="hide-scrollbar overflow-x-hidden">
                         <v-list-item v-for="group in groups" :key="group.id" @click="openGroup(group)">
-                            <v-list-item-avatar size="48" class="ml-n3">
-                                <img v-if="group.picture" :src="$getAvatarUrl('group', group)">
-                                <span v-else>{{group.name.substring(0,1)}}</span>
-                            </v-list-item-avatar>
+                            <v-tooltip right>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-list-item-avatar 
+                                        size="48" 
+                                        class="ml-n3"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        <img v-if="group.picture" :src="$getAvatarUrl('group', group)">
+                                        <span v-else>{{group.name.substring(0,1)}}</span>
+                                    </v-list-item-avatar>
+                                </template>
+                                {{group.name}}
+                            </v-tooltip>
                         </v-list-item>
                     </v-list>
                 </v-navigation-drawer>
@@ -82,7 +92,7 @@
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow v-if="$route.params.chatId" @showUser="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow v-if="$route.params.chatId" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
             </v-container>
         </v-main>

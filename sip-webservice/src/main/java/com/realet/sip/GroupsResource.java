@@ -1,10 +1,13 @@
 package com.realet.sip;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -124,5 +127,34 @@ public class GroupsResource {
             new GsonBuilder().registerTypeAdapter(Role.class, new RoleAdapter(1)).create()
             .toJson(roles)
         ).build();
+    }
+
+    @POST
+    public Response createGroup(Group group, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try{
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        }
+        catch(IllegalAccessException e){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        group.setOwner(UsersFacade.findById(tokenUserId).get());
+
+        //no, this doesn't allow us to change other users passwords. That will just fail because it's not possible to persist non-managed entities without setting a cascadetype. I think.
+        GroupsFacade.add(group);
+
+        try {
+            return Response.created(new  URI("/group/" + String.valueOf(group.getId()))).build();
+        } catch (URISyntaxException e) {
+            //won't happen
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
     }
 }

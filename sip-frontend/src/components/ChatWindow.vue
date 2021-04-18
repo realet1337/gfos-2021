@@ -33,7 +33,7 @@
 
                 <!-- different user or 5 min apart -->
                 <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
-                || new Date(chatMessages[index - 1].sent).getTime() + 300000 < new Date(chatMessage.sent).getTime()" class="text-message mt-5 rounded mr-2" no-gutters>
+                || new Date(chatMessages[index - 1].sent).getTime() + 300000 < new Date(chatMessage.sent).getTime()" class="text-message reveal-on-hover-container mt-5 rounded mr-2" no-gutters>
                     <!-- beeg -->
                     <v-col cols="auto" style="max-width: 63px;">
                         <v-avatar @click="$emit('showUser', chatMessage.author)" color="primary" class="clickable mt-1 ml-2" size="40">
@@ -61,7 +61,7 @@
                 </v-row>
 
                 <!-- smol -->
-                <v-row class="flat-text-message text-message my-1 rounded mr-2" v-else no-gutters>
+                <v-row class="flat-text-message text-message reveal-on-hover-container my-1 rounded mr-2" v-else no-gutters>
                     <v-col style="max-width: 64px;" align-self="center">
                         <span class="date reveal-on-hover ml-3">{{new Date(chatMessage.sent).getHours().toString().padStart(2,'0') + ":"
                             + new Date(chatMessage.sent).getMinutes().toString().padStart(2,'0')}}</span>

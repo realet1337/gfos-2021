@@ -4,20 +4,47 @@
             <v-col v-for="chat in chats" :key="chat.id" cols="auto">
                 <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
             </v-col>
+            <v-col>
+                <v-card width="350" min-width="350" class="rounded-xl my-4" elevation="0" color="secondary darken-4">
+                    <div v-ripple class="clickable" @click="showUserFinder">
+                        <v-row>
+                            <v-avatar size="130" class="mx-auto mt-6 mb-0" color="secondary darken-3">
+                                <span class="headline">+</span>
+                            </v-avatar>
+                        </v-row>
+                        <v-row>
+                            <v-card-title class="mx-auto">Start a conversation</v-card-title>
+                        </v-row>
+                    </div>
+                    <v-divider class="mt-3 mb-6"></v-divider>
+                    <v-row>
+                        <v-sheet class="mx-auto mb-4 rounded-lg reveal-on-hover-container" width="85%" color="secondary darken-3" elevation="0">
+                            <v-row no-gutters style="height: 100px;" class="fill-height" align="center">
+                                <v-col align-self="center">
+                                    <p class="ml-4 mx-auto my-auto secondary--text reveal-on-hover">{{voidMessage}}</p>
+                                </v-col>
+                            </v-row>
+                        </v-sheet>
+                    </v-row>
+                </v-card>
+            </v-col>
         </v-row>
-            <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
+        <UserFinderDialog ref="finderDialog" @show-user="showUserDialog"></UserFinderDialog>
+        <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
     </v-container>
 </template>
 <script>
 import ChatCard from './ChatCard.vue'
-import UserProfileDialog from './UserProfileDialog.vue'
+import UserProfileDialog from './UserProfileDialog'
 import Vue from 'vue'
+import UserFinderDialog from './UserFinderDialog'
 
 export default {
     name: 'HomeDirectChats',
     components:{
         ChatCard,
         UserProfileDialog,
+        UserFinderDialog,
     },
     data: function(){
         return {
@@ -47,6 +74,14 @@ export default {
         },
         openGroup: function(group){
             this.$router.push('/group/' + group.id);
+        },
+        showUserFinder: function(){
+            this.$refs.finderDialog.show();
+        }
+    },
+    computed: {
+        voidMessage: function(){
+            return Vue.prototype.$void[Math.floor(Math.random()*Vue.prototype.$void.length)];
         },
     }
 

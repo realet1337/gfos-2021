@@ -78,13 +78,14 @@
     background-color: var(--v-secondary-darken4);
 }
 
-.text-message .reveal-on-hover{
+.reveal-on-hover-container .reveal-on-hover{
     display: none;
 }
 
-.text-message:hover .reveal-on-hover{
+.reveal-on-hover-container:hover .reveal-on-hover{
     display: block;
 }
+
 
 .date{
     color: var(--v-secondary-lighten1);

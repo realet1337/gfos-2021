@@ -98,12 +98,19 @@
                     >{{user.username}}</v-list-item-title>
                 </v-list-item>
             </v-list>
+            <v-list nav dense>
+                <span class="label-text"><b>No role</b></span>
+                <v-list-item v-for="user in basicUsers" :key="user.id" @click="showUser(user)">
+                    <v-list-item-title 
+                    >{{user.username}}</v-list-item-title>
+                </v-list-item>
+            </v-list>
         </v-navigation-drawer>
         <v-main>
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow v-if="$route.params.chatId" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow v-if="chat" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
                 <GroupCreatorDialog ref="creatorDialog" @open-group-id="openGroupId"/>
             </v-container>
@@ -135,6 +142,7 @@ export default {
         return {
             chats: [],
             roles: [],
+            basicUsers: [],
             chat: undefined,
             chatIndex: 0,
             group: undefined,
@@ -158,6 +166,9 @@ export default {
                 this.group = group;
                 this.resetView();
                 this.initGroup();
+                if(this.groups.findIndex(tmpGroup => tmpGroup.id === group.id) === -1){
+                    this.getGroups();
+                }
             }
         },
         openChat: function(chat){
@@ -214,6 +225,27 @@ export default {
                 this.$data.chat = response.data[this.$data.chatIndex];
                 this.$data.chats = response.data;
             },  
+            (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            });
+
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/basic-users', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                this.basicUsers = response.data;
+            },
             (error) => {
                 if(error.response.status === 403){
                     if(error.response.data == "Unauthenticated"){
@@ -325,5 +357,24 @@ export default {
         this.initGroup();
 
     },
+    computed: {
+        isAdmin: function(){
+            var tmpGroup = this.group;
+            var tmpRoles = this.roles;
+            if(tmpGroup.owner.id === this.$store.state.userId){
+                return true;
+            }
+            for(var i = 0; i < tmpRoles.length; i++){
+                if(tmpRoles[i].isAdmin){
+                    for(var j = 0; j < tmpRoles[i].users.length; j++){
+                        if(tmpRoles[i].users[j].id === this.$store.state.userId){
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+    }
 }
 </script>

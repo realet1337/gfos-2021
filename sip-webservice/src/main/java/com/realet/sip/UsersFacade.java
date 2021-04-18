@@ -64,6 +64,13 @@ public class UsersFacade {
         return em.createNamedQuery("User.findGroupChatReaders", User.class).setParameter(1, groupId).setParameter(2, chatId).getResultList();
     }
 
+    public static List<User> findBasicGroupMembers(long groupId){
+
+        EntityManager em = emf.createEntityManager();
+
+        return em.createNamedQuery("User.findBasicGroupMembers", User.class).setParameter(1, groupId).getResultList();
+    }
+
     public static void add(User user){
 
         EntityManager em = emf.createEntityManager();

@@ -10,20 +10,20 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Role.class)
 public abstract class Role_ {
 
-	public static volatile SingularAttribute<Role, Boolean> administrator;
 	public static volatile SingularAttribute<Role, String> color;
 	public static volatile ListAttribute<Role, Permission> permissions;
 	public static volatile SingularAttribute<Role, String> name;
 	public static volatile SingularAttribute<Role, Long> id;
+	public static volatile SingularAttribute<Role, Boolean> isAdmin;
 	public static volatile SingularAttribute<Role, Long> priority;
 	public static volatile SetAttribute<Role, User> users;
 	public static volatile SingularAttribute<Role, Group> group;
 
-	public static final String ADMINISTRATOR = "administrator";
 	public static final String COLOR = "color";
 	public static final String PERMISSIONS = "permissions";
 	public static final String NAME = "name";
 	public static final String ID = "id";
+	public static final String IS_ADMIN = "isAdmin";
 	public static final String PRIORITY = "priority";
 	public static final String USERS = "users";
 	public static final String GROUP = "group";

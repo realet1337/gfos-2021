@@ -155,7 +155,7 @@ public class ImagesResource {
                 if(path.charAt(path.length()-1) != '/'){
                     path = path + "/";
                 }
-                path = path + "/pic/user/" + outName + ".jpg";
+                path = path + "/pic/group/" + outName + ".jpg";
 
                 outputFile = new File(path);
 

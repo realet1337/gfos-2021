@@ -2,10 +2,13 @@ package com.realet.sip.GsonTypeAdapter;
 
 import java.io.IOException;
 
+
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.realet.sip.Group;
+import com.realet.sip.User;
 
 public class GroupAdapter extends TypeAdapter<Group>{
 
@@ -20,8 +23,11 @@ public class GroupAdapter extends TypeAdapter<Group>{
         out.value(value.getName());
         out.name("picture");
         out.value(value.getPicture());
-        out.name("ownerId");
-        out.value(value.getOwner().getId());
+        out.name("owner");
+        out.jsonValue(
+            new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+            .toJson(value.getOwner())
+        );
         out.endObject();
         
     }

@@ -48,7 +48,9 @@ public class Role{
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    private boolean administrator;
+
+    @Column(name = "is_admin", nullable = false)
+    private boolean isAdmin;
 
     private long priority;
 
@@ -127,23 +129,24 @@ public class Role{
         return permissions;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
     }
 
-    public boolean isAdministrator() {
-        return administrator;
-    }
 
-    public void setAdministrator(boolean administrator) {
-        this.administrator = administrator;
-    }
-
-    public Role(String name, String color, Group group, boolean administrator, long priority) {
+    public Role(String name, String color, Group group, boolean isAdmin, long priority) {
         this.name = name;
         this.color = color;
         this.group = group;
-        this.administrator = administrator;
+        this.isAdmin = isAdmin;
         this.priority = priority;
     }
 

@@ -49,7 +49,11 @@ import javax.persistence.TemporalType;
     //also select users w/o Roles
     "SELECT Users.* FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE GroupMembership.group_id = ?1 " + 
     "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
-    "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class)
+    "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class),
+
+    @NamedNativeQuery(name = "User.findBasicGroupMembers", query = "SELECT Users.* FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE GroupMembership.group_id = ?1 " + 
+    "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
+    "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class) 
 })
 
 public class User{

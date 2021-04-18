@@ -43,18 +43,29 @@
                         <v-list-item v-for="group in groups" :key="group.id" @click="openGroup(group)">
                             <v-tooltip right>
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-list-item-avatar 
-                                        size="48" 
-                                        class="ml-n3"
+                                    <v-avatar 
+                                        size="40" 
+                                        class="ml-n2"
                                         v-bind="attrs"
                                         v-on="on"
+                                        color="primary"
                                     >
                                         <img v-if="group.picture" :src="$getAvatarUrl('group', group)">
                                         <span v-else>{{group.name.substring(0,1)}}</span>
-                                    </v-list-item-avatar>
+                                    </v-avatar>
                                 </template>
                                 {{group.name}}
                             </v-tooltip>
+                        </v-list-item>
+                        <v-divider class="my-2"></v-divider>
+                        <v-list-item @click="showGroupCreator">
+                            <v-avatar
+                                size="40" 
+                                class="ml-n2"
+                                color="secondary darken-4"
+                            >
+                                <span class="primary--text text-h6">+</span>
+                            </v-avatar>
                         </v-list-item>
                     </v-list>
                 </v-navigation-drawer>
@@ -94,6 +105,7 @@
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
                 <ChatWindow v-if="$route.params.chatId" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
+                <GroupCreatorDialog ref="creatorDialog" @open-group-id="openGroupId"/>
             </v-container>
         </v-main>
     </v-app>
@@ -107,6 +119,7 @@ import ChatWindow from '@/components/ChatWindow'
 import UserProfileDialog from '@/components/UserProfileDialog'
 import MessageAlerts from '@/components/MessageAlerts'
 import LoadingScreen from '@/components/LoadingScreen'
+import GroupCreatorDialog from '@/components/GroupCreatorDialog'
 import Vue from 'vue'
 
 export default {
@@ -115,7 +128,8 @@ export default {
         ChatWindow,
         UserProfileDialog,
         MessageAlerts,
-        LoadingScreen
+        LoadingScreen,
+        GroupCreatorDialog
     },
     data: function(){
         return {
@@ -141,6 +155,7 @@ export default {
         openGroup: function(group){
             if(group.id !== this.$data.group.id){
                 this.$router.push('/group/' + group.id);
+                this.group = group;
                 this.resetView();
                 this.initGroup();
             }
@@ -188,7 +203,12 @@ export default {
 
                     //invalid / no chat
                     chatIndex = 0;
-                    this.$router.push(this.$route.path + '/chat/' + response.data[0].id);
+                    if(!this.$route.params.chatId){
+                        this.$router.push(this.$route.path + '/chat/' + response.data[0].id);
+                    }
+                    else{
+                        this.$router.push('/group/' + this.$route.params.groupId + '/chat/' + response.data[0].id);
+                    }
                 }
                 this.$data.chatIndex = chatIndex;
                 this.$data.chat = response.data[this.$data.chatIndex];
@@ -246,40 +266,62 @@ export default {
             this.$data.chat = undefined;
             this.$data.roles = [];
             this.$data.showUserDrawer = false;
-        }
+        },
+        getGroups: function(){
+            //get groups
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/groups', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                var groupIndex = response.data.findIndex(group => group.id == this.$route.params.groupId);
+                if(groupIndex == -1){
+
+                    //invalid / no chat
+                    groupIndex = 0;
+                    this.$router.push('/home/groups');
+                }
+                this.$data.group = response.data[groupIndex];
+                this.$data.groups = response.data;
+            },  
+            (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            });
+        },
+        openGroupId: function(id){
+            var groupIndex = this.groups.findIndex(group => group.id === id);
+            if(groupIndex === -1){
+                this.resetView();
+                this.$router.push('/group/' + id);
+                this.getGroups();
+                this.initGroup();
+                
+            }
+            else{
+                //this is useless but its nice having some safety
+                this.group = this.groups[groupIndex];
+                this.$router.push('/group/' + id);
+                this.resetView();
+                this.initGroup();
+            }
+        },
+        showGroupCreator: function(){
+            this.$refs.creatorDialog.show();
+        },
     },
     created: function(){
 
-        //get groups
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/groups', {
-            headers:{
-                'Authorization': 'Bearer ' + this.$store.state.token,
-            }
-        }).then((response) => {
-            var groupIndex = response.data.findIndex(group => group.id == this.$route.params.groupId);
-            if(groupIndex == -1){
-
-                //invalid / no chat
-                groupIndex = 0;
-                this.$router.push('/home/groups');
-            }
-            this.$data.group = response.data[groupIndex];
-            this.$data.groups = response.data;
-        },  
-        (error) => {
-            if(error.response.status === 403){
-                if(error.response.data == "Unauthenticated"){
-                    this.$router.push('/');
-                }
-                else if(error.response.data == "Unauthorized"){
-                    this.$router.push('/home')
-                }
-            }
-            else if(error.response.status === 404){
-                this.$router.push('/home')
-            }
-        });
-
+        this.getGroups();
         this.initGroup();
 
     },

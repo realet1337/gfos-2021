@@ -52,10 +52,10 @@
                 <!-- css is terrible -->
                 <v-tabs-items v-model="tab" class="mt-3">
                     <v-tab-item>
-                        <v-row no-gutters v-if="$route.params.groupId">
+                        <v-row no-gutters v-if="$route.params.groupId && roles != false">
                             <p class="label-text mt-3"><b>ROLES</b></p>
                         </v-row>                
-                        <v-row no-gutters v-if="$route.params.groupId">
+                        <v-row no-gutters v-if="$route.params.groupId && roles != false">
                             <v-col v-for="role in roles" :key="role.id" cols="auto">
                                 <v-chip
                                 outlined
@@ -128,6 +128,11 @@ export default {
             this.$data.isOpen = false;
         },
         show: function(user){
+
+            this.sharedGroups = [];
+            this.roles = [];
+            this.tab = 0;
+            this.directChat = {};
 
             this.$data.user = user;
             this.$data.isOpen = true;

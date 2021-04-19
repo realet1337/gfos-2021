@@ -113,15 +113,28 @@ export default {
             sharedGroups: [],
             roles: [],
             tab: 0,
-            directChat: {},
             isOpen: false,
             user: {}
         }
     },
     methods: {
         openDirectChat: function(){
-            this.$emit('open-direct-chat', this.$data.directChat);
-            this.$data.isOpen = false;
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats', {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token
+                    },
+                    params:{
+                        user1: this.$data.user.id,
+                        user2: this.$store.state.userId
+                    }
+                }).then((response) => {
+                    this.$emit('open-direct-chat', response.data);
+                    this.$data.isOpen = false;
+                },(error) => {
+                    if(error.response.status == 403){
+                        this.$router.push('/login');
+                    }
+                })
         },
         openGroup: function(group){
             this.$emit('open-group', group);
@@ -132,7 +145,6 @@ export default {
             this.sharedGroups = [];
             this.roles = [];
             this.tab = 0;
-            this.directChat = {};
 
             this.$data.user = user;
             this.$data.isOpen = true;
@@ -153,22 +165,6 @@ export default {
                     }
                 })
 
-                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats', {
-                    headers:{
-                        'Authorization': 'Bearer ' + this.$store.state.token
-                    },
-                    params:{
-                        user1: this.$data.user.id,
-                        user2: this.$store.state.userId
-                    }
-                }).then((response) => {
-                    this.$data.directChat = response.data;
-                },(error) => {
-
-                    if(error.response.status == 403){
-                        this.$router.push('/login');
-                    }
-                })
             }
 
             if(this.$route.params.groupId){

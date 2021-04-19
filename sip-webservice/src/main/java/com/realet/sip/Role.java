@@ -23,7 +23,8 @@ import javax.persistence.Table;
 @Table(name = "Roles")
 @NamedQueries({
     @NamedQuery(name = "Role.findGroupRolesOrderedByPriority", query = "SELECT r FROM Role r WHERE r.group = :group ORDER BY r.priority ASC"),
-    @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group")
+    @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group"),
+    @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.isAdmin = true")
 })
 public class Role{
 

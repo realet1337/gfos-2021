@@ -2,7 +2,10 @@ package com.realet.sip;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -178,6 +181,23 @@ public class GroupsResource {
             return Response.status(403).entity("Unauthenticated").build();
         }
 
+        if(group.getName() == null){
+            return Response.status(400).entity("Group must have name").build();
+        }
+
+        //bit of sanitization (and some more validation)
+        //this pattern just strips whitespaces at the start/end of string
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(group.getName());
+
+        if(m.find()){
+            group.setName(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+
         User user = UsersFacade.findById(tokenUserId).get();
 
         group.setOwner(user);
@@ -190,5 +210,55 @@ public class GroupsResource {
         ChatsFacade.add(new Chat(group, null, null, "text-chat"));
 
         return Response.status(201).entity(new JSONObject().put("id", group.getId()).toString()).build();
+    }
+
+    @POST
+    @Path("/{groupId}/chats/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateChat(@PathParam("groupId") long groupId, Chat inputChat, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        if(inputChat.getName() == null){
+            return Response.status(400).entity("Chat must have name").build();
+        }
+
+        //bit of sanitization (and some more validation)
+        //this pattern just strips whitespaces at the start/end of string
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(inputChat.getName());
+
+        if(m.find()){
+            inputChat.setName(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty()){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        //just make a group chat anyways
+        inputChat.setGroup(group.get());
+        inputChat.setUser1(null);
+        inputChat.setUser2(null);
+        ChatsFacade.add(inputChat);
+
+        return Response.status(201).build();
     }
 }

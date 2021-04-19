@@ -9,9 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -321,6 +323,86 @@ public class ChatsResource {
         
         return Response.status(201).build();
 
+    }
+
+    @PUT
+    @Path("")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateChat(Chat inputChat, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        } 
+
+        if(inputChat.getName() == null){
+            return Response.status(400).entity("Chat must have name").build();
+        }
+
+        //bit of sanitization (and some more validation)
+        //this pattern just strips whitespaces at the start/end of string
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(inputChat.getName());
+
+        if(m.find()){
+            inputChat.setName(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+
+        Optional<Chat> chat = ChatsFacade.findById(inputChat.getId());
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+        if(chat.get().getGroup() == null){
+            return Response.status(400).entity("Can't modify direct chats.").build();
+        }
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty()){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+        inputChat.setGroup(chat.get().getGroup());
+        inputChat.setUser1(null);
+        inputChat.setUser2(null);
+        ChatsFacade.update(inputChat);
+
+        return Response.status(200).build();
+    }
+
+    @DELETE
+    @Path("/{chatId}")
+    public Response deleteChat(@PathParam("chatId") long chatId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        } 
+        Optional<Chat> chat = ChatsFacade.findById(chatId);
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+        if(chat.get().getGroup() == null){
+            return Response.status(400).entity("Can't delete direct chats.").build();
+        }
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty()){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+        ChatsFacade.remove(chat.get());
+
+        return Response.status(200).build();
     }
 
 }

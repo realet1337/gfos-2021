@@ -23,7 +23,9 @@
                     </v-row>
                 </v-col>
                 <v-col class="ml-auto" cols="auto" align-self="center">
-                    <v-icon class="my-auto" color="secondary lighten-2" @click="toggleUserDrawer">mdi-account-multiple</v-icon>
+                    <v-btn icon class="my-auto" @click="toggleUserDrawer">
+                        <v-icon color="secondary lighten-2">mdi-account-multiple</v-icon>
+                    </v-btn>
                 </v-col>
             </v-row>
         </v-app-bar>
@@ -73,34 +75,93 @@
                     <v-row class="mt-1 mb-2 ml-2">
                         <span class="secondary--text text--lighten-4" style="font-size: 14px;"><b>CHATS</b></span>
                     </v-row>
-                    <v-list-item-group v-model="$data.chatIndex" mandatory>
-                        <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)">
-                            <v-list-item-icon>
-                                <v-icon class="ml-2" color="secondary">
-                                    mdi-message-text
-                                </v-icon>
-                            </v-list-item-icon>
+                    <v-list-item v-for="chat in chats" :key="chat.id" @click="openChat(chat)" :input-value="$data.chat.id === chat.id">
+                        <v-list-item-icon>
+                            <v-icon class="ml-2" color="secondary">
+                                mdi-message-text
+                            </v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            {{chat.name}}
+                        </v-list-item-title>
+                        <v-list-item-action>
+                            <v-menu
+                                rounded="lg"
+                                offset-y
+                                offset-x
+                            >
+                                <template v-slot:activator="{ on }">
+                                    <v-btn icon width="20" height="20" v-on="on" >
+                                        <v-icon size="20" color="grey lighten-1">mdi-dots-vertical</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-list
+                                nav
+                                dense
+                                >
+                                    <v-list-item
+                                        link
+                                    >
+                                        <v-list-item-content
+                                            style="min-width: 100px;"
+                                            @click="editChat(chat)"
+                                        >Edit</v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item
+                                        link
+                                    >
+                                        <v-list-item-content
+                                            class="red--text text--lighten-2"
+                                            style="min-width: 100px;"
+                                            @click="deleteChat(chat)"
+                                        >Delete</v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-list-item-action>
+                    </v-list-item>
+                    <v-divider class="my-2"></v-divider>
+                    <v-list-item @click="createChat">
+                            <v-icon class="ml-2 mr-6">mdi-plus</v-icon>
                             <v-list-item-title>
-                                {{chat.name}}
+                                Add chat
                             </v-list-item-title>
                         </v-list-item>
-                    </v-list-item-group>
                 </v-list>
             </v-row>
         </v-navigation-drawer>
         <v-navigation-drawer app clipped floating  right color="grey darken-4" :value="$data.showUserDrawer">
+            <v-list nav dense v-if="group">
+                <span class="label-text"><b>OWNER</b></span>
+                <v-list-item @click="showUser(group.owner)">
+                    <v-avatar color="primary" size="30" class=" mr-2">
+                        <img v-if="group.owner.profilePicture" :src="$getAvatarUrl('user', group.owner)">
+                        <span v-else class="text-body-2">{{group.owner.username.substring(0,1)}}</span>
+                    </v-avatar>
+                    <v-list-item-title>{{group.owner.username}}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
             <v-list nav dense v-for="role in roles" :key="role.id">
                 <span class="label-text"><b>{{role.name.toUpperCase()}}</b></span>
                 <v-list-item v-for="user in role.users" :key="user.id"
                 @click="showUser(user)">
+                    <v-avatar color="primary" size="30" class=" mr-2">
+                        <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
+                        <span v-else class="text-body-2">{{user.username.substring(0,1)}}</span>
+                    </v-avatar>
                     <v-list-item-title 
                     :style="'color: ' + role.color"
                     >{{user.username}}</v-list-item-title>
                 </v-list-item>
             </v-list>
-            <v-list nav dense>
-                <span class="label-text"><b>No role</b></span>
+            <v-list v-if="basicUsers != false" nav dense>
+                <span class="label-text"><b>NO ROLE</b></span>
                 <v-list-item v-for="user in basicUsers" :key="user.id" @click="showUser(user)">
+                    <v-avatar color="primary" size="30" class=" mr-2">
+                        <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
+                        <span v-else class="text-body-2">{{user.username.substring(0,1)}}</span>
+                    </v-avatar>
                     <v-list-item-title 
                     >{{user.username}}</v-list-item-title>
                 </v-list-item>
@@ -113,6 +174,8 @@
                 <ChatWindow v-if="chat" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
                 <GroupCreatorDialog ref="creatorDialog" @open-group-id="openGroupId"/>
+                <!-- maybe change to manual adding later so we don't reload every time -->
+                <ChatEditorDialog ref="chatEditorDialog" @chat-updated="this.initGroup" @chat-created="this.initGroup"></ChatEditorDialog>
             </v-container>
         </v-main>
     </v-app>
@@ -127,6 +190,7 @@ import UserProfileDialog from '@/components/UserProfileDialog'
 import MessageAlerts from '@/components/MessageAlerts'
 import LoadingScreen from '@/components/LoadingScreen'
 import GroupCreatorDialog from '@/components/GroupCreatorDialog'
+import ChatEditorDialog from '@/components/ChatEditorDialog'
 import Vue from 'vue'
 
 export default {
@@ -136,7 +200,8 @@ export default {
         UserProfileDialog,
         MessageAlerts,
         LoadingScreen,
-        GroupCreatorDialog
+        GroupCreatorDialog,
+        ChatEditorDialog
     },
     data: function(){
         return {
@@ -144,10 +209,10 @@ export default {
             roles: [],
             basicUsers: [],
             chat: undefined,
-            chatIndex: 0,
             group: undefined,
             groups: [],
             showUserDrawer: false,
+            dummy: 0
         }
     },
     methods: {
@@ -221,8 +286,7 @@ export default {
                         this.$router.push('/group/' + this.$route.params.groupId + '/chat/' + response.data[0].id);
                     }
                 }
-                this.$data.chatIndex = chatIndex;
-                this.$data.chat = response.data[this.$data.chatIndex];
+                this.$data.chat = response.data[chatIndex];
                 this.$data.chats = response.data;
             },  
             (error) => {
@@ -349,6 +413,23 @@ export default {
         },
         showGroupCreator: function(){
             this.$refs.creatorDialog.show();
+        },
+        createChat: function(){
+            this.$refs.chatEditorDialog.show();
+        },
+        editChat: function(chat){
+            this.$refs.chatEditorDialog.show(chat);
+        },
+        deleteChat: function(chat){
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/chats/' + chat.id, {
+                headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.initGroup();
+            }, () => {
+                //shouldn't fail
+            });
         },
     },
     created: function(){

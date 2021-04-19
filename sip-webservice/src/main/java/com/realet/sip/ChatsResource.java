@@ -365,7 +365,7 @@ public class ChatsResource {
         if(chat.get().getGroup() == null){
             return Response.status(400).entity("Can't modify direct chats.").build();
         }
-        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty()){
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty() && chat.get().getGroup().getOwner().getId() != tokenUserId){
             return Response.status(403).entity("Unauthorized").build();
         }
         inputChat.setGroup(chat.get().getGroup());
@@ -397,8 +397,11 @@ public class ChatsResource {
         if(chat.get().getGroup() == null){
             return Response.status(400).entity("Can't delete direct chats.").build();
         }
-        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty()){
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty() && chat.get().getGroup().getOwner().getId() != tokenUserId){
             return Response.status(403).entity("Unauthorized").build();
+        }
+        if(chat.get().getGroup().getChats().size() == 1){
+            return Response.status(400).entity("Can't delete only chat of group.").build();
         }
         ChatsFacade.remove(chat.get());
 

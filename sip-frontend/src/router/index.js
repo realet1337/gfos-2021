@@ -8,9 +8,15 @@ import FrontPage from '@/views/FrontPage.vue'
 import DirectChat from '@/views/DirectChat.vue'
 import Group from '@/views/Group.vue'
 import Register from '@/views/Register.vue'
+import GroupEdit from '@/views/GroupEdit.vue'
 
-import HomeDirectChats from '@/components/HomeDirectChats.vue'
-import HomeGroups from '@/components/HomeGroups.vue'
+import HomeDirectChats from '@/views/HomeDirectChats.vue'
+import HomeGroups from '@/views/HomeGroups.vue'
+
+import GroupEditOverview from '@/views/GroupEditOverview'
+import GroupEditUsersView from '@/views/GroupEditUsersView'
+import GroupEditRolesView from '@/views/GroupEditRolesView'
+import GroupEditRoleManagerView from '@/views/GroupEditRoleManagerView'
 
 
 Vue.use(VueRouter)
@@ -61,6 +67,32 @@ const routes = [
 		path: '/group/:groupId',
 		component: Group,
 		name: 'Group'
+	},
+	{
+		path: '/group/:groupId/edit',
+		component: GroupEdit,
+		children: [
+			{
+				path:'overview',
+				component: GroupEditOverview,
+				name: 'GroupEditOverview',
+			},
+			{
+				path: 'roles',
+				component: GroupEditRolesView,
+				name: "GroupEditRolesView",
+			},
+			{
+				path: 'manage-roles',
+				component: GroupEditRoleManagerView,
+				name: "GroupEditRoleManagerView",
+			},
+			{
+				path: 'users',
+				component: GroupEditUsersView,
+				name: "GroupEditUsersView",
+			}
+		]
 	},
 	{
 		path: '',

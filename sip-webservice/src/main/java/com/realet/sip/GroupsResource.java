@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
+import com.realet.sip.GsonTypeAdapter.GroupAdapter;
 import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
 import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 import com.realet.sip.GsonTypeAdapter.UserAdapter;
@@ -29,6 +30,39 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/groups")
 public class GroupsResource {
+
+    @GET
+    @Path("/{groupId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroup(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        } 
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> user = UsersFacade.findById(tokenUserId);
+        if(!group.get().getUsers().contains(user.get())){
+            return Response.status(403).entity("Unauthorized").build();   
+        }
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(Group.class, new GroupAdapter()).create()
+            .toJson(group.get())
+        ).build();
+
+    }
     
     @GET
     @Path("/{groupId}/chats")
@@ -249,7 +283,7 @@ public class GroupsResource {
         if(group.isEmpty()){
             return Response.status(404).build();
         }
-        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty()){
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty() && group.get().getOwner().getId() != tokenUserId){
             return Response.status(403).entity("Unauthorized").build();
         }
 

@@ -23,7 +23,12 @@
                     </v-row>
                 </v-col>
                 <v-col class="ml-auto" cols="auto" align-self="center">
-                    <v-btn icon class="my-auto" @click="toggleUserDrawer">
+                    <v-btn width="35" height="35" icon class="my-auto" @click="$router.push('/group/' + $route.params.groupId + '/edit/overview')">
+                        <v-icon color="secondary lighten-2">mdi-pencil</v-icon>
+                    </v-btn>
+                </v-col>
+                <v-col cols="auto" align-self="center">
+                    <v-btn width="35" height="35" icon class="my-auto" @click="toggleUserDrawer">
                         <v-icon color="secondary lighten-2">mdi-account-multiple</v-icon>
                     </v-btn>
                 </v-col>
@@ -89,6 +94,7 @@
                                 rounded="lg"
                                 offset-y
                                 offset-x
+                                v-if="isAdmin && chats.length > 1"
                             >
                                 <template v-slot:activator="{ on }">
                                     <v-btn icon width="20" height="20" v-on="on" >
@@ -120,13 +126,15 @@
                             </v-menu>
                         </v-list-item-action>
                     </v-list-item>
-                    <v-divider class="my-2"></v-divider>
-                    <v-list-item @click="createChat">
+                    <template v-if="isAdmin">
+                        <v-divider class="my-2"></v-divider>
+                        <v-list-item @click="createChat">
                             <v-icon class="ml-2 mr-6">mdi-plus</v-icon>
                             <v-list-item-title>
                                 Add chat
                             </v-list-item-title>
                         </v-list-item>
+                    </template>
                 </v-list>
             </v-row>
         </v-navigation-drawer>
@@ -440,6 +448,9 @@ export default {
     },
     computed: {
         isAdmin: function(){
+            if(this.group === undefined){
+                return false;
+            }
             var tmpGroup = this.group;
             var tmpRoles = this.roles;
             if(tmpGroup.owner.id === this.$store.state.userId){

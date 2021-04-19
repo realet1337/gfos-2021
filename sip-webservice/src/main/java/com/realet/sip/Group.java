@@ -19,6 +19,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name="`Groups`")
 @NamedQueries({
@@ -49,9 +52,11 @@ public class Group{
     		   inverseJoinColumns=@JoinColumn(name="user_id"))
     private Set<User> users = new HashSet<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "group")
     private List<Role> roles = new ArrayList<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "group")
     private List<Chat> chats = new ArrayList<>();
 

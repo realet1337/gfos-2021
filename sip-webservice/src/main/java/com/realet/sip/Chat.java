@@ -17,6 +17,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name = "Chats")
 @NamedQueries({
@@ -49,9 +52,11 @@ public class Chat{
 
     private String name;
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "chat")
     private List<ChatMessage> messages = new ArrayList<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "chat")
     private List<Permission> permissions = new ArrayList<>();
 

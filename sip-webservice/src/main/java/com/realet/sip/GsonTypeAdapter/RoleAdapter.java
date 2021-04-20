@@ -42,7 +42,7 @@ public class RoleAdapter extends TypeAdapter<Role> {
                 .toJson(value.getUsers())
             );
         }
-        out.name("isAdmin");
+        out.name("admin");
         out.value(value.isAdmin());
         out.endObject();
     }

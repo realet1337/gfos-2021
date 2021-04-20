@@ -457,7 +457,7 @@ export default {
                 return true;
             }
             for(var i = 0; i < tmpRoles.length; i++){
-                if(tmpRoles[i].isAdmin){
+                if(tmpRoles[i].admin){
                     for(var j = 0; j < tmpRoles[i].users.length; j++){
                         if(tmpRoles[i].users[j].id === this.$store.state.userId){
                             return true;

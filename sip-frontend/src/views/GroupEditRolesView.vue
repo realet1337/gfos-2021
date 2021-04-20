@@ -2,25 +2,77 @@
     <v-container fluid>
         <v-row>
             <v-col>
-                <v-select cache-items v-model="roleIndex" :items="roles" item-text="name" item-value="id">
+                <v-select v-model="roleId" :items="roles" item-text="name" item-value="id">
                 </v-select>
             </v-col>
             <v-col cols="auto" align-self="center">
-                <v-btn large depressed color="primary">EDIT ROLE PRIORITY</v-btn>
+                <v-btn large depressed color="primary" @click="createRole">ADD ROLE</v-btn>
+            </v-col>
+            <v-col cols="auto" align-self="center">
+                <v-btn text large depressed color="primary">EDIT ROLE PRIORITIES</v-btn>
             </v-col>
         </v-row>
-        <v-divider></v-divider>
+        <v-divider class="mb-5"></v-divider>
         <v-form v-if="role">
+            <h3 class="mb-3" v-if="role.id">{{!!role.id ? 'Role details:' : 'Create role:'}}</h3>
             <v-row no-gutters>
-                <v-text-field v-model="role.name"></v-text-field>
+                <span class="overline secondary--text text--lighten-3">NAME</span>
             </v-row>
-            <v-row>
-                <v-col>
-                    <v-color-picker flat v-model="role.color"></v-color-picker>
+            <v-row no-gutters>
+                <v-text-field outlined v-model="role.name"></v-text-field>
+            </v-row>
+            <v-row no-gutters class="mt-5">
+                <span class="overline secondary--text text--lighten-3">COLOR</span>
+            </v-row>
+            <v-row no-gutters>
+                <v-color-picker hide-inputs flat v-model="color"></v-color-picker>
+            </v-row>
+            <v-row no-gutters class="mt-5">
+                <span class="overline secondary--text text--lighten-3 mt-6 mb-n4">ALLOW ADMINISTRATIVE PRIVILEGES</span>
+            </v-row>
+            <v-row no-gutters>
+                <v-checkbox v-model="role.admin" label="Administrator"></v-checkbox>
+            </v-row>
+            <v-row no-gutters class="mt-5" justify="center">
+                <span class="overline secondary--text text--lighten-3" @click="submit">{{!!role.id ? 'SAVE CHANGES' : 'CREATE ROLE'}}</span>
+            </v-row>
+            <v-row no-gutters justify="center">
+                <v-btn @click="submit" depressed large color="primary" width="120">{{!!role.id ? 'SAVE' : 'CREATE'}}</v-btn>
+            </v-row>
+            <v-divider class="mb-5 mt-5"></v-divider>
+            <v-row no-gutters>
+                <v-col cols="24">
+                    <v-list nav class="rounded-lg">
+                        <v-list-item v-for="user in role.users" :key="user.id" link>
+                            <v-avatar color="primary" size="30" class=" mr-2">
+                                <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
+                                <span v-else class="text-body-2">{{user.username.substring(0,1)}}</span>
+                            </v-avatar>
+                            <v-list-item-title class="ml-5">{{user.username}}</v-list-item-title>
+                            <v-list-item-action class="ml-auto">
+                                <v-btn icon width="30" height="30" @click="removeUser(user)">
+                                    <v-icon size="20" color="grey lighten-1">mdi-window-close</v-icon>
+                                </v-btn>
+                            </v-list-item-action>
+                        </v-list-item>
+                        <v-divider class="mb-2"></v-divider>
+                        <v-list-item link @click="showUserFinder">
+                            <v-list-item-icon class="ml-1">
+                                <v-icon>
+                                    mdi-plus
+                                </v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title class="ml-n1">Add User</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
                 </v-col>
-                <v-col>
-
-                </v-col>
+            </v-row>
+            <v-divider class="mb-5 mt-5"></v-divider>
+            <!-- <v-row no-gutters class="mt-2" justify="center">
+                <span class="overline secondary--text text--lighten-3 mt-2">DELETE ROLE</span>
+            </v-row> -->
+            <v-row no-gutters justify="center">
+                <v-btn block text color="red" @click="deleteRole" large width="120">Delete role</v-btn>
             </v-row>
         </v-form>
     </v-container>
@@ -32,11 +84,13 @@ export default {
     data: function(){
         return {
             roles: [],
-            roleIndex: undefined,
+            roleId: undefined,
+            role: undefined,
+            color: '#FFFFFF'
         }
     },
     methods: {
-        fetchUsers: function(){
+        fetchRoles: function(){
             window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
@@ -47,18 +101,71 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
-    },
-    created: function(){
-        this.fetchUsers();
-    },
-    computed: {
-        role: function(){
-            if(this.roleIndex !== undefined){
-                //vuetify uses 1-index. IDK WHY EITHER
-                return this.roles[this.roleIndex-1];
+        submit: function(){
+            this.role.color = this.color;
+
+            if(this.role.id){
+                window.axios.put(Vue.prototype.$apiHttpUrl + '/api/roles', this.role, {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    this.role = undefined;
+                    this.roleId = undefined;
+                    this.color = '#FFFFFF';
+                    this.fetchRoles();
+                }, () => {
+                    this.$router.push('/home/groups');
+                });
             }
             else{
-                return undefined;
+                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', this.role, {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    this.role = undefined;
+                    this.roleId = undefined;
+                    this.color = '#FFFFFF';
+                    this.fetchRoles();
+                }, () => {
+                    this.$router.push('/home/groups');
+                });
+            }
+        },
+        createRole: function(){
+            this.roleId = -1;
+            this.role = {
+                name:'',
+                color: '#FFFFFF',
+                admin: false,
+            };
+            this.color = '#FFFFFF';
+        },
+        deleteRole: function(){
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.role = undefined;
+                this.roleId = undefined;
+                this.color = '#FFFFFF';
+                this.fetchRoles();
+            }, () => {
+                this.$router.push('/home/groups');
+            });
+        }
+    },
+    created: function(){
+        this.fetchRoles();
+    },
+    watch: {
+        roleId: function(roleId){
+            if(roleId !== -1 && roleId !== undefined){
+                                                    //i dont know why vuetify 1 indexes either
+                this.role = Object.assign({}, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
+                this.color = this.role.color;
             }
         }
     }

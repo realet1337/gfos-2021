@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "Role.findGroupRolesOrderedByPriority", query = "SELECT r FROM Role r WHERE r.group = :group ORDER BY r.priority ASC"),
     @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group"),
-    @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.isAdmin = true")
+    @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.admin = true")
 })
 public class Role{
 
@@ -39,6 +39,14 @@ public class Role{
     @Column(name = "role_color", nullable = false)
     private String color;
     
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     @ManyToMany
     @JoinTable(name = "RoleMembership",
     		   joinColumns=@JoinColumn(name="role_id"),
@@ -49,9 +57,16 @@ public class Role{
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
+    /*
+    IMPORTANT:
+    -------------
 
+    I can hear you crying about how this is "bad" and "not following the naming conventions" and 
+    "comprising the integrity of the codebase". Shut up.
+    If I do "isAdmin" instead of "admin", resteasy fails to deserialize that attribute. Tested.
+    */
     @Column(name = "is_admin", nullable = false)
-    private boolean isAdmin;
+    private boolean admin;
 
     private long priority;
 
@@ -130,24 +145,15 @@ public class Role{
         return permissions;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
     }
 
-
-    public Role(String name, String color, Group group, boolean isAdmin, long priority) {
+    public Role(String name, String color, Group group, boolean admin, long priority) {
         this.name = name;
         this.color = color;
         this.group = group;
-        this.isAdmin = isAdmin;
+        this.admin = admin;
         this.priority = priority;
     }
 

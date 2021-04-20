@@ -469,4 +469,69 @@ public class GroupsResource {
         return Response.status(200).build();
     }
 
+    @POST
+    @Path("/{groupId}/roles")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateRole(@PathParam("groupId") long groupId, Role role, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try{
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        }
+        catch(IllegalAccessException e){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        if(role.getName() == null){
+            return Response.status(400).entity("Role must have a name").build();
+        }
+
+        if(role.getColor() == null){
+            return Response.status(400).entity("Role must have a color").build();
+        }
+
+        //check for valid hex code
+        if(!Pattern.compile("^#[0-9a-fA-F]{6}$", Pattern.CASE_INSENSITIVE)
+        .matcher(role.getColor()).matches()){
+            return Response.status(400).entity("Invalid color tag. Use: #<hex color code>").build();
+        }
+
+        //bit of sanitization (and some more validation)
+        //this pattern just strips whitespaces at the start/end of string
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(role.getName());
+
+        if(m.find()){
+            role.setName(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty() && group.get().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        List<Role> roles = RolesFacade.findGroupRolesOrderedByPriority(group.get());
+
+        //lowest priority
+        role.setPriority(roles.get(roles.size()-1).getPriority() + 1);
+
+        role.setGroup(group.get());
+        
+        RolesFacade.add(role);
+
+        return Response.ok().build();
+    }
+
 }

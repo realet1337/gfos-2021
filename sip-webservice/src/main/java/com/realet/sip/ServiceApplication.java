@@ -25,6 +25,7 @@ public class ServiceApplication extends Application {
         set.add( GroupsResource.class );
         set.add( ChatWebsocketResource.class );
         set.add( ImagesResource.class );
+        set.add( RolesResource.class );
         return set;
     }
 

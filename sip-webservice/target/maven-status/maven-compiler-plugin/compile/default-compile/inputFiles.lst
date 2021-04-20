@@ -12,6 +12,7 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Role.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/SessionsFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/Permission.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/RolesResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/PermissionAdapter.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/GroupAdapter.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/User.java

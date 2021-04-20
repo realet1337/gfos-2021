@@ -69,7 +69,7 @@
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
                 <ChatWindow @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
-                <UserFinderDialog ref="finderDialog" @show-user="showUser"></UserFinderDialog>
+                <UserFinderDialog ref="finderDialog" @selected-user="showUser"></UserFinderDialog>
             </v-container>
         </v-main>
     </v-app>
@@ -119,6 +119,9 @@ export default {
                 if(!chat.notSelf){
                     this.findNotSelf(chat);
                 }
+                if(this.chats.findIndex(tmpChat => chat.id == tmpChat.id) === -1){
+                    this.fetchChats();
+                }
                 this.$data.chat = chat;
                 this.$data.chatIndex = this.$data.chats.findIndex(findChat => chat.id == findChat.id);
                 this.$router.push('/chat/' + chat.id);
@@ -152,41 +155,44 @@ export default {
         },
         showUserFinder: function(){
             this.$refs.finderDialog.show();
+        },
+        fetchChats: function(){
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/direct-chats/', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                response.data.forEach(chat => {
+                    this.findNotSelf(chat);
+                });
+                var chatIndex = response.data.findIndex(chat => chat.id == this.$route.params.chatId);
+                if(chatIndex == -1){
+
+                    //can't open this chat
+                    this.$router.push('/home');
+                    return;
+                }
+                this.$data.chatIndex = chatIndex;
+                this.$data.chat = response.data[this.$data.chatIndex];
+                this.$data.chats = response.data;
+            },  
+            (error) => {
+                if(error.response.status === 403){
+                    if(error.response.data == "Unauthenticated"){
+                        this.$router.push('/');
+                    }
+                    else if(error.response.data == "Unauthorized"){
+                        this.$router.push('/home')
+                    }
+                }
+                else if(error.response.status === 404){
+                    this.$router.push('/home')
+                }
+            })
         }
     },
     created: function(){
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/direct-chats/', {
-            headers:{
-                'Authorization': 'Bearer ' + this.$store.state.token,
-            }
-        }).then((response) => {
-            response.data.forEach(chat => {
-                this.findNotSelf(chat);
-            });
-            var chatIndex = response.data.findIndex(chat => chat.id == this.$route.params.chatId);
-            if(chatIndex == -1){
-
-                //can't open this chat
-                this.$router.push('/home');
-                return;
-            }
-            this.$data.chatIndex = chatIndex;
-            this.$data.chat = response.data[this.$data.chatIndex];
-            this.$data.chats = response.data;
-        },  
-        (error) => {
-            if(error.response.status === 403){
-                if(error.response.data == "Unauthenticated"){
-                    this.$router.push('/');
-                }
-                else if(error.response.data == "Unauthorized"){
-                    this.$router.push('/home')
-                }
-            }
-            else if(error.response.status === 404){
-                this.$router.push('/home')
-            }
-        })
+        this.fetchChats();
         this.$eventHub.$on('new-message', this.onNewMessage);
     },
     beforeDestroy: function(){

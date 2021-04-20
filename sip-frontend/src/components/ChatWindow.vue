@@ -110,7 +110,7 @@
                     "{{$data.editing.content.substring(0,20) + ($data.editing.content.length > 20 ? '...':'')}}"</p>
                 </v-col>
             </v-row>
-            <v-row v-if="$data.canWrite" no-gutters>
+            <v-row v-if="$data.canWrite || editing.id" no-gutters>
                 <v-col>
                     <v-textarea
                     @keydown.enter.exact.prevent="sendMessage"
@@ -123,7 +123,7 @@
                     ></v-textarea>
                 </v-col>
             </v-row>
-            <v-row v-if="$data.canWrite === false" no-gutters justify="center" class="mb-3">
+            <v-row v-if="$data.canWrite === false && !editing.id" no-gutters justify="center" class="mb-3">
                 <v-col cols="auto" align-self="center">
                     <span class="secondary--text text--darken3">You don't have permission to send any messages to this chat.</span>
                 </v-col>

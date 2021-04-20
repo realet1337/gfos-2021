@@ -2,11 +2,19 @@
     <v-dialog width="700" v-model="$data.isOpen">
         <v-card>
             <v-container fluid>
-                <v-form>
+                <v-form v-model="isValid">
                     <p class="headline secondary--text text--lighten-2"><b>Please enter a user ID:</b></p>
                     <v-divider></v-divider>
-                    <v-text-field class="mt-5 mb-n3" height="80" filled v-model="id" append-icon="mdi-magnify" @keydown.enter.prevent="search"></v-text-field>
-                    <p class="error--text">{{this.$data.errorMessage}}</p>
+                    <v-text-field class="mt-5 mb-n3" 
+                    height="80" 
+                    filled 
+                    v-model="id" 
+                    append-icon="mdi-magnify"
+                    @keydown.enter.prevent="search"
+                    :rules="[v => (!isNaN(v) && v != '') || 'ID must be a number']"
+                    ></v-text-field>
+                    <p class="error--text">{{errorMessage}}</p>
+                    <v-btn block color="primary" :disabled="!isValid" @click="search">SEARCH</v-btn>
                 </v-form>
             </v-container>  
         </v-card>
@@ -19,7 +27,9 @@ export default {
     data: function(){
         return {
             isOpen: false,
+            isValid: true,
             id: '',
+            errorMessage: '',
         }
     },
     methods: {
@@ -29,20 +39,19 @@ export default {
             this.$data.isOpen = true;
         },
         search: function(){
-            if(!isNaN(this.$data.id)){
+            if(this.isValid){
+                this.errorMessage = '';
+
                 window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$data.id,{
                     headers:{
                             'Authorization': 'Bearer ' + this.$store.state.token,
                     }
                 }).then((response) => {
                     this.close();
-                    this.$emit('show-user', response.data);
+                    this.$emit('selected-user', response.data);
                 }, () => {
-                    this.$data.errorMessage = "We're sorry, that user doesn't exist."
-                })
-            }
-            else{
-                this.$data.errorMessage = "That's not a valid ID"
+                    this.errorMessage = "We're sorry, that user doesn't exist."
+                });
             }
         },
         close: function(){

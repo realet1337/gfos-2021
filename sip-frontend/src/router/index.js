@@ -16,7 +16,7 @@ import HomeGroups from '@/views/HomeGroups.vue'
 import GroupEditOverview from '@/views/GroupEditOverview'
 import GroupEditUsersView from '@/views/GroupEditUsersView'
 import GroupEditRolesView from '@/views/GroupEditRolesView'
-import GroupEditRoleManagerView from '@/views/GroupEditRoleManagerView'
+import GroupEditPermissionsView from '@/views/GroupEditPermissionsView'
 
 
 Vue.use(VueRouter)
@@ -83,9 +83,9 @@ const routes = [
 				name: "GroupEditRolesView",
 			},
 			{
-				path: 'manage-roles',
-				component: GroupEditRoleManagerView,
-				name: "GroupEditRoleManagerView",
+				path: 'permissions',
+				component: GroupEditPermissionsView,
+				name: "GroupEditPermissionsView",
 			},
 			{
 				path: 'users',

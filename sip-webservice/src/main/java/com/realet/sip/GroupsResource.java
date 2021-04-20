@@ -6,9 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -100,7 +102,7 @@ public class GroupsResource {
     @GET
     @Path("/{groupId}/basic-users")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+    public Response getBasicUsers(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
 
         if(token == null){
             return Response.status(403).entity("Unauthenticated").build();
@@ -127,6 +129,39 @@ public class GroupsResource {
         return Response.ok(
             new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
             .toJson(UsersFacade.findBasicGroupMembers(groupId))
+        ).build();
+    }
+
+    @GET
+    @Path("/{groupId}/users")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> user = UsersFacade.findById(tokenUserId);
+        if(!group.get().getUsers().contains(user.get())){
+            return Response.status(403).entity("Unauthorized").build();   
+        }
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(User.class, new UserAdapter()).create()
+            .toJson(group.get().getUsers())
         ).build();
     }
 
@@ -238,6 +273,7 @@ public class GroupsResource {
 
 
         //no, this doesn't allow us to change other users passwords. That will just fail because it's not possible to persist non-managed entities without setting a cascadetype. I think.
+        //hibernate actually doesn't even attempt it. Found out through testing.
         group.getUsers().add(user);
         GroupsFacade.add(group);
 
@@ -295,4 +331,142 @@ public class GroupsResource {
 
         return Response.status(201).build();
     }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateGroup(Group group, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try{
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        }
+        catch(IllegalAccessException e){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        if(group.getName() == null){
+            return Response.status(400).entity("Group must have name").build();
+        }
+
+        //bit of sanitization (and some more validation)
+        //this pattern just strips whitespaces at the start/end of string
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(group.getName());
+
+        if(m.find()){
+            group.setName(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+
+        Optional<Group> oldGroup = GroupsFacade.findById(group.getId());
+        if(oldGroup.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), oldGroup.get()).isEmpty() && oldGroup.get().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        group.setOwner(oldGroup.get().getOwner());
+
+        //need to update because group owns the relationship
+        group.setUsers(oldGroup.get().getUsers());
+
+        GroupsFacade.update(group);
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{groupId}/users")
+    public Response addUser(@PathParam("groupId") long groupId, User inputUser, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> user = UsersFacade.findById(inputUser.getId());
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(group.get().getUsers().contains(user.get())){
+            return Response.status(400).entity("User is already part of group").build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty() && group.get().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        group.get().getUsers().add(user.get());
+
+        GroupsFacade.update(group.get());
+
+        return Response.ok().build();
+        
+    }
+
+    @DELETE
+    @Path("/{groupId}/users/{userId}")
+    public Response removeUser(@PathParam("groupId") long groupId, @PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(group.get().getOwner().getId() == userId){
+            return Response.status(400).entity("Cannot remove group owner from group").build();
+        }
+
+        Optional<User> user = UsersFacade.findById(userId);
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(!group.get().getUsers().contains(user.get())){
+            return Response.status(400).entity("User is not part of group").build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty() && group.get().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        group.get().getUsers().remove(user.get());
+
+        GroupsFacade.update(group.get());
+
+        return Response.status(200).build();
+    }
+
 }

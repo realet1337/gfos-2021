@@ -23,7 +23,7 @@
                     </v-row>
                 </v-col>
                 <v-col class="ml-auto" cols="auto" align-self="center">
-                    <v-btn width="35" height="35" icon class="my-auto" @click="$router.push('/group/' + $route.params.groupId + '/edit/overview')">
+                    <v-btn v-if="isAdmin" width="35" height="35" icon class="my-auto" @click="$router.push('/group/' + $route.params.groupId + '/edit/overview')">
                         <v-icon color="secondary lighten-2">mdi-pencil</v-icon>
                     </v-btn>
                 </v-col>

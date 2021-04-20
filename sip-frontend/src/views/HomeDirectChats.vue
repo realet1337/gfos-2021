@@ -29,7 +29,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <UserFinderDialog ref="finderDialog" @show-user="showUserDialog"></UserFinderDialog>
+        <UserFinderDialog ref="finderDialog" @selected-user="showUserDialog"></UserFinderDialog>
         <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
     </v-container>
 </template>

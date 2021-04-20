@@ -1,21 +1,26 @@
 <template>
     <v-container>
         <v-form v-if="group">
-            <v-row no-gutters class="mb-2 ml-3">
-                <h3>Edit group details: </h3>
+            <v-row no-gutters class="mb-4 ml-3">
+                <v-col cols="24">
+                    <h3>Edit group details: </h3>
+                    <v-divider></v-divider>
+                </v-col>
             </v-row>
             <v-row no-gutters>
                 <v-col class="mx-2">
                     <v-text-field outlined v-model="group.name" label="name"></v-text-field>
                 </v-col>
+            </v-row>
+            <v-row>
                 <v-col class="mx-2">
-                    <v-text-field outlined v-model="group.description" label="description"></v-text-field>
+                    <v-textarea outlined rows="4" no-resize v-model="group.description" label="description"></v-textarea>
                 </v-col>
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto">
-                    <v-avatar v-if="group.picture">
-                        <img :src="$getAvatarUrl('group', group)">
+                    <v-avatar v-if="imgFile">
+                        <img :src="avatarUrl">
                     </v-avatar>
                     <v-row v-else class="mt-4" no-gutters>
                         <span>No picture</span>
@@ -33,7 +38,7 @@
                     ></v-file-input>
                 </v-col>
                 <v-col cols="auto" class="mx-2">
-                    <v-btn class="ml-auto mt-2" color="primary" depressed>UPDATE</v-btn>
+                    <v-btn class="ml-auto mt-2" color="primary" depressed @click="submit">UPDATE</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -73,11 +78,22 @@ export default {
                     },
                     cancelToken: cancelTokenSource.token
                 }).then((response) => {
-                    console.log(response.data);
                     this.$data.group.picture = response.data.picture;
                 })
             }
         },
+        submit: function(){
+            //TODO: name validation
+            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/groups', this.group, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                //pass
+            }, () => {
+                //won't happen lmao
+            })
+        }
     },
     created: function(){
         window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId, {
@@ -89,6 +105,11 @@ export default {
         }, () => {
             this.$router.push('/home/groups');
         })
-    }
+    },
+    computed: {
+        avatarUrl: function(){
+            return URL.createObjectURL(this.$data.imgFile);
+        }
+    },
 }
 </script>

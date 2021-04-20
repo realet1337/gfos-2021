@@ -1,6 +1,6 @@
 <template>
     <v-app v-if="$store.state.initialized">
-        <v-navigation-drawer app floating color="secondary darken-4">
+        <v-navigation-drawer app permanent floating color="secondary darken-4">
             <v-list nav dense>
                 <v-list-item link :to="'/group/' + $route.params.groupId + '/edit/overview'">
                     <v-list-item-title>Overview</v-list-item-title>
@@ -12,8 +12,8 @@
                 <v-list-item link :to="'/group/' + $route.params.groupId + '/edit/roles'">
                     <v-list-item-title>Roles</v-list-item-title>
                 </v-list-item>
-                <v-list-item link :to="'/group/' + $route.params.groupId + '/edit/manage-roles'">
-                    <v-list-item-title>Manage roles</v-list-item-title>
+                <v-list-item link :to="'/group/' + $route.params.groupId + '/edit/permissions'">
+                    <v-list-item-title>Permissions</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>

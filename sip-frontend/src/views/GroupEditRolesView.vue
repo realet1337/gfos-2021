@@ -13,13 +13,13 @@
             </v-col>
         </v-row>
         <v-divider class="mb-5"></v-divider>
-        <v-form v-if="role">
+        <v-form v-if="role" v-model="isValid">
             <h3 class="mb-3" v-if="role.id">{{!!role.id ? 'Role details:' : 'Create role:'}}</h3>
             <v-row no-gutters>
                 <span class="overline secondary--text text--lighten-3">NAME</span>
             </v-row>
             <v-row no-gutters>
-                <v-text-field outlined v-model="role.name"></v-text-field>
+                <v-text-field :rules="[v => !!v || 'The role needs a name', v => /\S/.test(v) || 'The role needs a name']" outlined v-model="role.name"></v-text-field>
             </v-row>
             <v-row no-gutters class="mt-5">
                 <span class="overline secondary--text text--lighten-3">COLOR</span>
@@ -37,48 +37,82 @@
                 <span class="overline secondary--text text--lighten-3" @click="submit">{{!!role.id ? 'SAVE CHANGES' : 'CREATE ROLE'}}</span>
             </v-row>
             <v-row no-gutters justify="center">
-                <v-btn @click="submit" depressed large color="primary" width="120">{{!!role.id ? 'SAVE' : 'CREATE'}}</v-btn>
+                <v-btn :disabled="!isValid" @click="submit" depressed large color="primary" width="120">{{!!role.id ? 'SAVE' : 'CREATE'}}</v-btn>
             </v-row>
-            <v-divider class="mb-5 mt-5"></v-divider>
-            <v-row no-gutters>
-                <v-col cols="24">
-                    <v-list nav class="rounded-lg">
-                        <v-list-item v-for="user in role.users" :key="user.id" link>
-                            <v-avatar color="primary" size="30" class=" mr-2">
-                                <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
-                                <span v-else class="text-body-2">{{user.username.substring(0,1)}}</span>
-                            </v-avatar>
-                            <v-list-item-title class="ml-5">{{user.username}}</v-list-item-title>
-                            <v-list-item-action class="ml-auto">
-                                <v-btn icon width="30" height="30" @click="removeUser(user)">
-                                    <v-icon size="20" color="grey lighten-1">mdi-window-close</v-icon>
-                                </v-btn>
-                            </v-list-item-action>
-                        </v-list-item>
-                        <v-divider class="mb-2"></v-divider>
-                        <v-list-item link @click="showUserFinder">
-                            <v-list-item-icon class="ml-1">
-                                <v-icon>
-                                    mdi-plus
-                                </v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-title class="ml-n1">Add User</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-col>
-            </v-row>
-            <v-divider class="mb-5 mt-5"></v-divider>
-            <!-- <v-row no-gutters class="mt-2" justify="center">
-                <span class="overline secondary--text text--lighten-3 mt-2">DELETE ROLE</span>
-            </v-row> -->
-            <v-row no-gutters justify="center">
-                <v-btn block text color="red" @click="deleteRole" large width="120">Delete role</v-btn>
-            </v-row>
+            <template v-if="role.id">
+                <v-divider class="mb-5 mt-5"></v-divider>
+                <v-row no-gutters>
+                    <v-col cols="24">
+                        <v-list nav class="rounded-lg">
+                            <v-list-item v-for="user in role.users" :key="user.id" link>
+                                <v-avatar color="primary" size="30" class=" mr-2">
+                                    <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
+                                    <span v-else class="text-body-2">{{user.username.substring(0,1)}}</span>
+                                </v-avatar>
+                                <v-list-item-title class="ml-5">{{user.username}}</v-list-item-title>
+                                <v-list-item-action class="ml-auto">
+                                    <v-btn icon width="30" height="30" @click="removeUser(user)">
+                                        <v-icon size="20" color="grey lighten-1">mdi-window-close</v-icon>
+                                    </v-btn>
+                                </v-list-item-action>
+                            </v-list-item>
+                            <v-divider v-if="role.users.length > 0" class="mb-2"></v-divider>
+                            <v-list-item link @click="showUserFinder">
+                                <v-list-item-icon class="ml-1">
+                                    <v-icon>
+                                        mdi-plus
+                                    </v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title class="ml-n1">Add User</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-col>
+                </v-row>
+                <v-divider class="mb-5 mt-5"></v-divider>
+                <!-- <v-row no-gutters class="mt-2" justify="center">
+                    <span class="overline secondary--text text--lighten-3 mt-2">DELETE ROLE</span>
+                </v-row> -->
+                <v-row no-gutters justify="center">
+                    <v-btn block text color="red" @click="deleteRole" large width="120">Delete role</v-btn>
+                </v-row>
+            </template>
         </v-form>
+        <RemoveUserConfirmDialog ref="removeUserConfirmDialog" @removed="localRemoveUserFromRole"></RemoveUserConfirmDialog>
+        <AddUserConfirmDialog ref="addUserConfirmDialog" @added="localAddUserToRole"></AddUserConfirmDialog>
+        <v-dialog v-model="userFinderDialogIsOpen" width="500">
+            <v-card>
+                <v-card-title class="primary white--text">
+                    Add users to role
+                </v-card-title>
+                <v-card-text>
+                    <div style="height: 500px;" class="overflow-y-auto">
+                        <v-list>
+                            <v-list-item link v-for="user in notMembers" :key="user.id">
+                                <v-avatar color="primary" size="45" class=" mr-4">
+                                    <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
+                                    <span v-else class="text-body-2">{{user.username.substring(0,1)}}</span>
+                                </v-avatar>
+                                <v-list-item-title>{{user.username}}</v-list-item-title>
+                                <v-list-item-action>
+                                    <v-btn icon @click="addUser(user)">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </v-list>
+                        <span v-if="notMembers.length === 0" class="secondary--text">All group members have this role.</span>
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 <script>
 import Vue from 'vue';
+
+import AddUserConfirmDialog from '@/components/AddUserConfirmDialog'
+import RemoveUserConfirmDialog from '@/components/RemoveUserConfirmDialog'
+
 export default {
     name: 'GroupEditRolesView',
     data: function(){
@@ -86,8 +120,16 @@ export default {
             roles: [],
             roleId: undefined,
             role: undefined,
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            userFinderDialogIsOpen: false,
+            groupUsers: [],
+            selectedGroupUser: undefined,
+            isValid: false,
         }
+    },
+    components: {
+        RemoveUserConfirmDialog,
+        AddUserConfirmDialog,
     },
     methods: {
         fetchRoles: function(){
@@ -155,10 +197,45 @@ export default {
             }, () => {
                 this.$router.push('/home/groups');
             });
-        }
+        },
+        removeUser: function(user){
+            this.$refs.removeUserConfirmDialog.show(user, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
+        },
+        addUser: function(user){
+            if(this.role.users.findIndex(tmpUser => user.id == tmpUser.id) === -1){
+                this.$refs.addUserConfirmDialog.show(user, this.role);
+            }
+        },
+        showUserFinder: function(){
+            this.userFinderDialogIsOpen = true;
+        },
+        localRemoveUserFromRole: function(user){
+            const roleIndex = this.role.users.findIndex(tmpUser => user.id === tmpUser.id);
+            if(roleIndex !== -1){
+                this.role.users.splice(roleIndex,1);
+            }
+        },
+        localAddUserToRole: function(user){
+            const roleIndex = this.role.users.findIndex(tmpUser => user.id === tmpUser.id);
+            if(roleIndex === -1){
+                this.role.users.push(user);
+            }
+        },
+        fetchUsers: function(){
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users', {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then((response) => {
+                this.groupUsers = response.data;
+            }, () => {
+                this.$router.push('/home/groups');
+            });
+        },
     },
     created: function(){
         this.fetchRoles();
+        this.fetchUsers();
     },
     watch: {
         roleId: function(roleId){
@@ -166,6 +243,17 @@ export default {
                                                     //i dont know why vuetify 1 indexes either
                 this.role = Object.assign({}, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
                 this.color = this.role.color;
+            }
+        }
+    },
+    computed: {
+        notMembers: function(){
+            if(this.role){
+                const roleUsers = this.role.users;
+                return this.groupUsers.filter(tmpUser => roleUsers.findIndex(tmpTmpUser => tmpTmpUser.id === tmpUser.id) === -1);
+            }
+            else{
+                return this.groupUsers;
             }
         }
     }

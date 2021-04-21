@@ -47,16 +47,30 @@ export default {
             this.isOpen = false;
         },
         add: function(){
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users', this.user, {
-                headers:{
-                    'Authorization': 'Bearer ' + this.$store.state.token,
-                }
-            }).then(() => {
-                this.$emit('added');
-                this.close();
-            }, () => {
-                this.$router.push('/home/groups');
-            });
+            if(!this.role){
+                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users', this.user, {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    this.$emit('added');
+                    this.close();
+                }, () => {
+                    this.$router.push('/home/groups');
+                });
+            }
+            else{
+                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/users', this.user, {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    this.$emit('added', this.user);
+                    this.close();
+                }, () => {
+                    this.$router.push('/home/groups');
+                });
+            }
         }
     }
 }

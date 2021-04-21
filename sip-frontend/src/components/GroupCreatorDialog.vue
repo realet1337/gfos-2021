@@ -21,7 +21,7 @@
                         ></v-file-input>
                     </v-row>
                     <p class="secondary--text text--lighten-2"><b>Pick a name:</b></p>
-                    <v-text-field class="mt-5 mb-n3" filled v-model="name" :rules="[v => !!v || 'The group needs a name', v => /\S/.test(v) || 'The chat needs a name']"></v-text-field>
+                    <v-text-field class="mt-5 mb-n3" filled v-model="name" :rules="[v => !!v || 'The group needs a name', v => /\S/.test(v) || 'The group needs a name']"></v-text-field>
                     <p class="secondary--text text--lighten-2"><b>Describe the group:</b></p>
                     <v-textarea class="mt-5 mb-n3" filled v-model="description" no-resize rows="4"></v-textarea>
                     <v-btn block depressed large color="primary" @click="create" :disabled="!$data.isValid">CREATE</v-btn>

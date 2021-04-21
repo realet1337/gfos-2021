@@ -47,12 +47,12 @@ export default {
             this.isOpen = false;
         },
         remove: function(){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users/' + this.user.id,  {
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/users/' + this.user.id,  {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
             }).then(() => {
-                this.$emit('removed');
+                this.$emit('removed', this.user);
                 this.close();
             }, () => {
                 this.$router.push('/home/groups');

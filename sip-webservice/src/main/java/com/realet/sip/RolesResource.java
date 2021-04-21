@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -107,6 +108,91 @@ public class RolesResource {
         }
 
         RolesFacade.remove(role.get());
+
+        return Response.status(200).build();
+    }
+
+    @POST
+    @Path("/{roleId}/users")
+    public Response addUser(@PathParam("roleId") long roleId, User inputUser, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Role> role = RolesFacade.findById(roleId);
+        if(role.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> user = UsersFacade.findById(inputUser.getId());
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(role.get().getUsers().contains(user.get())){
+            return Response.status(400).entity("User is already part of role").build();
+        }
+
+        if(!role.get().getGroup().getUsers().contains(user.get())){
+            return Response.status(400).entity("User is not part of group").build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), role.get().getGroup()).isEmpty() && role.get().getGroup().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        role.get().getUsers().add(user.get());
+
+        RolesFacade.update(role.get());
+
+        return Response.ok().build();
+        
+    }
+
+    @DELETE
+    @Path("/{roleId}/users/{userId}")
+    public Response removeUser(@PathParam("roleId") long roleId, @PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Role> role = RolesFacade.findById(roleId);
+        if(role.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        Optional<User> user = UsersFacade.findById(userId);
+        if(user.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(!role.get().getUsers().contains(user.get())){
+            return Response.status(400).entity("User is not part of role").build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), role.get().getGroup()).isEmpty() && role.get().getGroup().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        role.get().getUsers().remove(user.get());
+
+        RolesFacade.update(role.get());
 
         return Response.status(200).build();
     }

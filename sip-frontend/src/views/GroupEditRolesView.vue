@@ -113,7 +113,7 @@
                 <v-card-text>
                     <div style="height: 500px;" class="overflow-y-auto">
                         <v-list>
-                            <v-list-item link v-for="(role, idx) in roles" :key="role.id">
+                            <v-list-item link v-for="(role, idx) in priorityEditorArray" :key="role.id">
                                 <v-list-item-title :style="'color: ' + role.color">{{role.name}}</v-list-item-title>
                                 <v-list-item-action>
                                     <v-btn icon v-if="idx !== 0" @click="swapRolesUpwards(idx)">
@@ -130,6 +130,9 @@
                         <span v-if="roles.length === 0" class="secondary--text">All group members have this role.</span>
                     </div>
                 </v-card-text>
+                <v-card-actions>
+                    <v-btn text color="primary" block @click="updateRolePriorities">update priorities</v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </v-container>
@@ -153,6 +156,7 @@ export default {
             groupUsers: [],
             selectedGroupUser: undefined,
             isValid: false,
+            priorityEditorArray: [],
         }
     },
     components: {
@@ -261,17 +265,34 @@ export default {
             });
         },
         swapRolesUpwards: function(idx){
-            const buf = this.roles[idx];
-            Vue.set(this.roles, idx, this.roles[idx - 1]);
-            Vue.set(this.roles, idx - 1, buf);
+            const buf = this.priorityEditorArray[idx];
+            Vue.set(this.priorityEditorArray, idx, this.priorityEditorArray[idx - 1]);
+            Vue.set(this.priorityEditorArray, idx - 1, buf);
         },
         swapRolesDownwards: function(idx){
-            const buf = this.roles[idx];
-            Vue.set(this.roles, idx, this.roles[idx + 1]);
-            Vue.set(this.roles, idx + 1, buf);
+            const buf = this.priorityEditorArray[idx];
+            Vue.set(this.priorityEditorArray, idx, this.priorityEditorArray[idx + 1]);
+            Vue.set(this.priorityEditorArray, idx + 1, buf);
         },
         showPriorityEditor: function(){
+            this.priorityEditorArray = this.roles.slice();
             this.priorityEditorIsOpen = true;
+        },
+        updateRolePriorities: function(){
+            const ids = [];
+            for(var i = 0; i < this.priorityEditorArray.length; i++){
+                ids.push(this.priorityEditorArray[i].id);
+            }
+            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles/priorities', ids, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.fetchRoles();
+                this.priorityEditorIsOpen = false;
+            }, () => {
+                this.$router.push('/home/groups');
+            });
         }
     },
     created: function(){

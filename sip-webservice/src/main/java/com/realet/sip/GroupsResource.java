@@ -28,6 +28,7 @@ import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 import com.realet.sip.GsonTypeAdapter.UserAdapter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -529,7 +530,12 @@ public class GroupsResource {
         List<Role> roles = RolesFacade.findGroupRolesOrderedByPriority(group.get());
 
         //lowest priority
-        role.setPriority(roles.get(roles.size()-1).getPriority() + 1);
+        if(roles.size() == 0){
+            role.setPriority(0);
+        }
+        else {
+            role.setPriority(roles.get(roles.size()-1).getPriority() + 1);
+        }
 
         role.setGroup(group.get());
         
@@ -564,14 +570,43 @@ public class GroupsResource {
             return Response.status(403).entity("Unauthorized").build();
         }
 
-        //:)
+        // This is frank    =>     :)      <=     Say hi to frank
 
         JSONArray array = new JSONArray(requestBody);
-        Set<Integer> integers = new HashSet<Integer>();
+        List<Long> ids = new ArrayList<Long>();
 
         for(int i = 0; i < array.length(); i++){
-            
+            try{
+                if(ids.contains(Long.valueOf(array.getLong(i)))){
+                    return Response.status(400).entity("Array elements must be unique").build();
+                }
+                ids.add(Long.valueOf(array.getLong(i)));
+            }
+            catch(JSONException e){
+                return Response.status(400).entity("Array elements must be Integers").build();
+            }
         }
+
+        //the reason we are doing this in 2 steps is so the process doesn't fail midway through, possibly leaving us with non-unique 
+        //priorities
+        List<Role> roles = new ArrayList<>();
+        for(Long id: ids){
+            Optional<Role> role = RolesFacade.findById(id.longValue());
+            if(role.isEmpty()){
+                return Response.status(404).build();
+            }
+            if(role.get().getGroup().getId() != groupId){
+                return Response.status(400).entity("Role is not part of group").build();
+            }
+            roles.add(role.get());
+        }
+
+        for(int i = 0; i < roles.size(); i++){
+            roles.get(i).setPriority(i);
+            RolesFacade.update(roles.get(i));
+        }
+
+        return Response.ok().build();
     }
 
 

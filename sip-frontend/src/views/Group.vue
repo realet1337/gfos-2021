@@ -47,7 +47,7 @@
                     floating
                 >
                     <v-list style="max-height: 100%;" class="hide-scrollbar overflow-x-hidden">
-                        <v-list-item v-for="group in groups" :key="group.id" @click="openGroup(group)">
+                        <v-list-item v-for="group in groups" :key="group.id" @click="openGroup(group)" :input-value="$data.group.id === group.id">
                             <v-tooltip right>
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-avatar 

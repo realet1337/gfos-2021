@@ -64,7 +64,7 @@ public class ServiceApplication extends Application {
         role_users.add(UsersFacade.findById(1).get());
         role_users.add(UsersFacade.findById(4).get());
 
-        Role role = new Role("cool role 1","#FFFFFF", GroupsFacade.findById(1).get(), true, 1);
+        Role role = new Role("cool role 1","#FFFFFF", GroupsFacade.findById(1).get(), true, 0);
         role.setUsers(role_users);
 
         RolesFacade.add(role);
@@ -73,7 +73,7 @@ public class ServiceApplication extends Application {
         role_users.add(UsersFacade.findById(3).get());
         role_users.add(UsersFacade.findById(4).get());
 
-        role = new Role("cool role 2","#FF0000",GroupsFacade.findById(1).get(), true, 2);
+        role = new Role("cool role 2","#FF0000",GroupsFacade.findById(1).get(), true, 1);
 
         role.setUsers(role_users);
 

@@ -9,7 +9,7 @@
                 <v-btn large depressed color="primary" @click="createRole">ADD ROLE</v-btn>
             </v-col>
             <v-col cols="auto" align-self="center">
-                <v-btn text large depressed color="primary">EDIT ROLE PRIORITIES</v-btn>
+                <v-btn text large depressed color="primary" @click="showPriorityEditor">EDIT ROLE PRIORITIES</v-btn>
             </v-col>
         </v-row>
         <v-divider class="mb-5"></v-divider>
@@ -105,6 +105,33 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="priorityEditorIsOpen" width="500">
+            <v-card>
+                <v-card-title class="secondary white--text">
+                    Edit role priority
+                </v-card-title>
+                <v-card-text>
+                    <div style="height: 500px;" class="overflow-y-auto">
+                        <v-list>
+                            <v-list-item link v-for="(role, idx) in roles" :key="role.id">
+                                <v-list-item-title :style="'color: ' + role.color">{{role.name}}</v-list-item-title>
+                                <v-list-item-action>
+                                    <v-btn icon v-if="idx !== 0" @click="swapRolesUpwards(idx)">
+                                        <v-icon>mdi-chevron-up</v-icon>
+                                    </v-btn>
+                                </v-list-item-action>
+                                <v-list-item-action>
+                                    <v-btn icon v-if="idx !== roles.length -1" @click="swapRolesDownwards(idx)">
+                                        <v-icon>mdi-chevron-down</v-icon>
+                                    </v-btn>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </v-list>
+                        <span v-if="roles.length === 0" class="secondary--text">All group members have this role.</span>
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 <script>
@@ -122,6 +149,7 @@ export default {
             role: undefined,
             color: '#FFFFFF',
             userFinderDialogIsOpen: false,
+            priorityEditorIsOpen: false,
             groupUsers: [],
             selectedGroupUser: undefined,
             isValid: false,
@@ -232,6 +260,19 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        swapRolesUpwards: function(idx){
+            const buf = this.roles[idx];
+            Vue.set(this.roles, idx, this.roles[idx - 1]);
+            Vue.set(this.roles, idx - 1, buf);
+        },
+        swapRolesDownwards: function(idx){
+            const buf = this.roles[idx];
+            Vue.set(this.roles, idx, this.roles[idx + 1]);
+            Vue.set(this.roles, idx + 1, buf);
+        },
+        showPriorityEditor: function(){
+            this.priorityEditorIsOpen = true;
+        }
     },
     created: function(){
         this.fetchRoles();

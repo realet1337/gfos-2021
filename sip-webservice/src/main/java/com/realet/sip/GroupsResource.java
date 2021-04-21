@@ -1,7 +1,10 @@
 package com.realet.sip;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,7 @@ import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
 import com.realet.sip.GsonTypeAdapter.RoleAdapter;
 import com.realet.sip.GsonTypeAdapter.UserAdapter;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -533,5 +537,42 @@ public class GroupsResource {
 
         return Response.ok().build();
     }
+
+    @PUT
+    @Path("/{groupId}/roles/priorities")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePriorities(@PathParam("groupId") long groupId, String requestBody, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try{
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        }
+        catch(IllegalAccessException e){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), group.get()).isEmpty() && group.get().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        //:)
+
+        JSONArray array = new JSONArray(requestBody);
+        Set<Integer> integers = new HashSet<Integer>();
+
+        for(int i = 0; i < array.length(); i++){
+            
+        }
+    }
+
 
 }

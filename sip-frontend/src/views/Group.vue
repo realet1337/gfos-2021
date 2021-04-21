@@ -150,7 +150,7 @@
                 </v-list-item>
             </v-list>
             <v-divider></v-divider>
-            <v-list nav dense v-for="role in roles" :key="role.id">
+            <v-list nav dense v-for="role in rolesWithMembers" :key="role.id">
                 <span class="label-text"><b>{{role.name.toUpperCase()}}</b></span>
                 <v-list-item v-for="user in role.users" :key="user.id"
                 @click="showUser(user)">
@@ -466,6 +466,9 @@ export default {
                 }
             }
             return false;
+        },
+        rolesWithMembers: function(){
+            return this.roles.filter(role => role.users.length > 0);
         }
     }
 }

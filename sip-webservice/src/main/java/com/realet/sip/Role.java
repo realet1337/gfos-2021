@@ -19,6 +19,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name = "Roles")
 @NamedQueries({
@@ -70,6 +73,7 @@ public class Role{
 
     private long priority;
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "role")
     private List<Permission> permissions = new ArrayList<>();
 

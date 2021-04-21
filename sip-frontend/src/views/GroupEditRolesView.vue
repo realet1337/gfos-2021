@@ -248,7 +248,7 @@ export default {
     },
     computed: {
         notMembers: function(){
-            if(this.role){
+            if(this.role && this.role.id){
                 const roleUsers = this.role.users;
                 return this.groupUsers.filter(tmpUser => roleUsers.findIndex(tmpTmpUser => tmpTmpUser.id === tmpUser.id) === -1);
             }

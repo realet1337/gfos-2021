@@ -26,6 +26,7 @@ public class ServiceApplication extends Application {
         set.add( ChatWebsocketResource.class );
         set.add( ImagesResource.class );
         set.add( RolesResource.class );
+        set.add( PermissionsResource.class );
         return set;
     }
 
@@ -101,19 +102,14 @@ public class ServiceApplication extends Application {
 
         ChatsFacade.add(new Chat(null, UsersFacade.findById(4).get(), UsersFacade.findById(1).get(), null));
 
-        role = RolesFacade.findById(1).get();
+        PermissionsFacade.add(new Permission(null, ChatsFacade.findById(1).get(), false, false));
+        PermissionsFacade.add(new Permission(null, ChatsFacade.findById(3).get(), false, false));
+        PermissionsFacade.add(new Permission(null, ChatsFacade.findById(4).get(), false, false));
+        PermissionsFacade.add(new Permission(null, ChatsFacade.findById(5).get(), false, false));
 
-        PermissionsFacade.add(new Permission(role, null, false, false));
-
-        PermissionsFacade.add(new Permission(role, ChatsFacade.findById(4).get(), true, true));
-
-        PermissionsFacade.add(new Permission(role, ChatsFacade.findById(1).get(), true, false));
-
-        role = RolesFacade.findById(2).get();
-
-        PermissionsFacade.add(new Permission(role, null, true, true));
-
-        PermissionsFacade.add(new Permission(role, ChatsFacade.findById(4).get(), false, false));
+        PermissionsFacade.add(new Permission(RolesFacade.findById(1).get(), ChatsFacade.findById(1).get(), true, true));
+        PermissionsFacade.add(new Permission(RolesFacade.findById(1).get(), ChatsFacade.findById(4).get(), true, true));
+        
         
     }
 

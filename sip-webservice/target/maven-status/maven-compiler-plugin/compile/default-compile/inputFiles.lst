@@ -24,6 +24,7 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UserProfilesFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/UserProfileAdapter.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatWebsocketManagement.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/PermissionsResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GroupsFacade.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GsonTypeAdapter/ChatMessageAdapter.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UserWebsocketManagement.java

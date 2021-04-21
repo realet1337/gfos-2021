@@ -29,6 +29,7 @@
                                             icon
                                             v-bind="attrs"
                                             v-on="on"
+                                            @click="updatePermission(rule)"
                                         >
                                             <v-icon color="green">mdi-check</v-icon>
                                         </v-btn>
@@ -60,6 +61,7 @@
                                             icon
                                             v-bind="attrs"
                                             v-on="on"
+                                            @click="updatePermission(permission)"
                                         >
                                             <v-icon color="green">mdi-check</v-icon>
                                         </v-btn>
@@ -186,6 +188,17 @@ export default {
                 chat: chat,
             }
             window.axios.post(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/permissions', permission, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.fetchPermissions();
+            }, () => {
+                this.$router.push('/home/groups');
+            });
+        },
+        updatePermission: function(permission){
+            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/permissions', permission, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

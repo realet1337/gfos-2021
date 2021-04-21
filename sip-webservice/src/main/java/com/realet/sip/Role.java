@@ -68,6 +68,8 @@ public class Role{
     "comprising the integrity of the codebase". Shut up.
     If I do "isAdmin" instead of "admin", resteasy fails to deserialize that attribute. Tested.
     */
+
+    /* (Very likely a problem with getters/setters)*/
     @Column(name = "is_admin", nullable = false)
     private boolean admin;
 

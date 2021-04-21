@@ -42,7 +42,7 @@ public class Permission {
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id")
+    @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
     private boolean canRead;
@@ -88,6 +88,10 @@ public class Permission {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Chat getChat() {

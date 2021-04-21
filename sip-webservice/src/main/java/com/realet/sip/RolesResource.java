@@ -6,13 +6,19 @@ import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.google.gson.GsonBuilder;
+import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
+
 import javax.ws.rs.core.HttpHeaders;
 
 @Path("/roles")
@@ -194,7 +200,90 @@ public class RolesResource {
 
         RolesFacade.update(role.get());
 
-        return Response.status(200).build();
+        return Response.ok().build();
     }
+
+    @GET
+    @Path("/{roleId}/permissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPermissions(@PathParam("roleId") long roleId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Role> role = RolesFacade.findById(roleId);
+        if(role.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), role.get().getGroup()).isEmpty() && role.get().getGroup().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        return Response.ok(
+            new GsonBuilder().registerTypeAdapter(Permission.class, new PermissionAdapter()).create()
+            .toJson(role.get().getPermissions())
+        ).build();
+    }
+
+    @POST
+    @Path("/{roleId}/permissions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addPermission(@PathParam("roleId") long roleId, Permission permission, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Role> role = RolesFacade.findById(roleId);
+        if(role.isEmpty()){
+            return Response.status(404).build();
+        }
+        
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), role.get().getGroup()).isEmpty() && role.get().getGroup().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        if(permission.getChat() == null){
+            return Response.status(400).entity("Permission must have a chat").build();
+        }
+
+        Optional<Chat> chat = ChatsFacade.findById(permission.getChat().getId());
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(!role.get().getGroup().getChats().contains(chat.get())){
+            return Response.status(400).entity("Chat doesn't belong to group").build();
+        }
+
+        if(PermissionsFacade.findByRoleAndChat(role.get(), chat.get()).isPresent()){
+            return Response.status(400).entity("A permission for this role and chat already exists.").build();
+        }
+
+        //this is unnecessary but i feel safer doing it leave me alone
+        permission.setRole(role.get());
+        permission.setChat(chat.get());
+
+        PermissionsFacade.add(permission);
+
+        return Response.status(201).build();
+    }
+
     
 }

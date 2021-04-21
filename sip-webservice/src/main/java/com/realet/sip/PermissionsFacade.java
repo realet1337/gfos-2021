@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 
 public class PermissionsFacade {
 
@@ -37,6 +38,21 @@ public class PermissionsFacade {
 
         return wList.isEmpty() ? Optional.empty() : Optional.of(wList.get(0));
     }
+
+    public static Optional<Permission> findByRoleAndChat(Role role, Chat chat){
+        
+        EntityManager em = emf.createEntityManager();
+
+        try{
+            return Optional.of(em.createNamedQuery("Permission.findByRoleAndChat", Permission.class).setParameter("chat", chat).setParameter("role", role).getSingleResult());
+        }
+        catch(NoResultException e){
+            return Optional.empty();
+        }
+
+    }
+
+    
 
     public static void add(Permission permission){
 

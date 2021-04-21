@@ -302,7 +302,6 @@ export default {
     watch: {
         roleId: function(roleId){
             if(roleId !== -1 && roleId !== undefined){
-                                                    //i dont know why vuetify 1 indexes either
                 this.role = Object.assign({}, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
                 this.color = this.role.color;
             }

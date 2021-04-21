@@ -9,10 +9,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Permissions")
+@NamedQueries({
+    @NamedQuery(name = "Permission.findByRoleAndChat", query = "SELECT p FROM Permission p WHERE p.role = :role AND p.chat = :chat")
+})
 @NamedNativeQueries({
     //PARAMETERS:
     //?1 = userid

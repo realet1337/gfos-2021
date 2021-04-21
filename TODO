@@ -1,0 +1,16 @@
+add status to userprofiledialog
+add last seen to DirectChat.vue as well as UserProfileDialog
+logout
+delete account
+
+switch occurences of array.findIndex === -1 to array.some
+
+Responsivity:
+/login
+/register
+/home/direct-chats
+/home/groups
+/group
+/chat
+/group/edit
+/edit-profile

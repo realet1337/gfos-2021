@@ -1,10 +1,8 @@
 package com.realet.sip;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -540,6 +538,12 @@ public class GroupsResource {
         role.setGroup(group.get());
         
         RolesFacade.add(role);
+
+        Permission rule = new Permission();
+        rule.setCanRead(true);
+        rule.setCanWrite(true);
+        rule.setRole(role);
+        PermissionsFacade.add(rule);
 
         return Response.ok().build();
     }

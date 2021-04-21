@@ -40,7 +40,7 @@ import javax.persistence.TemporalType;
     //?1 = groupid
     //?2 = chatid
 
-    /* here it is in pretty: (won't work because the sql formatter i used turned all the table names into lowerCamelCase)
+    /* old query (ignore)
         SELECT Users.*
         FROM   Users
             JOIN RoleMembership
@@ -77,21 +77,30 @@ import javax.persistence.TemporalType;
                                     WHERE  Roles.group_id = ?1) 
     */
 
-    @NamedNativeQuery(name = "User.findGroupChatReaders", query = "SELECT Users.* FROM Users JOIN RoleMembership ON " + 
-    "Users.id = RoleMembership.user_id JOIN Roles AS Roles ON RoleMembership.role_id = Roles.id JOIN Permissions ON " + 
-    "Permissions.role_id = Roles.id WHERE Roles.id = (SELECT MIN(priority) FROM Roles AS subRoles JOIN RoleMembership AS subRoleMembership " + 
-    "ON subRoleMembership.role_id = subRoles.id JOIN Users AS subUsers ON subRoleMembership.user_id = subUsers.id WHERE " + 
-    "subRoles.group_id = ?1 AND subUsers.id = Users.id) AND Permissions.chat_id = (SELECT MAX(chat_id) FROM Permissions AS subPermissions " + 
-    "WHERE subPermissions.role_id = Roles.id AND subPermissions.chat_id = ?2) AND Permissions.canRead = true UNION " + 
-
-    //also select users w/o Roles
-    "SELECT Users.* FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE GroupMembership.group_id = ?1 " + 
-    "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
-    "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class),
-
     @NamedNativeQuery(name = "User.findBasicGroupMembers", query = "SELECT Users.* FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE GroupMembership.group_id = ?1 " + 
     "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
-    "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class) 
+    "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class),
+    @NamedNativeQuery(name = "User.findGroupChatReaders", query =
+        "( "
+        + " SELECT DISTINCT Users.* "
+        + " FROM            Users "
+        + " JOIN            RoleMembership "
+        + " ON              Users.id = RoleMembership.user_id "
+        + " JOIN            Roles "
+        + " ON              RoleMembership.role_id = Roles.id "
+        + " JOIN            Permissions "
+        + " ON              Roles.id = Permissions.role_id "
+        + " WHERE           Permissions.chat_id = 4) "
+        + "UNION "
+        + "      ( "
+        + "             SELECT * "
+        + "             FROM   Users "
+        + "             WHERE  ( "
+        + "                           SELECT canRead "
+        + "                           FROM   Permissions "
+        + "                           WHERE  Permissions.chat_id = 4 "
+        + "                           AND    Permissions.role_id IS NULL))",
+        resultClass = Permission.class)
 })
 
 public class User{

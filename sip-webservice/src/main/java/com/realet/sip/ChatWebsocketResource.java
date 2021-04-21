@@ -1,6 +1,7 @@
 package com.realet.sip;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.websocket.CloseReason;
@@ -79,8 +80,16 @@ public class ChatWebsocketResource {
                 }
                 return;
             }
-            Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), tokenUserId);
-            if(permission.isPresent() && !permission.get().isCanRead()){
+            List<Permission> permissions = PermissionsFacade.findGroupChatPermissions(chatId, tokenUserId);
+
+            boolean canRead = false;
+
+            for(Permission p: permissions){
+                canRead = canRead || p.isCanRead();
+            }
+
+
+            if(!canRead){
                 try {
                     session.getBasicRemote().sendText("Insufficient permissions.");
                 } catch (IOException e) {

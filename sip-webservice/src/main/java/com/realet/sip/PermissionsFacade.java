@@ -26,17 +26,14 @@ public class PermissionsFacade {
 
     }
 
-    public static Optional<Permission> findGroupChatPermissions(long chatId, long groupId, long userId) throws IllegalArgumentException{
+    public static List<Permission> findGroupChatPermissions(long chatId, long userId) throws IllegalArgumentException{
 
         EntityManager em = emf.createEntityManager();
 
-        List<Permission> wList = em.createNamedQuery("Permission.findGroupChatPermissions", Permission.class)
+        return em.createNamedQuery("Permission.findGroupChatPermissions", Permission.class)
         .setParameter(1, userId)
         .setParameter(2, chatId)
-        .setParameter(3, groupId)
         .getResultList();
-
-        return wList.isEmpty() ? Optional.empty() : Optional.of(wList.get(0));
     }
 
     public static Optional<Permission> findByRoleAndChat(Role role, Chat chat){

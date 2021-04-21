@@ -105,10 +105,14 @@ public class ServiceApplication extends Application {
         PermissionsFacade.add(new Permission(null, ChatsFacade.findById(1).get(), false, false));
         PermissionsFacade.add(new Permission(null, ChatsFacade.findById(3).get(), false, false));
         PermissionsFacade.add(new Permission(null, ChatsFacade.findById(4).get(), false, false));
-        PermissionsFacade.add(new Permission(null, ChatsFacade.findById(5).get(), false, false));
+        PermissionsFacade.add(new Permission(null, ChatsFacade.findById(5).get(), true, false));
 
         PermissionsFacade.add(new Permission(RolesFacade.findById(1).get(), ChatsFacade.findById(1).get(), true, true));
-        PermissionsFacade.add(new Permission(RolesFacade.findById(1).get(), ChatsFacade.findById(4).get(), true, true));
+        PermissionsFacade.add(new Permission(RolesFacade.findById(1).get(), ChatsFacade.findById(4).get(), false, true));
+        PermissionsFacade.add(new Permission(RolesFacade.findById(2).get(), ChatsFacade.findById(4).get(), true, false));
+
+        PermissionsFacade.add(new Permission(RolesFacade.findById(1).get(), ChatsFacade.findById(5).get(), true, false));
+        PermissionsFacade.add(new Permission(RolesFacade.findById(2).get(), ChatsFacade.findById(5).get(), true, false));
         
         
     }

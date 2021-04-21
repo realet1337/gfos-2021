@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.ChatMessageAdapter;
+import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
 
 @Path("/chats")
 public class ChatsResource {
@@ -166,8 +167,17 @@ public class ChatsResource {
                 if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(user_id).get())){
                     return Response.status(403).entity("Unauthorized").build();
                 }
-                Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), user_id);
-                if(permission.isPresent() && !permission.get().isCanRead()){
+
+                List<Permission> permissions = PermissionsFacade.findGroupChatPermissions(chatId, user_id);
+
+                boolean canRead = false;
+
+                for(Permission p: permissions){
+                    canRead = canRead || p.isCanRead();
+                }
+
+
+                if(!canRead){
                     return Response.status(403).entity("Insufficient permissions").build();
                 }
             }
@@ -240,10 +250,20 @@ public class ChatsResource {
             if(!chat.get().getGroup().getUsers().contains(UsersFacade.findById(tokenUserId).get())){
                 return Response.status(403).entity("Unauthorized").build();               
             }
-            Optional<Permission> permission = PermissionsFacade.findGroupChatPermissions(chatId, chat.get().getGroup().getId(), tokenUserId);
-            if(permission.isPresent() && !permission.get().isCanWrite()){
+
+            List<Permission> permissions = PermissionsFacade.findGroupChatPermissions(chatId, tokenUserId);
+
+                boolean canRead = false;
+
+                for(Permission p: permissions){
+                    canRead = canRead || p.isCanRead();
+                }
+
+
+                if(!canRead){
                 return Response.status(403).entity("Insufficient permissions").build();
             }
+
         }
 
         if(chatMessage.getContent() == null){
@@ -408,4 +428,57 @@ public class ChatsResource {
         return Response.status(200).build();
     }
 
+
+    @GET
+    @Path("/{chatId}/permissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChatPermissions(@PathParam("chatId") long chatId, @QueryParam("user") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Chat> chat = ChatsFacade.findById(chatId);
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(chat.get().getGroup() == null){
+            return Response.status(400).entity("Only group chats have permissions.").build();
+        }
+        
+        if(userId != 0){
+            //is requesting own permissions
+            if(userId != tokenUserId){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+
+            List<Permission> permissions = PermissionsFacade.findGroupChatPermissions(chatId, userId);
+
+            return Response.ok(
+                new GsonBuilder().registerTypeAdapter(Permission.class, new PermissionAdapter()).create()
+                .toJson(permissions)
+            ).build();
+        }
+        else{
+            //is requesting all chat permissions (must be admin)
+            if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty() && chat.get().getGroup().getOwner().getId() != tokenUserId){
+                return Response.status(403).entity("Unauthorized").build();
+            }
+    
+            return Response.ok(
+                new GsonBuilder().registerTypeAdapter(Permission.class, new PermissionAdapter()).create()
+                .toJson(chat.get().getPermissions())
+            ).build();
+        }
+
+    }
 }

@@ -22,12 +22,42 @@ import javax.persistence.Table;
     //PARAMETERS:
     //?1 = userid
     //?2 = chatid
-    //?3 = groupid
+
+    //This spits out 1-3 permissions in a way that (inclusive) OR-ing all of the canRead/canWrite values yields the permissions.
+
     @NamedNativeQuery(name = "Permission.findGroupChatPermissions", 
-    query = "SELECT Permissions.* FROM Permissions JOIN Roles ON Roles.id = Permissions.role_id " 
-    + "JOIN RoleMembership ON Roles.id = RoleMembership.role_id JOIN Users ON Users.id = RoleMembership.user_id " 
-    + "WHERE Users.id = ?1 AND (Permissions.chat_id = ?2 or Permissions.chat_id IS NULL) AND Roles.group_id = ?3 " 
-    + "ORDER BY Roles.priority ASC, Permissions.chat_id DESC LIMIT 1", 
+    query = "(SELECT Permissions.* "
+    + " FROM   Permissions "
+    + "        LEFT OUTER JOIN Roles "
+    + "                     ON Roles.id = Permissions.role_id "
+    + "        LEFT OUTER JOIN RoleMembership "
+    + "                     ON Roles.id = RoleMembership.role_id "
+    + "        LEFT OUTER JOIN Users "
+    + "                     ON RoleMembership.user_id = Users.id "
+    + " WHERE  Permissions.chat_id = ?2 "
+    + "        AND Users.id = ?1 "
+    + "        AND Permissions.canWrite "
+    + " ORDER  BY Roles.priority ASC "
+    + " LIMIT  1) "
+    + "UNION "
+    + "(SELECT Permissions.* "
+    + " FROM   Permissions "
+    + "        LEFT OUTER JOIN Roles "
+    + "                     ON Roles.id = Permissions.role_id "
+    + "        LEFT OUTER JOIN RoleMembership "
+    + "                     ON Roles.id = RoleMembership.role_id "
+    + "        LEFT OUTER JOIN Users "
+    + "                     ON RoleMembership.user_id = Users.id "
+    + " WHERE  Permissions.chat_id = ?2 "
+    + "        AND Users.id = ?1 "
+    + "        AND Permissions.canRead "
+    + " ORDER  BY Roles.priority ASC "
+    + " LIMIT  1) "
+    + "UNION "
+    + "(SELECT * "
+    + " FROM   Permissions "
+    + " WHERE  Permissions.role_id IS NULL "
+    + "        AND Permissions.chat_id = ?2);", 
     resultClass = Permission.class)
 })
 public class Permission {

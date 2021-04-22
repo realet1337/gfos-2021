@@ -9,6 +9,7 @@ import DirectChat from '@/views/DirectChat.vue'
 import Group from '@/views/Group.vue'
 import Register from '@/views/Register.vue'
 import GroupEdit from '@/views/GroupEdit.vue'
+import Edit from '@/views/Edit.vue'
 
 import HomeDirectChats from '@/views/HomeDirectChats.vue'
 import HomeGroups from '@/views/HomeGroups.vue'
@@ -18,6 +19,8 @@ import GroupEditUsersView from '@/views/GroupEditUsersView'
 import GroupEditRolesView from '@/views/GroupEditRolesView'
 import GroupEditPermissionsView from '@/views/GroupEditPermissionsView'
 
+import EditProfile from '@/views/EditProfile'
+import EditSettings from '@/views/EditSettings'
 
 Vue.use(VueRouter)
 
@@ -95,6 +98,22 @@ const routes = [
 		]
 	},
 	{
+		path: '/edit',
+		component: Edit,
+		children: [
+			{
+				path: 'profile',
+				component: EditProfile,
+				name: 'EditProfile'
+			},
+			{
+				path: 'settings',
+				component: EditSettings,
+				name: 'EditSettings'
+			},
+		]
+	},
+	{
 		path: '',
 		name: 'FrontPage',
 		component: FrontPage,
@@ -111,7 +130,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-	if(to.path.startsWith('/home') || to.path.startsWith('/chat') || to.path.startsWith('/group')){
+
+	if(to.path.startsWith('/home') || to.path.startsWith('/chat') || to.path.startsWith('/group') || to.path.startsWith('/edit')){
 
 		if(store.state.token === false){
 

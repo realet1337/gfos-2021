@@ -12,6 +12,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -376,8 +377,11 @@ public class UsersResource {
         }
         catch(PersistenceException e){
             e.printStackTrace();
+
+            //find column
             String errorMessage = e.getMessage().split(" ")[1];
             errorMessage = errorMessage.substring(1, errorMessage.length()-1);
+
             if(errorMessage.equals("e_mail")){
                 return Response.status(400).entity("Email is already in use.").build();
             }
@@ -409,5 +413,69 @@ public class UsersResource {
             new GsonBuilder().registerTypeAdapter(UserProfile.class, new UserProfileAdapter()).create()
             .toJson(UsersFacade.findById(userId).get().getUserProfiles().get(0))
         ).build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(User user, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        if(user.getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        Optional<User> oldUser = UsersFacade.findById(user.getId());
+
+        //these shoudln't be set by the user
+        user.setEmail(oldUser.get().getEmail());
+        user.setLastSeen(oldUser.get().getLastSeen());
+        user.setOnline(oldUser.get().isOnline());
+        if(user.getPass() != null){
+            user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
+
+            //log out all other users
+            SessionsFacade.removeAllUserSessionsExcept(token, oldUser.get());
+        }
+        else{
+            user.setPass(oldUser.get().getPass());
+        }
+        
+        UsersFacade.update(user);
+
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @Path("/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(@PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        if(userId != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        Optional<User> user = UsersFacade.findById(tokenUserId);
+        UsersFacade.remove(user.get());
+
+        return Response.ok().build();
     }
 }

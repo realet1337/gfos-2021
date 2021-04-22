@@ -1,7 +1,7 @@
-add status to userprofiledialog
-add last seen to DirectChat.vue as well as UserProfileDialog
-logout
 delete account
+
+text validation for all text fields:
+both server side and client side
 
 switch occurences of array.findIndex === -1 to array.some
 

@@ -1,6 +1,7 @@
 package com.realet.sip;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -39,6 +40,24 @@ public class SessionsFacade {
         }
         throw new IllegalAccessException("No session was found");
 
+    }
+
+    public static void removeAllUserSessionsExcept(String token, User user){
+
+        EntityManager em = emf.createEntityManager();
+
+        List<Session> sessions = em.createNamedQuery("Session.getAllUserSessionsExcept", Session.class)
+        .setParameter("user", user)
+        .setParameter("token", token)
+        .getResultList();
+
+        em.getTransaction().begin();
+
+        for(Session s: sessions){
+            em.remove(s);
+        }
+
+        em.getTransaction().commit();
     }
 
     public static void add(Session session){

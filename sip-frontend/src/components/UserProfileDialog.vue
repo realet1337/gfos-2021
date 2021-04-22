@@ -16,18 +16,15 @@
                         <v-card-title><h2>{{ $data.user.username }}</h2>
                             <span class="ml-2 mt-1" v-if="$data.user.id == $store.state.userId">(You)</span>
                         </v-card-title>
-                        <v-card-text><b>ID:</b> {{ $data.user.id }}</v-card-text>
+                        <v-card-text><b>ID:</b> {{ $data.user.id }}<template v-if="!user.isOnline && user.lastSeen"><br><b>last seen:</b> {{ new Date(user.lastSeen).toLocaleString() }}</template> </v-card-text>
                     </v-col>
                     <v-spacer></v-spacer>
                     <v-col v-if="$data.user.id != $store.state.userId" cols="auto" align-self="center">
                         <v-btn v-if="!userIsBlocked" depressed large color="error darken-2" class="white--text" @click="blockUser">block</v-btn>
                         <v-btn v-else depressed large color="error darken-2" class="white--text" @click="unblockUser">unblock</v-btn>
                     </v-col>
-                    <v-col v-if="$data.user.id != $store.state.userId" cols="auto" class="ml-2" align-self="center">
+                    <v-col v-if="$data.user.id != $store.state.userId" cols="auto" class="ml-2 mr-3" align-self="center">
                         <v-btn @click="openDirectChat" depressed large color="white" class="primary--text">message</v-btn>
-                    </v-col>
-                    <v-col cols="auto" class="ml-2 mr-3" align-self="center">
-                        <v-icon size="150%">mdi-dots-vertical</v-icon>
                     </v-col>
                 </v-row>
                 <v-row class="highlighted-portion">
@@ -65,9 +62,15 @@
                             </v-col>
                         </v-row>
                         <v-row no-gutters>
+                            <p class="label-text mt-3"><b>STATUS</b></p>
+                        </v-row>
+                        <v-row class="mt-n2" no-gutters>
+                            <p>{{user.status}}</p>
+                        </v-row>         
+                        <v-row no-gutters>
                             <p class="label-text mt-3"><b>USER INFO</b></p>
                         </v-row>                
-                        <v-row no-gutters>
+                        <v-row no-gutters class="mt-n2">
                             <p v-if="$data.user.info">{{$data.user.info}}</p>
                             <p v-else>This user doesn't have any information about themselves.</p>
                         </v-row>

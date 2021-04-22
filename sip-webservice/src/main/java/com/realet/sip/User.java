@@ -23,22 +23,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name = "Users")
 @NamedQueries({
-
-    //FIXME: make this "like"
-    @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.username = :name"),
 
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 
 })
 @NamedNativeQueries({
-
-    //yes this works don't ask
-    //PARAMETERS:
-    //?1 = groupid
-    //?2 = chatid
 
     /* old query (ignore)
         SELECT Users.*
@@ -138,6 +133,7 @@ public class User{
     @Column(name = "profile_picture")
     private String profilePicture;
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "user")
     private List<UserProfile> userProfiles;
 
@@ -159,18 +155,23 @@ public class User{
     @ManyToMany(mappedBy = "users")
     private Set<Role> roles = new HashSet<>();
     
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "owner")
     private List<Group> ownedGroups = new ArrayList<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "user1")
     private List<Chat> directChats1 = new ArrayList<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "user2")
     private List<Chat> directChats2 = new ArrayList<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "author")
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
+    @Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "user")
     private List<Session> sessions = new ArrayList<>();
 

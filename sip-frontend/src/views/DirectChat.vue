@@ -31,6 +31,11 @@
                 <v-col v-if="$data.chat" cols="auto" align-self="center">
                     <p :class="'my-auto ' + ($data.chat.notSelf.isOnline ? 'green--text ' : 'red--text ')">{{$data.chat.notSelf.isOnline ? 'ONLINE' : 'OFFLINE'}}</p>
                 </v-col>
+                <v-col align-self="center" class="ml-3" v-if="chat && !chat.notSelf.isOnline && chat.notSelf.lastSeen">
+                    <v-row no-gutters class="my-auto">
+                        <span style="font-size: 14px;" class="secondary--text text--lighten-2"><b>last seen:</b> {{ new Date(chat.notSelf.lastSeen).toLocaleString() }}</span>
+                    </v-row>
+                </v-col>
             </v-row>
         </v-app-bar>
         <v-navigation-drawer app clipped floating permanent color="secondary darken-4">

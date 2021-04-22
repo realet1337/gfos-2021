@@ -449,7 +449,7 @@ export default {
             }
         },
         getPermissions: function(){
-            window.axios.get(this.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats/' + this.$route.params.chatId + '/permissions',{
+            window.axios.get(this.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/permissions',{
                 headers: {
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },
@@ -458,8 +458,14 @@ export default {
                 }
             }).then((response) => {
                 if(response.status == 200){
-                    this.$data.canRead = response.data.canRead;
-                    this.$data.canWrite = response.data.canWrite;
+                    var tmpCanRead = false;
+                    var tmpCanWrite = false;
+                    response.data.forEach((permission) => {
+                        tmpCanRead = tmpCanRead || permission.canRead;
+                        tmpCanWrite = tmpCanWrite || permission.canWrite;
+                    });
+                    this.canRead = tmpCanRead;
+                    this.canWrite = tmpCanWrite;
                 }
                 else if(response.status == 204){
                     this.$data.canRead = true;

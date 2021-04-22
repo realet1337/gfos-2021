@@ -80,6 +80,11 @@ import javax.persistence.TemporalType;
     @NamedNativeQuery(name = "User.findBasicGroupMembers", query = "SELECT Users.* FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE GroupMembership.group_id = ?1 " + 
     "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
     "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class),
+
+    
+    //PARAMETERS:
+    //?1 = chatid
+
     @NamedNativeQuery(name = "User.findGroupChatReaders", query =
         "( "
         + " SELECT DISTINCT Users.* "
@@ -90,7 +95,7 @@ import javax.persistence.TemporalType;
         + " ON              RoleMembership.role_id = Roles.id "
         + " JOIN            Permissions "
         + " ON              Roles.id = Permissions.role_id "
-        + " WHERE           Permissions.chat_id = 4) "
+        + " WHERE           Permissions.chat_id = ?1) "
         + "UNION "
         + "      ( "
         + "             SELECT * "
@@ -98,9 +103,9 @@ import javax.persistence.TemporalType;
         + "             WHERE  ( "
         + "                           SELECT canRead "
         + "                           FROM   Permissions "
-        + "                           WHERE  Permissions.chat_id = 4 "
+        + "                           WHERE  Permissions.chat_id = ?1 "
         + "                           AND    Permissions.role_id IS NULL))",
-        resultClass = Permission.class)
+        resultClass = User.class)
 })
 
 public class User{

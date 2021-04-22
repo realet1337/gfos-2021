@@ -17,11 +17,11 @@ public class ServiceApplication extends Application {
     public Set<Class<?>> getClasses() { 
 
         Set<Class<?>> set = new HashSet<>();
+        set.add( CORSPreflightHandler.class );
         set.add( UsersResource.class );
         set.add( AuthResource.class );
         set.add( ChatsResource.class );
         set.add( ChatMessagesResource.class );
-        set.add( CORSPreflightHandler.class );
         set.add( GroupsResource.class );
         set.add( ChatWebsocketResource.class );
         set.add( ImagesResource.class );

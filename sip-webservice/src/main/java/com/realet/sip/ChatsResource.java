@@ -481,4 +481,56 @@ public class ChatsResource {
         }
 
     }
+
+    @POST
+    @Path("/{chatId}/permissions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addPermission(@PathParam("chatId") long chatId, Permission permission, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try {
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        } catch (IllegalAccessException e) {
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Chat> chat = ChatsFacade.findById(chatId);
+        if(chat.isEmpty()){
+            return Response.status(404).build();
+        }
+        
+        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), chat.get().getGroup()).isEmpty() && chat.get().getGroup().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        if(permission.getRole() == null){
+            return Response.status(400).entity("Permission must have a role").build();
+        }
+
+        Optional<Role> role = RolesFacade.findById(permission.getRole().getId());
+        if(role.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(!chat.get().getGroup().getRoles().contains(role.get())){
+            return Response.status(400).entity("Role doesn't belong to group").build();
+        }
+
+        if(PermissionsFacade.findByRoleAndChat(role.get(), chat.get()).isPresent()){
+            return Response.status(400).entity("A permission for this role and chat already exists.").build();
+        }
+
+        //this is unnecessary but i feel safer doing it leave me alone
+        permission.setRole(role.get());
+        permission.setChat(chat.get());
+
+        PermissionsFacade.add(permission);
+
+        return Response.status(201).build();
+    }
+
 }

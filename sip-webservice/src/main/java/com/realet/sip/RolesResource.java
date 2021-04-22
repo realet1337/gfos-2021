@@ -197,57 +197,5 @@ public class RolesResource {
 
         return Response.ok().build();
     }
-
-    @POST
-    @Path("/{roleId}/permissions")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addPermission(@PathParam("roleId") long roleId, Permission permission, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
-        if(token == null){
-            return Response.status(403).entity("Unauthenticated").build();
-        }
-        token = token.split(" ")[1];
-
-        long tokenUserId;
-        try {
-            tokenUserId = SessionsFacade.findUserIdByToken(token);
-        } catch (IllegalAccessException e) {
-            return Response.status(403).entity("Unauthenticated").build();
-        }
-
-        Optional<Role> role = RolesFacade.findById(roleId);
-        if(role.isEmpty()){
-            return Response.status(404).build();
-        }
-        
-        if(RolesFacade.findAdminRolesByUserAndGroup(UsersFacade.findById(tokenUserId).get(), role.get().getGroup()).isEmpty() && role.get().getGroup().getOwner().getId() != tokenUserId){
-            return Response.status(403).entity("Unauthorized").build();
-        }
-
-        if(permission.getChat() == null){
-            return Response.status(400).entity("Permission must have a chat").build();
-        }
-
-        Optional<Chat> chat = ChatsFacade.findById(permission.getChat().getId());
-        if(chat.isEmpty()){
-            return Response.status(404).build();
-        }
-
-        if(!role.get().getGroup().getChats().contains(chat.get())){
-            return Response.status(400).entity("Chat doesn't belong to group").build();
-        }
-
-        if(PermissionsFacade.findByRoleAndChat(role.get(), chat.get()).isPresent()){
-            return Response.status(400).entity("A permission for this role and chat already exists.").build();
-        }
-
-        //this is unnecessary but i feel safer doing it leave me alone
-        permission.setRole(role.get());
-        permission.setChat(chat.get());
-
-        PermissionsFacade.add(permission);
-
-        return Response.status(201).build();
-    }
-
     
 }

@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-row no-gutters>
             <v-col>
-                <v-select v-model="roleId" :items="roles" item-text="name" item-value="id">
+                <v-select v-model="chatId" :items="chats" item-text="name" item-value="id">
                 </v-select>
             </v-col>
         </v-row>
@@ -41,10 +41,15 @@
                         <v-row no-gutters>
                             <v-divider></v-divider>
                         </v-row>
-                        <h3 class="mt-4 ml-2 mb-2">Exceptions:</h3>
+                        <v-row no-gutters>
+                            <h3 class="mt-4 ml-2 mb-2">Exceptions:</h3>
+                        </v-row>
+                        <v-row v-if="exceptions.length===0" class="ml-2 mb-2" no-gutters>
+                            <span class="secondary--text">No exceptions</span>
+                        </v-row>
                         <v-list-item v-for="permission in exceptions" :key="permission.id">
-                            <v-list-item-title>
-                                {{permission.chat.name}}
+                            <v-list-item-title :style="'color: ' + permission.role.color">
+                                {{permission.role.name}}
                             </v-list-item-title>
                             <v-list-item-action>
                                 <v-checkbox v-model="permission.canRead"></v-checkbox>
@@ -76,6 +81,7 @@
                                             icon
                                             v-bind="attrs"
                                             v-on="on"
+                                            @click="deleteException(permission)"
                                         >
                                             <v-icon color="red">mdi-window-close</v-icon>
                                         </v-btn>
@@ -97,7 +103,7 @@
                 </v-col>
             </v-row>
         </template>
-        <v-dialog v-model="chatFinderDialogIsOpen" width="500">
+        <v-dialog v-model="roleFinderDialogIsOpen" width="500">
             <v-card>
                 <v-card-title class="primary white--text">
                     Add exceptions for chats
@@ -105,19 +111,19 @@
                 <v-card-text>
                     <div style="height: 500px;" class="overflow-y-auto">
                         <v-list nav>
-                            <v-list-item link v-for="chat in chatsWithoutExceptions" :key="chat.id">
-                                <v-list-item-icon>
-                                    <v-icon color="secondary lighten-2">mdi-message-text</v-icon>
+                            <v-list-item link v-for="role in rolesWithoutExceptions" :key="role.id">
+                                <v-list-item-icon class="ml-2">
+                                    <v-icon :color="role.color">mdi-account-group</v-icon>
                                 </v-list-item-icon>
-                                <v-list-item-title>{{chat.name}}</v-list-item-title>
+                                <v-list-item-title :style="'color: ' + role.color">{{role.name}}</v-list-item-title>
                                 <v-list-item-action class="mr-4">
-                                    <v-btn icon @click="addException(chat)">
+                                    <v-btn icon @click="addException(role)">
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                 </v-list-item-action>
                             </v-list-item>
                         </v-list>
-                        <span v-if="chatsWithoutExceptions.length === 0" class="secondary--text">All chats have an exception.</span>
+                        <span v-if="rolesWithoutExceptions.length === 0" class="secondary--text">All roles have an exception.</span>
                     </div>
                 </v-card-text>
             </v-card>
@@ -132,12 +138,12 @@ export default {
     data: function(){
         return {
             roles: [],
-            roleId: undefined,
-            role: undefined,
             exceptions: [],
             rule: undefined,
             chats: [],
-            chatFinderDialogIsOpen: false,
+            chatId: undefined,
+            chat: undefined,
+            roleFinderDialogIsOpen: false,
         }
     },
     methods: {
@@ -164,12 +170,12 @@ export default {
             });
         },
         fetchPermissions: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/permissions', {
+            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.chat.id + '/permissions', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
             }).then((response) => {
-                const ruleIdx = response.data.findIndex(p => p.chat === undefined);
+                const ruleIdx = response.data.findIndex(p => p.role === undefined);
                 this.rule = response.data[ruleIdx];
                 response.data.splice(ruleIdx, 1);
                 this.exceptions = response.data;
@@ -178,16 +184,16 @@ export default {
             });
         },
         showChatFinder: function(){
-            this.chatFinderDialogIsOpen = true;
+            this.roleFinderDialogIsOpen = true;
         },
-        addException: function(chat){
+        addException: function(role){
             const permission = {
-                canRead: true,
-                canWrite: true,
-                role: this.role,
-                chat: chat,
+                canRead: false,
+                canWrite: false,
+                chat: this.chat,
+                role: role,
             }
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/permissions', permission, {
+            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.chat.id + '/permissions', permission, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -207,6 +213,17 @@ export default {
             }, () => {
                 this.$router.push('/home/groups');
             });
+        },
+        deleteException: function(permission){
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/permissions/' + permission.id, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.fetchPermissions();
+            }, () => {
+                this.$router.push('/home/groups');
+            });
         }
     },
     created: function(){
@@ -214,20 +231,20 @@ export default {
         this.fetchChats();
     },
     watch: {
-        roleId: function(roleId){
-            if(roleId !== -1 && roleId !== undefined){
-                this.role = this.roles[this.roles.findIndex(role => role.id === this.roleId)];
+        chatId: function(chatId){
+            if(chatId !== -1 && chatId !== undefined){
+                this.chat = this.chats[this.chats.findIndex(chat => chat.id === this.chatId)];
                 this.fetchPermissions();
             }
         }
     },
     computed: {
-        chatsWithoutExceptions: function(){
-            if(this.role && this.role.id){
-                return this.chats.filter( c => !this.exceptions.some(p => c.id === p.chat.id));
+        rolesWithoutExceptions: function(){
+            if(this.chat){
+                return this.roles.filter( r => !this.exceptions.some(p => r.id === p.role.id));
             }
             else{
-                return this.chats;
+                return this.roles;
             }
         }
     }

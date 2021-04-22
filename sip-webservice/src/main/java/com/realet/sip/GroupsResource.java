@@ -244,7 +244,11 @@ public class GroupsResource {
         group.getUsers().add(user);
         GroupsFacade.add(group);
 
-        ChatsFacade.add(new Chat(group, null, null, "text-chat"));
+        Chat defaultChat = new Chat(group, null, null, "text-chat");
+
+        ChatsFacade.add(defaultChat);
+
+        PermissionsFacade.add(new Permission(null, defaultChat, true, true));
 
         return Response.status(201).entity(new JSONObject().put("id", group.getId()).toString()).build();
     }
@@ -295,6 +299,8 @@ public class GroupsResource {
         inputChat.setUser1(null);
         inputChat.setUser2(null);
         ChatsFacade.add(inputChat);
+        
+        PermissionsFacade.add(new Permission(null, inputChat, true, true));
 
         return Response.status(201).build();
     }
@@ -503,12 +509,6 @@ public class GroupsResource {
         
         RolesFacade.add(role);
 
-        Permission rule = new Permission();
-        rule.setCanRead(true);
-        rule.setCanWrite(true);
-        rule.setRole(role);
-        PermissionsFacade.add(rule);
-
         return Response.ok().build();
     }
 
@@ -577,5 +577,34 @@ public class GroupsResource {
         return Response.ok().build();
     }
 
+    @DELETE
+    @Path("/{groupId}")
+    public Response deleteGroup(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+        if(token == null){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+        token = token.split(" ")[1];
+
+        long tokenUserId;
+        try{
+            tokenUserId = SessionsFacade.findUserIdByToken(token);
+        }
+        catch(IllegalAccessException e){
+            return Response.status(403).entity("Unauthenticated").build();
+        }
+
+        Optional<Group> group = GroupsFacade.findById(groupId);
+        if(group.isEmpty()){
+            return Response.status(404).build();
+        }
+
+        if(group.get().getOwner().getId() != tokenUserId){
+            return Response.status(403).entity("Unauthorized").build();
+        }
+
+        GroupsFacade.remove(group.get());
+
+        return Response.ok().build();
+    }
 
 }

@@ -37,11 +37,33 @@
                         label="Avatar"
                     ></v-file-input>
                 </v-col>
-                <v-col cols="auto" class="mx-2">
-                    <v-btn class="ml-auto mt-2" color="primary" depressed @click="submit">UPDATE</v-btn>
+            </v-row>
+            <v-row no-gutters>
+                <v-col cols="auto" class="mx-auto">
+                    <v-btn width="150" large class="ml-auto mt-2" color="primary" depressed @click="submit">UPDATE</v-btn>
                 </v-col>
             </v-row>
+            <template v-if="group.owner.id == $store.state.userId">
+                <v-row no-gutters class="mt-4 mb-n2">
+                    <v-divider></v-divider>
+                </v-row>
+                <v-row>
+                    <v-col cols="24" class="mx-auto">
+                        <v-btn @click="openDeleteDialog" block large text color="red">DELETE GROUP</v-btn>
+                    </v-col>
+                </v-row>
+            </template>
         </v-form>
+        <v-dialog v-if="group" v-model="showDeleteDialog" width="500">
+            <v-card>
+                <v-card-title>Delete group?</v-card-title>
+                <v-card-text>Are you sure you want to delete the group <b>{{group.name}}</b>?</v-card-text>
+                <v-card-actions class="secondary darken-4">
+                    <v-btn class="ml-auto" text x-large @click="showDeleteDialog = false">CANCEL</v-btn>
+                    <v-btn color="red" x-large @click="deleteGroup">DELETE</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 <script>
@@ -55,6 +77,7 @@ export default {
             cancelTokenSource: undefined,
             imgFile: undefined,
             group: undefined,
+            showDeleteDialog: false,
         }
     },
     methods: {
@@ -92,6 +115,20 @@ export default {
                 //pass
             }, () => {
                 //won't happen lmao
+            })
+        },
+        openDeleteDialog: function(){
+            this.showDeleteDialog = true;
+        },
+        deleteGroup: function(){
+            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.group.id, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.$router.push('/home/groups');
+            }, () => {
+                this.$router.push('/home/groups');
             })
         }
     },

@@ -7,7 +7,11 @@
                     justify="center"
                 >
                     <v-col>
-                       <RegisterCard class="mx-auto"/>
+                                            
+                        <v-card v-if="!$vuetify.breakpoint.xs" class="mx-auto rounded-lg" width="700">
+                            <RegisterForm/>
+                        </v-card>
+                        <RegisterForm v-else class="mx-auto"/>
                     </v-col>
                 </v-row>
             </v-container>
@@ -20,12 +24,12 @@
 </style>
 
 <script>
-import RegisterCard from '@/components/RegisterCard.vue'
+import RegisterForm from '@/components/RegisterForm'
 
 export default {
     components: {
-        RegisterCard
+        RegisterForm
     },
-    name: 'RegisterPage'
+    name: 'Register'
 }
 </script>

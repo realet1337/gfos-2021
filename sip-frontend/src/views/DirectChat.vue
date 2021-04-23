@@ -1,44 +1,53 @@
 <template>
-    <v-app v-if="$store.state.initialized">
-        <v-app-bar app clipped-left height="62">
+    <v-app v-if="$store.state.initialized" class="overflow-y-hidden">
+        <v-app-bar app clipped-left :height="$vuetify.breakpoint.xs ? '120' : '62'">
             <v-row no-gutters>
-                <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/direct-chats')" class="ml-n4 clickable">
-                    <v-row justify="center" no-gutters>
-                        <v-col class="mx-auto" cols="auto">
-                            <img src="@/assets/sip.png" width="100">
+                <v-row no-gutters>
+                    <template v-if="!$vuetify.breakpoint.xs">
+                        <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/direct-chats')" class="ml-n4 clickable">
+                            <v-row justify="center" no-gutters>
+                                <v-col class="mx-auto" cols="auto">
+                                    <img src="@/assets/sip.png" width="100">
+                                </v-col>
+                            </v-row>
                         </v-col>
-                    </v-row>
-                </v-col>
-                <v-col cols="auto">
-                    <v-divider vertical></v-divider>
-                </v-col>
-                <v-col cols="auto" v-if="$data.chat" align-self="center">
-                    <v-avatar @click="showUser($data.chat.notSelf)" class="clickable mx-2" color="primary">
-                        <img v-if="$data.chat.notSelf.profilePicture" :src="$getAvatarUrl('user', $data.chat.notSelf)">
-                        <span v-else class="headline">{{$data.chat.notSelf.username.substring(0,1)}}</span>
-                    </v-avatar>
-                </v-col>
-                <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
-                    <v-row no-gutters class="my-auto">
-                        <h3 @click="showUser($data.chat.notSelf)" class="clickable">
-                        {{$data.chat.notSelf.username}}
-                        </h3>
-                    </v-row>
-                </v-col>
-                <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-5 mr-1">
-                    <v-icon size="10" :color="$data.chat.notSelf.isOnline ? 'green' : 'red'">mdi-checkbox-blank-circle</v-icon>
-                </v-col>
-                <v-col v-if="$data.chat" cols="auto" align-self="center">
-                    <p :class="'my-auto ' + ($data.chat.notSelf.isOnline ? 'green--text ' : 'red--text ')">{{$data.chat.notSelf.isOnline ? 'ONLINE' : 'OFFLINE'}}</p>
-                </v-col>
-                <v-col align-self="center" class="ml-3" v-if="chat && !chat.notSelf.isOnline && chat.notSelf.lastSeen">
-                    <v-row no-gutters class="my-auto">
-                        <span style="font-size: 14px;" class="secondary--text text--lighten-2"><b>last seen:</b> {{ new Date(chat.notSelf.lastSeen).toLocaleString() }}</span>
-                    </v-row>
-                </v-col>
+                        <v-col cols="auto">
+                            <v-divider vertical></v-divider>
+                        </v-col>
+                    </template>
+                    <v-col cols="auto" v-if="$data.chat" align-self="center">
+                        <v-avatar @click="showUser($data.chat.notSelf)" class="clickable mx-2" color="primary">
+                            <img v-if="$data.chat.notSelf.profilePicture" :src="$getAvatarUrl('user', $data.chat.notSelf)">
+                            <span v-else class="headline">{{$data.chat.notSelf.username.substring(0,1)}}</span>
+                        </v-avatar>
+                    </v-col>
+                    <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
+                        <v-row no-gutters class="my-auto">
+                            <h3 @click="showUser($data.chat.notSelf)" class="clickable">
+                            {{$data.chat.notSelf.username}}
+                            </h3>
+                        </v-row>
+                    </v-col>
+                    <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-5 mr-1">
+                        <v-icon size="10" :color="$data.chat.notSelf.isOnline ? 'green' : 'red'">mdi-checkbox-blank-circle</v-icon>
+                    </v-col>
+                    <v-col v-if="$data.chat" cols="auto" align-self="center">
+                        <p :class="'my-auto ' + ($data.chat.notSelf.isOnline ? 'green--text ' : 'red--text ')">{{$data.chat.notSelf.isOnline ? 'ONLINE' : 'OFFLINE'}}</p>
+                    </v-col>
+                    <v-col align-self="center" class="ml-3" v-if="!$vuetify.breakpoint.xs && chat && !chat.notSelf.isOnline && chat.notSelf.lastSeen">
+                        <v-row no-gutters class="my-auto">
+                            <span style="font-size: 14px;" class="secondary--text text--lighten-2"><b>last seen:</b> {{ new Date(chat.notSelf.lastSeen).toLocaleString() }}</span>
+                        </v-row>
+                    </v-col>
+                </v-row>
+                <v-row v-if="chat">
+                    <v-col>
+                        <span v-if="$vuetify.breakpoint.xs" style="font-size: 14px;" class="ml-2 secondary--text text--lighten-2"><b>last seen:</b> {{ new Date(chat.notSelf.lastSeen).toLocaleString() }}</span>
+                    </v-col>
+                </v-row>
             </v-row>
         </v-app-bar>
-        <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
+        <v-navigation-drawer :temporary="$vuetify.breakpoint.xs" app clipped floating :permanent="!$vuetify.breakpoint.xs" color="secondary darken-4" v-model="showNavDrawer">
             <v-list nav>
                 <!-- why do we use :key here? We want to force a re-render on array change. See vuetify bug. Dirty workaround! -->
                 <!-- https://github.com/vuetifyjs/vuetify/issues/11405 -->
@@ -72,7 +81,7 @@
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" :style="'height: ' + ($vuetify.breakpoint.xs ? '81' : '89') + 'vh;'"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
                 <UserFinderDialog ref="finderDialog" @selected-user="showUser"></UserFinderDialog>
             </v-container>
@@ -105,6 +114,7 @@ export default {
             chats: [],
             chat: undefined,
             chatIndex: 0,
+            showNavDrawer: false,
         }
     },
     methods: {

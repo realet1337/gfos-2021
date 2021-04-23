@@ -5,7 +5,7 @@
                 <ChatCard :chat="chat" @show-user="showUserDialog" class="my-4"></ChatCard>
             </v-col>
             <v-col cols="auto">
-                <v-card width="350" min-width="350" class="rounded-xl my-4" elevation="0" color="secondary darken-4">
+                <v-card width="350" min-width="300" class="rounded-xl my-4" elevation="0" color="secondary darken-4">
                     <div v-ripple class="clickable" @click="showUserFinder">
                         <v-row>
                             <v-avatar size="130" class="mx-auto mt-6 mb-0" color="secondary darken-3">

@@ -1,8 +1,29 @@
 <template>
     <!-- avoid errors -->
-    <v-dialog v-if="$data.user.id" min-width="550" width="850" v-model="isOpen">
-        <v-card min-width="550" width="850">
+    <v-dialog v-if="$data.user.id" 
+        :min-width="$vuetify.breakpoint.xs ? undefined : '550'" 
+        :width="$vuetify.breakpoint.xs ? undefined : '850'" 
+        v-model="isOpen" 
+        :fullscreen="$vuetify.breakpoint.xs"
+    >
+        <v-card 
+            :min-width="$vuetify.breakpoint.xs ? undefined : '550'" 
+            :width="$vuetify.breakpoint.xs ? undefined : '850'" 
+        >
             <v-container>
+                <v-row class="highlighted-portion" v-if="$vuetify.breakpoint.xs">
+                    <v-col cols="auto" class="ml-auto">
+                        <v-btn
+                            icon
+                            dark
+                            @click="isOpen = false"
+                        >
+                            <v-icon>
+                                mdi-window-close
+                            </v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
                 <v-row no-gutters class="ma-n3 highlighted-portion">
                     <v-col cols="auto" justify="center" align="center">
                         <v-badge bottom bordered offset-x="45" offset-y="40" :color="$data.user.isOnline ? 'green' : 'red'">
@@ -18,8 +39,19 @@
                         </v-card-title>
                         <v-card-text><b>ID:</b> {{ $data.user.id }}<template v-if="!user.isOnline && user.lastSeen"><br><b>last seen:</b> {{ new Date(user.lastSeen).toLocaleString() }}</template> </v-card-text>
                     </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col v-if="$data.user.id != $store.state.userId" cols="auto" align-self="center">
+                    <template v-if="!$vuetify.breakpoint.xs">
+                        <v-spacer></v-spacer>
+                        <v-col v-if="$data.user.id != $store.state.userId" cols="auto" align-self="center">
+                            <v-btn v-if="!userIsBlocked" depressed large color="error darken-2" class="white--text" @click="blockUser">block</v-btn>
+                            <v-btn v-else depressed large color="error darken-2" class="white--text" @click="unblockUser">unblock</v-btn>
+                        </v-col>
+                        <v-col v-if="$data.user.id != $store.state.userId" cols="auto" class="ml-2 mr-3" align-self="center">
+                            <v-btn @click="openDirectChat" depressed large color="white" class="primary--text">message</v-btn>
+                        </v-col>
+                    </template>
+                </v-row>
+                <v-row v-if="$vuetify.breakpoint.xs" class="highlighted-portion" justify="center">
+                    <v-col v-if="$data.user.id != $store.state.userId" align-self="center" cols="auto">
                         <v-btn v-if="!userIsBlocked" depressed large color="error darken-2" class="white--text" @click="blockUser">block</v-btn>
                         <v-btn v-else depressed large color="error darken-2" class="white--text" @click="unblockUser">unblock</v-btn>
                     </v-col>
@@ -83,7 +115,7 @@
                         </v-row>
                         <v-virtual-scroll 
                         :items="sharedGroups"
-                        height="300"
+                        height="290"
                         item-height="64">
                             <template v-slot:default="{ item }">
                                 <v-list nav :key="item.id">

@@ -113,14 +113,21 @@
             <v-row v-if="$data.canWrite || editing.id" no-gutters>
                 <v-col>
                     <v-textarea
-                    @keydown.enter.exact.prevent="sendMessage"
-                    v-model="message"
-                    outlined
-                    rows="1"
-                    auto-grow
-                    no-resize
-                    class="message-textarea"
+                        v-if="!$vuetify.breakpoint.xs"
+                        @keydown.enter.exact.prevent="sendMessage"
+                        v-model="message"
+                        outlined
+                        rows="1"
+                        auto-grow
+                        no-resize
+                        class="message-textarea"
                     ></v-textarea>
+                    <v-text-field
+                        v-else
+                        @keydown.enter.exact.prevent="sendMessage"
+                        v-model="message"
+                        outlined
+                    ></v-text-field>
                 </v-col>
             </v-row>
             <v-row v-if="$data.canWrite === false && !editing.id" no-gutters justify="center" class="mb-3">

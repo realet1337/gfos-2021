@@ -1,5 +1,5 @@
 <template>
-    <v-card width="350" min-width="350" class="rounded-xl" elevation="4">
+    <v-card width="350" min-width="300" class="rounded-xl" elevation="4">
         <div v-ripple class="clickable" @click="$router.push('/chat/' + $props.chat.id)">
             <v-row>
                 <v-avatar size="130" class="mx-auto mt-6 mb-0" color="primary">

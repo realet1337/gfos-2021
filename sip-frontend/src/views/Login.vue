@@ -7,7 +7,10 @@
                     justify="center"
                 >
                     <v-col>
-                       <LoginCard class="mx-auto"/>
+                        <v-card v-if="!$vuetify.breakpoint.xs" width="500" class="mx-auto rounded-lg">
+                            <LoginForm/>
+                        </v-card>
+                        <LoginForm v-else class="mx-auto"/>
                     </v-col>
                 </v-row>
             </v-container>
@@ -21,12 +24,12 @@
 
 <script>
 import Vue from 'vue'
-import LoginCard from '@/components/LoginCard.vue'
+import LoginForm from '@/components/LoginForm'
 import store from '@/store/'
 
 export default {
     components: {
-        LoginCard
+        LoginForm
     },
     
     beforeRouteEnter: function(to, from, next) {

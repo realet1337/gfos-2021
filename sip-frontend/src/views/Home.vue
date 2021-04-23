@@ -1,7 +1,7 @@
 <template>
     <v-app v-if="$store.state.initialized">
         <v-app-bar app hide-on-scroll height="62">
-            <v-row no-gutters>
+            <v-row no-gutters :class="$vuetify.breakpoint.xs ? 'mx-4' : ''">
                 <!-- spacer col so the log is centered -->
                 <v-col cols="1">
                 </v-col>

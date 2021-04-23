@@ -15,7 +15,7 @@
                             <v-divider vertical></v-divider>
                         </v-col>
                     </template>
-                    <v-app-bar-nav-icon @click="showNavDrawer = true"></v-app-bar-nav-icon>
+                    <v-app-bar-nav-icon v-if="$vuetify.breakpoint.xs" @click="showNavDrawer = true"></v-app-bar-nav-icon>
                     <v-col cols="auto" v-if="$data.chat" align-self="center">
                         <v-avatar @click="showUser($data.chat.notSelf)" class="clickable mx-2" color="primary">
                             <img v-if="$data.chat.notSelf.profilePicture" :src="$getAvatarUrl('user', $data.chat.notSelf)">

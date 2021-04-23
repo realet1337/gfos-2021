@@ -65,7 +65,7 @@ export default {
             this.$refs.removeUserConfirmDialog.show(user);
         },
         addUser: function(user){
-            if(this.users.findIndex(tmpUser => user.id == tmpUser.id) === -1){
+            if(!this.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user);
             }
         },

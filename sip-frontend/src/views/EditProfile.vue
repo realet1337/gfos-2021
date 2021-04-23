@@ -9,7 +9,7 @@
             </v-row>
             <v-row no-gutters>
                 <v-col class="mx-2">
-                    <v-text-field outlined v-model="user.username" label="username"></v-text-field>
+                    <v-text-field :rules="[v => !!v || 'Username is required' , v=> !/\s/g.test(v) || 'Name cannot contain whitespaces.']" outlined v-model="user.username" label="username"></v-text-field>
                 </v-col>
             </v-row>
             <v-row no-gutters>
@@ -146,8 +146,8 @@ export default {
             }).then(() => {
                 this.$store.commit('setUser', this.user);
             }, () => {
-                //won't happen lmao
-            })
+                this.$router.push('/');
+            });
         },
         changePass: function(){
             //prepare object
@@ -164,7 +164,7 @@ export default {
                 this.password1 = '';
                 this.password2 = '';
             }, () => {
-                //shoudln't happen
+                this.$router.push('/');
             })
         },
         openDeleteDialog: function(){

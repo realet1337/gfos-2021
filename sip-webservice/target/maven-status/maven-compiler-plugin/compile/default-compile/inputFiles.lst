@@ -2,6 +2,7 @@
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/GroupsResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/AuthResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatsResource.java
+/home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/UserProfilesResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatMessagesResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/ChatWebsocketResource.java
 /home/ubuntu/dev/gfos-2021/sip-webservice/src/main/java/com/realet/sip/FileUploadForm.java

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
@@ -360,6 +362,18 @@ public class UsersResource {
         user.setOnline(false);
         user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
         UserProfile userProfile;
+
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(user.getUsername());
+
+        if(m.find()){
+            user.setUsername(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+
         if(user.getUserProfiles() != null){
             userProfile = user.getUserProfiles().get(0);
             if(userProfile.getMaxLoadedMessages() < userProfile.getMessageChunkSize()){
@@ -433,6 +447,17 @@ public class UsersResource {
             return Response.status(403).entity("Unauthorized").build();
         }
 
+        Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
+
+        Matcher m = p.matcher(user.getUsername());
+
+        if(m.find()){
+            user.setUsername(m.group(0));
+        }
+        else{
+            return Response.status(400).entity("Name cannot entirely consist of whitespaces").build();
+        }
+        
         Optional<User> oldUser = UsersFacade.findById(user.getId());
 
         //these shoudln't be set by the user

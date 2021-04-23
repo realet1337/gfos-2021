@@ -239,7 +239,7 @@ export default {
                 this.group = group;
                 this.resetView();
                 this.initGroup();
-                if(this.groups.findIndex(tmpGroup => tmpGroup.id === group.id) === -1){
+                if(!this.groups.some(tmpGroup => tmpGroup.id === group.id)){
                     this.getGroups();
                 }
             }

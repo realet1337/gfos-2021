@@ -61,12 +61,14 @@
                                 >{{role.name}}</v-chip>
                             </v-col>
                         </v-row>
-                        <v-row no-gutters>
-                            <p class="label-text mt-3"><b>STATUS</b></p>
-                        </v-row>
-                        <v-row class="mt-n2" no-gutters>
-                            <p>{{user.status}}</p>
-                        </v-row>         
+                        <template v-if="user.status">
+                            <v-row no-gutters>
+                                <p class="label-text mt-3"><b>STATUS</b></p>
+                            </v-row>
+                            <v-row class="mt-n2" no-gutters>
+                                <p>{{user.status}}</p>
+                            </v-row>
+                        </template>
                         <v-row no-gutters>
                             <p class="label-text mt-3"><b>USER INFO</b></p>
                         </v-row>                
@@ -209,7 +211,7 @@ export default {
     },
     computed: {
         userIsBlocked: function(){
-            return this.$store.state.blockedUsers.findIndex(user => user.id == this.$data.user.id) !== -1;
+            return this.$store.state.blockedUsers.some(user => user.id == this.$data.user.id);
         }
     }
 

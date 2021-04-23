@@ -26,7 +26,7 @@
                                 >
                                     <v-avatar class="clickable" color="primary">
                                         <img v-if="user.profilePicture" :src="$getAvatarUrl('user', user)">
-                                        <span v-else class="headline">{{user.username.substring(0,1)}}</span>
+                                        <span v-else>{{user.username.substring(0,1)}}</span>
                                     </v-avatar>
                                 </v-btn>
                             </template>
@@ -139,6 +139,7 @@ export default {
             ).then( () => {
 
                 this.$router.push('/');
+				document.cookie = 'token=; Max-Age=-99999999;';
 
             }, () => {
 

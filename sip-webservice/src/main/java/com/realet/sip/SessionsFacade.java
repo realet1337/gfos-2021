@@ -31,14 +31,15 @@ public class SessionsFacade {
         EntityManager em = emf.createEntityManager();
 
         Session session = em.find(Session.class, token);
-        if(session != null){
-            em.getTransaction().begin();
-            session.getUser().setLastSeen(new Date());
-            em.getTransaction().commit();
-            
-            return session.getUser().getId();
+        if(session == null || session.getExpires().compareTo(new Date()) < 0){
+            throw new IllegalAccessException("No session was found");
         }
-        throw new IllegalAccessException("No session was found");
+
+        em.getTransaction().begin();
+        session.getUser().setLastSeen(new Date());
+        em.getTransaction().commit();
+        
+        return session.getUser().getId();
 
     }
 

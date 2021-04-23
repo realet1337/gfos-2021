@@ -27,6 +27,7 @@ public class ServiceApplication extends Application {
         set.add( ImagesResource.class );
         set.add( RolesResource.class );
         set.add( PermissionsResource.class );
+        set.add( UserProfilesResource.class );
         return set;
     }
 

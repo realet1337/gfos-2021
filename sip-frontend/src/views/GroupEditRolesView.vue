@@ -234,7 +234,7 @@ export default {
             this.$refs.removeUserConfirmDialog.show(user, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
         },
         addUser: function(user){
-            if(this.role.users.findIndex(tmpUser => user.id == tmpUser.id) === -1){
+            if(!this.role.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user, this.role);
             }
         },
@@ -248,8 +248,7 @@ export default {
             }
         },
         localAddUserToRole: function(user){
-            const roleIndex = this.role.users.findIndex(tmpUser => user.id === tmpUser.id);
-            if(roleIndex === -1){
+            if(!this.role.users.some(tmpUser => user.id === tmpUser.id)){
                 this.role.users.push(user);
             }
         },
@@ -311,7 +310,7 @@ export default {
         notMembers: function(){
             if(this.role && this.role.id){
                 const roleUsers = this.role.users;
-                return this.groupUsers.filter(tmpUser => roleUsers.findIndex(tmpTmpUser => tmpTmpUser.id === tmpUser.id) === -1);
+                return this.groupUsers.filter(tmpUser => !roleUsers.some(tmpTmpUser => tmpTmpUser.id === tmpUser.id));
             }
             else{
                 return this.groupUsers;

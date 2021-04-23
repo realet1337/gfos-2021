@@ -1,5 +1,11 @@
 <template>
     <v-form class="ml-3 mt-2" v-model="isValid" v-if="userProfile">
+        <v-row no-gutters class="mb-4 ml-3">
+            <v-col cols="24">
+                <h3>Edit settings: </h3>
+                <v-divider></v-divider>
+            </v-col>
+        </v-row>
         <v-row no-gutters>
             <p class="label-text">At most how many messages should the application have loaded simultaneously?</p>
         </v-row>
@@ -37,6 +43,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'EditSettings',
     data: function(){
@@ -47,9 +55,23 @@ export default {
     },
     methods: {
         onSubmit: function(){
-
+            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/user-profiles', this.userProfile, {
+                headers:{
+                    'Authorization': 'Bearer ' + this.$store.state.token,
+                }
+            }).then(() => {
+                this.$store.commit('setUser', this.user);
+            }, () => {
+                this.$router.push('/');
+            });
         }
     },
+    created: function(){
+        this.userProfile = Object.assign({}, this.$store.state.userProfile);
+        this.userProfile.user = {
+            id: this.$store.state.userId
+        };
+    }
 
 }
 </script>

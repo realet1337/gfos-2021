@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-form v-if="group">
+        <v-form v-if="group" v-model="isValid">
             <v-row no-gutters class="mb-4 ml-3">
                 <v-col cols="24">
                     <h3>Edit group details: </h3>
@@ -9,7 +9,7 @@
             </v-row>
             <v-row no-gutters>
                 <v-col class="mx-2">
-                    <v-text-field outlined v-model="group.name" label="name"></v-text-field>
+                    <v-text-field :rules="[v => !!v || 'The group needs a name', v => /\S/.test(v) || 'The group needs a name']" outlined v-model="group.name" label="name"></v-text-field>
                 </v-col>
             </v-row>
             <v-row>
@@ -21,6 +21,9 @@
                 <v-col cols="auto">
                     <v-avatar v-if="imgFile">
                         <img :src="avatarUrl">
+                    </v-avatar>
+                    <v-avatar v-else-if="group.picture">
+                        <img :src="$getAvatarUrl('group', group)">
                     </v-avatar>
                     <v-row v-else class="mt-4" no-gutters>
                         <span>No picture</span>
@@ -40,7 +43,7 @@
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" class="mx-auto">
-                    <v-btn width="150" large class="ml-auto mt-2" color="primary" depressed @click="submit">UPDATE</v-btn>
+                    <v-btn :disabled="!isValid" width="150" large class="ml-auto mt-2" color="primary" depressed @click="submit">UPDATE</v-btn>
                 </v-col>
             </v-row>
             <template v-if="group.owner.id == $store.state.userId">
@@ -114,7 +117,7 @@ export default {
             }).then(() => {
                 //pass
             }, () => {
-                //won't happen lmao
+                this.$router.push('/');
             })
         },
         openDeleteDialog: function(){

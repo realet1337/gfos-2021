@@ -124,7 +124,7 @@ export default {
                 if(!chat.notSelf){
                     this.findNotSelf(chat);
                 }
-                if(this.chats.findIndex(tmpChat => chat.id == tmpChat.id) === -1){
+                if(!this.chats.some(tmpChat => chat.id == tmpChat.id)){
                     this.fetchChats();
                 }
                 this.$data.chat = chat;

@@ -59,6 +59,14 @@ public class UserProfile {
         return messageChunkSize;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public UserProfile(User user, boolean reverseBlocking, int maxLoadedMessages, int messageChunkSize) {
         this.user = user;
         this.reverseBlocking = reverseBlocking;

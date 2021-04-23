@@ -12,6 +12,8 @@ public class UserProfileAdapter extends TypeAdapter<UserProfile>{
     @Override
     public void write(JsonWriter out, UserProfile value) throws IOException {
         out.beginObject();
+        out.name("id");
+        out.value(value.getId());
         out.name("reverseBlocking");
         out.value(value.isReverseBlocking());
         out.name("maxLoadedMessages");

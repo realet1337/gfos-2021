@@ -48,8 +48,8 @@ function createUserWatcher(){
 
 		if(message.data.startsWith('new-message: ')){
 			var chatMessage = JSON.parse(message.data.substring(13));
-			if(store.state.blockedUsers.findIndex(user => user.id == chatMessage.author.id) === -1
-			&& (store.state.blockedBy.findIndex(user => user.id == chatMessage.author.id) === -1
+			if(!store.state.blockedUsers.some(user => user.id == chatMessage.author.id)
+			&& (!store.state.blockedBy.some(user => user.id == chatMessage.author.id)
 				|| store.state.userProfile.reverseBlocking === 0
 				)
 			){

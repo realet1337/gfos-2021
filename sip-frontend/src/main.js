@@ -14,9 +14,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$apiHttpUrl = "http://192.168.178.35:8080"; //make this an empty string to point to same url
 Vue.prototype.$apiWsUrl = "ws://192.168.178.35:8080"; //make this an empty string to point to same url
-Vue.prototype.$messageChunkSize = 50;
-Vue.prototype.$maxLoadedMessages = 100; //these are pretty safe, there's some room here
-Vue.prototype.$notificationTimeout = 500000;
+Vue.prototype.$notificationTimeout = 5000;
 
 //THE VOID
 Vue.prototype.$void = [

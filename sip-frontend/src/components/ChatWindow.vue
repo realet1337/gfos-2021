@@ -166,7 +166,7 @@ export default {
         updateMessages: function(before, after){
 
             var queryParams = {
-                count: Vue.prototype.$messageChunkSize,
+                count: this.$store.state.userProfile.messageChunkSize,
                 authorUnblockedBy: this.$store.state.userId,
                 reverseBlocking: this.$store.state.userProfile.reverseBlocking ? 1:0,
             }
@@ -187,12 +187,12 @@ export default {
             }).then((response) => {
 
                 if(before){
-                    if(response.data.length < Vue.prototype.$messageChunkSize){
+                    if(response.data.length < this.$store.state.userProfile.messageChunkSize){
                         this.$data.hasOldest = true;
                     }
                 }
                 else if(after){
-                    if(response.data.length < Vue.prototype.$messageChunkSize){
+                    if(response.data.length < this.$store.state.userProfile.messageChunkSize){
                         this.$data.hasNewest = true;
                     }
                 }
@@ -200,7 +200,7 @@ export default {
                     if(response.data.length === 0){
                         this.$data.isEmpty = true;
                     }
-                    if(response.data.length < Vue.prototype.$messageChunkSize){
+                    if(response.data.length < this.$store.state.userProfile.messageChunkSize){
                         this.$data.hasOldest = true;
                     }
                     else{
@@ -325,21 +325,21 @@ export default {
                     relativeNode = msgDiv.childNodes[2];
                     preOffsetTop = relativeNode.offsetTop;
                     preScrollTop = msgDiv.scrollTop;
-                    if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
+                    if(this.$data.chatMessages.length + chatMessages.length > this.$store.state.userProfile.maxLoadedMessages){
                         this.$data.hasNewest = false;
                     }
-                    this.$data.chatMessages = chatMessages.concat(this.$data.chatMessages.slice(0,Vue.prototype.$maxLoadedMessages - chatMessages.length))
+                    this.$data.chatMessages = chatMessages.concat(this.$data.chatMessages.slice(0,this.$store.state.userProfile.maxLoadedMessages - chatMessages.length))
                 }
                 else{
                     //just pick an element
                     relativeNode = msgDiv.childNodes[msgDiv.childNodes.length-2];
                     preOffsetTop = relativeNode.offsetTop;
                     preScrollTop = msgDiv.scrollTop;
-                    if(this.$data.chatMessages.length + chatMessages.length > Vue.prototype.$maxLoadedMessages){
+                    if(this.$data.chatMessages.length + chatMessages.length > this.$store.state.userProfile.maxLoadedMessages){
                         this.$data.hasOldest = false;
                     }
                     this.$data.chatMessages = this.$data.chatMessages.slice(chatMessages.length + this.$data.chatMessages.length - 
-                    Vue.prototype.$maxLoadedMessages, this.$data.chatMessages.length).concat(chatMessages);
+                    this.$store.state.userProfile.maxLoadedMessages, this.$data.chatMessages.length).concat(chatMessages);
                 }
             }
             else{

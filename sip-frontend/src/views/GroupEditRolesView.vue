@@ -175,7 +175,7 @@ export default {
     },
     methods: {
         fetchRoles: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -189,7 +189,7 @@ export default {
             this.role.color = this.color;
 
             if(this.role.id){
-                window.axios.put(Vue.prototype.$apiHttpUrl + '/api/roles', this.role, {
+                window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/roles', this.role, {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token,
                     }
@@ -203,7 +203,7 @@ export default {
                 });
             }
             else{
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles', this.role, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/roles', this.role, {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token,
                     }
@@ -227,7 +227,7 @@ export default {
             this.color = '#FFFFFF';
         },
         deleteRole: function(){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/roles/' + this.role.id, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -263,7 +263,7 @@ export default {
             }
         },
         fetchUsers: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/users', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -292,7 +292,7 @@ export default {
             for(var i = 0; i < this.priorityEditorArray.length; i++){
                 ids.push(this.priorityEditorArray[i].id);
             }
-            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/roles/priorities', ids, {
+            window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/roles/priorities', ids, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

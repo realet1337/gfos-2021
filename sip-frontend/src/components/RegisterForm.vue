@@ -236,7 +236,7 @@ export default {
                 formData.append('file', file);
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/users/pictures', formData, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/images/users/pictures', formData, {
                     headers: {
                         'content-type': 'multipart/form-data'
                     },
@@ -259,7 +259,7 @@ export default {
             if(this.$data.userInfo){
                 userPayload.info = this.$data.userInfo;
             }
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/users', userPayload).then(() => {
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/users', userPayload).then(() => {
                 this.$data.processing = false;
                 this.$router.push('/login');
             }, () => {

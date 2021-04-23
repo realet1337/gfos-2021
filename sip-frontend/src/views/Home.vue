@@ -121,7 +121,7 @@ export default {
             }
         },
         fetchUser: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId, {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$store.state.userId, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -132,7 +132,7 @@ export default {
             });
         },
         logout: function(){
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/auth/logout', 
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/auth/logout', 
                 new URLSearchParams({
                     'token': this.$store.state.token,
                 }).toString()

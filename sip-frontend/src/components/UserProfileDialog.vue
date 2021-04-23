@@ -156,7 +156,7 @@ export default {
     },
     methods: {
         openDirectChat: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/chats', {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token
                     },
@@ -188,7 +188,7 @@ export default {
 
             if(user.id != this.$store.state.userId){
                 //load shared groups (performance?)
-                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId +
+                window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$store.state.userId +
                 '/shared-groups/' + this.$data.user.id, {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token
@@ -205,7 +205,7 @@ export default {
             }
 
             if(this.$route.params.groupId){
-                window.axios.get(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$data.user.id +
+                window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$data.user.id +
                 '/roles', {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token
@@ -223,7 +223,7 @@ export default {
             }
         },
         blockUser: function(){
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/blocked-users', this.$data.user, {
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$store.state.userId + '/blocked-users', this.$data.user, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token
                 }
@@ -232,7 +232,7 @@ export default {
             });
         },
         unblockUser: function(){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/users/' + this.$store.state.userId + '/blocked-users/' + this.$data.user.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$store.state.userId + '/blocked-users/' + this.$data.user.id, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token
                 }

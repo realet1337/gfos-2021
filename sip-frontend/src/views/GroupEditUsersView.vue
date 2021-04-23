@@ -70,7 +70,7 @@ export default {
             }
         },
         fetchUsers: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/users', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -81,7 +81,7 @@ export default {
             });
         },
         fetchGroup: function(){
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId, {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

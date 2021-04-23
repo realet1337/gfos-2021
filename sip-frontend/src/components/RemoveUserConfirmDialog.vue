@@ -47,7 +47,7 @@ export default {
             this.isOpen = false;
         },
         remove: function(){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/users/' + this.user.id,  {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/roles/' + this.role.id + '/users/' + this.user.id,  {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

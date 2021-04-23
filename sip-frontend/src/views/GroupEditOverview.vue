@@ -98,7 +98,7 @@ export default {
                 formData.append('file', file);
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/groups/pictures', formData, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/images/groups/pictures', formData, {
                     headers: {
                         'content-type': 'multipart/form-data'
                     },
@@ -110,7 +110,7 @@ export default {
         },
         submit: function(){
             //TODO: name validation
-            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/groups', this.group, {
+            window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/groups', this.group, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -124,7 +124,7 @@ export default {
             this.showDeleteDialog = true;
         },
         deleteGroup: function(){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.group.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.group.id, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -136,7 +136,7 @@ export default {
         }
     },
     created: function(){
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId, {
+        window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId, {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
             }

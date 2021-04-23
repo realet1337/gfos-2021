@@ -130,7 +130,7 @@ export default {
                 formData.append('file', file);
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/users/pictures', formData, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/images/users/pictures', formData, {
                     headers: {
                         'content-type': 'multipart/form-data'
                     },
@@ -142,7 +142,7 @@ export default {
         },
         updateUser: function(){
             //TODO: name validation
-            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/users', this.user, {
+            window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/users', this.user, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -159,7 +159,7 @@ export default {
             //TODO:  validation
             tmpUser.pass = this.password1;
 
-            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/users', tmpUser, {
+            window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/users', tmpUser, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -174,7 +174,7 @@ export default {
             this.showDeleteDialog = true;
         },
         deleteUser: function(){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/users/' + this.user.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.user.id, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

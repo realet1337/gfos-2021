@@ -48,7 +48,7 @@ export default {
         },
         add: function(){
             if(!this.role){
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/users', this.user, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/users', this.user, {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token,
                     }
@@ -60,7 +60,7 @@ export default {
                 });
             }
             else{
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/roles/' + this.role.id + '/users', this.user, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/roles/' + this.role.id + '/users', this.user, {
                     headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token,
                     }

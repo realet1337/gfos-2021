@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         onSubmit: function(){
-            window.axios.put(Vue.prototype.$apiHttpUrl + '/api/user-profiles', this.userProfile, {
+            window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/user-profiles', this.userProfile, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

@@ -43,7 +43,7 @@ export default {
         },
         submit: function(){
             if(this.isEditing){
-                window.axios.put(Vue.prototype.$apiHttpUrl + '/api/chats', this.chat, {
+                window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/chats', this.chat, {
                     headers:{
                             'Authorization': 'Bearer ' + this.$store.state.token,
                     }
@@ -55,7 +55,7 @@ export default {
                 })
             }
             else{
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/' + this.$route.params.groupId + '/chats', this.chat, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/chats', this.chat, {
                     headers:{
                             'Authorization': 'Bearer ' + this.$store.state.token,
                     }

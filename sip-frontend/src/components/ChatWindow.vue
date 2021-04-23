@@ -179,7 +179,7 @@ export default {
                 queryParams.after = after.id;
             }
             
-            window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/chats/' + this.$route.params.chatId + '/chat-messages', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },
@@ -230,7 +230,7 @@ export default {
         sendMessage: function(){
             if(/\S/.test(this.$data.message)){
                 if(this.$data.editing.id){
-                    window.axios.put(Vue.prototype.$apiHttpUrl + '/api/chat-messages',
+                    window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/chat-messages',
                     {
                             //removing leading and trailing whitespaces
                             id: this.$data.editing.id,
@@ -258,7 +258,7 @@ export default {
                     });
                 }
                 else{
-                    window.axios.post(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
+                    window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/chats/' + this.$route.params.chatId + '/chat-messages',
                     {
                             //removing leading and trailing whitespaces
                             content: this.$data.message.match(/\S(.*\S)?/s)[0],
@@ -379,7 +379,7 @@ export default {
             document.body.removeChild(el);
         },
         deleteMessage: function(chatMessage){
-            window.axios.delete(Vue.prototype.$apiHttpUrl + '/api/chat-messages/' + chatMessage.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/chat-messages/' + chatMessage.id, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -430,7 +430,7 @@ export default {
         createWatcher: function(){
             //create watcher
             var _this = this;
-            var ws = new WebSocket(Vue.prototype.$apiWsUrl + '/api/chats/' + this.$route.params.chatId + '/websockets');
+            var ws = new WebSocket(Vue.prototype.$getApiUrl('ws') + '/api/chats/' + this.$route.params.chatId + '/websockets');
             ws.onopen = function(){
                 ws.send('Bearer ' + _this.$store.state.token);
             }
@@ -456,7 +456,7 @@ export default {
             }
         },
         getPermissions: function(){
-            window.axios.get(this.$apiHttpUrl + '/api/chats/' + this.$route.params.chatId + '/permissions',{
+            window.axios.get(this.$getApiUrl('http') + '/api/chats/' + this.$route.params.chatId + '/permissions',{
                 headers: {
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },

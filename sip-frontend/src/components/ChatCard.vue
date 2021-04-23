@@ -34,7 +34,7 @@ export default {
     props: ['chat'],
     computed:{
         imageUrl: function(){
-            return Vue.prototype.$apiHttpUrl + "/upload/pic/user/" + this.$data.user.profilePicture + ".jpg";
+            return Vue.prototype.$getApiUrl('http') + "/upload/pic/user/" + this.$data.user.profilePicture + ".jpg";
         }
     },
     data: function(){
@@ -44,7 +44,7 @@ export default {
         }
     },
     created: function(){
-        window.axios.get(Vue.prototype.$apiHttpUrl + '/api/chats/' + this.$props.chat.id + '/chat-messages', {
+        window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/chats/' + this.$props.chat.id + '/chat-messages', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },

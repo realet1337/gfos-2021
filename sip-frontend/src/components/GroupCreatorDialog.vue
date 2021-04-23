@@ -60,7 +60,7 @@ export default {
                 formData.append('file', file);
                 const cancelTokenSource = window.axios.CancelToken.source();
                 this.$data.cancelTokenSource = cancelTokenSource;
-                window.axios.post(Vue.prototype.$apiHttpUrl + '/api/images/groups/pictures', formData, {
+                window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/images/groups/pictures', formData, {
                     headers: {
                         'content-type': 'multipart/form-data'
                     },
@@ -88,7 +88,7 @@ export default {
             if(this.picture){
                 group.picture = this.picture;
             }
-            window.axios.post(Vue.prototype.$apiHttpUrl + '/api/groups/', group, {
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/groups/', group, {
                 headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token,
                 }

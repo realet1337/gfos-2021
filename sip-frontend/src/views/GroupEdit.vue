@@ -1,6 +1,10 @@
 <template>
     <v-app v-if="$store.state.initialized">
-        <v-navigation-drawer app permanent floating color="secondary darken-4">
+        <v-app-bar app v-if="$vuetify.breakpoint.xs">
+            <v-app-bar-nav-icon @click="showNavDrawer = true"></v-app-bar-nav-icon>
+            <v-app-bar-title>{{getTitle($route.path.split('/')[4])}}</v-app-bar-title>
+        </v-app-bar>
+        <v-navigation-drawer app :permanent="!$vuetify.breakpoint.xs" floating color="secondary darken-4" v-model="showNavDrawer">
             <div class="d-flex flex-column fill-height">
                 <div class="flex-grow-1">
                     <v-list nav dense>
@@ -66,6 +70,22 @@ export default {
         }
         else{
             next();
+        }
+    },
+    data: function(){
+        return {
+            showNavDrawer: false
+        }
+    },
+    methods: {
+        getTitle: function(keyword){
+            const dict = {
+                'overview': 'Overview',
+                'users': 'Users',
+                'roles': 'Roles',
+                'permissions': 'Permissions',
+            };
+            return dict[keyword];
         }
     }
 }

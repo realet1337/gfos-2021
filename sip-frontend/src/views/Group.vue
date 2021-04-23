@@ -14,7 +14,7 @@
                         <v-divider vertical></v-divider>
                     </v-col>
                 </template>
-                <v-app-bar-nav-icon @click="showNavDrawer = true"></v-app-bar-nav-icon>
+                <v-app-bar-nav-icon v-if="$vuetify.breakpoint.xs" @click="showNavDrawer = true"></v-app-bar-nav-icon>
                 <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
                     <v-row no-gutters class="my-auto">
                         <v-icon class="mx-2" color="secondary">
@@ -42,13 +42,13 @@
                 class="fill-height"
                 no-gutters
             >
-                <v-navigation-drawer
-                    mini-variant
-                    mini-variant-width="56"
-                    color="secondary darken-3"
-                    floating
-                >
-                    <v-list style="max-height: 100%;" class="hide-scrollbar overflow-x-hidden">
+                    <v-list style="max-height: 100%;" width="56" class="secondary darken-3 hide-scrollbar overflow-x-hidden">
+                        <template v-if="$vuetify.breakpoint.xs">
+                            <v-list-item to="/home/groups">
+                                <v-icon>mdi-home</v-icon>
+                            </v-list-item>
+                            <v-divider class="my-2"></v-divider>
+                        </template>
                         <v-list-item v-for="group in groups" :key="group.id" @click="openGroup(group)" :input-value="$data.group.id === group.id">
                             <v-tooltip right>
                                 <template v-slot:activator="{ on, attrs }">
@@ -77,7 +77,6 @@
                             </v-avatar>
                         </v-list-item>
                     </v-list>
-                </v-navigation-drawer>
                 <v-list nav dense style="max-height: 100%;" width="100" class="overflow-y-auto overflow-x-hidden grow">
                     <v-row class="mt-1 mb-2 ml-2">
                         <span class="secondary--text text--lighten-4" style="font-size: 14px;"><b>CHATS</b></span>

@@ -51,15 +51,17 @@
         </v-app-bar>
         <v-navigation-drawer :temporary="$vuetify.breakpoint.xs" app clipped floating :permanent="!$vuetify.breakpoint.xs" color="secondary darken-4" v-model="showNavDrawer">
             <v-list nav>
-                <v-list-item to="/home/direct-chats">
-                    <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>Home</v-list-item-title>
-                </v-list-item>
-                <v-row no-gutters>
-                    <v-divider class="mb-2"></v-divider>
-                </v-row>
+                <template v-if="$vuetify.breakpoint.xs">
+                    <v-list-item to="/home/direct-chats">
+                        <v-list-item-icon>
+                            <v-icon>mdi-home</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Home</v-list-item-title>
+                    </v-list-item>
+                    <v-row no-gutters>
+                        <v-divider class="mb-2"></v-divider>
+                    </v-row>
+                </template>
                 <!-- why do we use :key here? We want to force a re-render on array change. See vuetify bug. Dirty workaround! -->
                 <!-- https://github.com/vuetifyjs/vuetify/issues/11405 -->
                 <v-list-item-group v-model="$data.chatIndex" :key="$data.chats.map(chat => chat.id).join()" mandatory>

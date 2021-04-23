@@ -1,13 +1,23 @@
 <template>
     <v-container fluid>
+        <v-row no-gutters>
+            <h3>Select role:</h3>
+        </v-row>
         <v-row>
             <v-col>
                 <v-select v-model="roleId" :items="roles" item-text="name" item-value="id">
                 </v-select>
             </v-col>
-            <v-col cols="auto" align-self="center">
-                <v-btn large depressed color="primary" @click="createRole">ADD ROLE</v-btn>
-            </v-col>
+                <v-col cols="auto" align-self="center">
+                    <v-btn large depressed color="primary" @click="createRole">ADD ROLE</v-btn>
+                </v-col>
+            <template v-if="!$vuetify.breakpoint.xs">
+                <v-col cols="auto" align-self="center">
+                    <v-btn text large depressed color="primary" @click="showPriorityEditor">EDIT ROLE PRIORITIES</v-btn>
+                </v-col>
+            </template>
+        </v-row>
+        <v-row v-if="$vuetify.breakpoint.xs" class="mb-2" justify="center">
             <v-col cols="auto" align-self="center">
                 <v-btn text large depressed color="primary" @click="showPriorityEditor">EDIT ROLE PRIORITIES</v-btn>
             </v-col>

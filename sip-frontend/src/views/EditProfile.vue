@@ -86,8 +86,11 @@
         <v-dialog v-if="user" v-model="showDeleteDialog" width="500">
             <v-card>
                 <v-card-title>Delete account?</v-card-title>
-                <v-card-text>If you delete your account all your <b>messages and groups</b> will disappear. 
-                <b>This action is not reversible</b> Are you sure you want to delete your account?</v-card-text>
+                <v-card-text>If you delete your account all your <b>messages and groups</b> will disappear.
+                <br>
+                <b>This action is not reversible.</b>
+                <br>
+                Are you sure you want to delete your account?</v-card-text>
                 <v-card-actions class="secondary darken-4">
                     <v-btn class="ml-auto" text x-large @click="showDeleteDialog = false">CANCEL</v-btn>
                     <v-btn color="red" x-large @click="deleteUser">DELETE</v-btn>

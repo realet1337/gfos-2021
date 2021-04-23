@@ -133,3 +133,25 @@
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+.background-particles {
+  
+    position
+    :
+     absolute
+    ;
+      
+    display
+    :
+     block
+    ;
+      
+    top
+    : 0;
+      
+    left
+    : 0;
+      
+    z-index
+    : 0;
+    }

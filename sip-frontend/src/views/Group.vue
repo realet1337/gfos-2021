@@ -2,16 +2,19 @@
     <v-app v-if="$store.state.initialized">
         <v-app-bar app clipped-left clipped-right height="62">
             <v-row no-gutters>
-                <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/groups')" class="ml-n4 clickable">
-                    <v-row justify="center" no-gutters>
-                        <v-col class="mx-auto" cols="auto">
-                            <img src="@/assets/sip.png" width="100">
-                        </v-col>
-                    </v-row>
-                </v-col>
-                <v-col cols="auto">
-                    <v-divider vertical></v-divider>
-                </v-col>
+                <template v-if="!$vuetify.breakpoint.xs">
+                    <v-col v-ripple style="width: 256px;" cols="auto" @click="$router.push('/home/groups')" class="ml-n4 clickable">
+                        <v-row justify="center" no-gutters>
+                            <v-col class="mx-auto" cols="auto">
+                                <img src="@/assets/sip.png" width="100">
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                    <v-col cols="auto">
+                        <v-divider vertical></v-divider>
+                    </v-col>
+                </template>
+                <v-app-bar-nav-icon @click="showNavDrawer = true"></v-app-bar-nav-icon>
                 <v-col v-if="$data.chat" cols="auto" align-self="center" class="ml-3">
                     <v-row no-gutters class="my-auto">
                         <v-icon class="mx-2" color="secondary">
@@ -34,7 +37,7 @@
                 </v-col>
             </v-row>
         </v-app-bar>
-        <v-navigation-drawer app clipped floating permanent color="secondary darken-4">
+        <v-navigation-drawer :temporary="$vuetify.breakpoint.xs" app clipped floating :permanent="!$vuetify.breakpoint.xs" color="secondary darken-4" v-model="showNavDrawer">
             <v-row
                 class="fill-height"
                 no-gutters
@@ -42,7 +45,6 @@
                 <v-navigation-drawer
                     mini-variant
                     mini-variant-width="56"
-                    permanent
                     color="secondary darken-3"
                     floating
                 >
@@ -138,7 +140,7 @@
                 </v-list>
             </v-row>
         </v-navigation-drawer>
-        <v-navigation-drawer app clipped floating  right color="grey darken-4" :value="$data.showUserDrawer">
+        <v-navigation-drawer app clipped floating  right color="grey darken-4" v-model="$data.showUserDrawer">
             <v-list nav dense v-if="group">
                 <span class="label-text"><b>OWNER</b></span>
                 <v-list-item @click="showUser(group.owner)">
@@ -179,7 +181,7 @@
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow v-if="chat" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" style="height: 89vh;"/>
+                <ChatWindow v-if="chat" @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" :style="'height: ' + ($vuetify.breakpoint.xs ? '81' : '89') + 'vh;'"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
                 <GroupCreatorDialog ref="creatorDialog" @open-group-id="openGroupId"/>
                 <!-- maybe change to manual adding later so we don't reload every time -->
@@ -220,7 +222,8 @@ export default {
             group: undefined,
             groups: [],
             showUserDrawer: false,
-            dummy: 0
+            dummy: 0,
+            showNavDrawer: false,
         }
     },
     methods: {

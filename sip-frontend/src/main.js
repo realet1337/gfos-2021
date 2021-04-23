@@ -10,8 +10,6 @@ import './assets/css/main.css'
 //global event bus
 Vue.prototype.$eventHub = new Vue();
 
-Vue.config.productionTip = false;
-
 Vue.prototype.$apiHttpUrl = "http://192.168.178.35:8080"; //make this an empty string to point to same url
 Vue.prototype.$apiWsUrl = "ws://192.168.178.35:8080"; //make this an empty string to point to same url
 Vue.prototype.$notificationTimeout = 5000;

@@ -1,6 +1,6 @@
 <template>
     <v-app v-if="$store.state.initialized" class="overflow-y-hidden">
-        <v-app-bar app clipped-left :height="$vuetify.breakpoint.xs ? '120' : '62'">
+        <v-app-bar app clipped-left :height="$vuetify.breakpoint.xs && chat && !chat.notSelf.isOnline && chat.notSelf.lastSeen ? '120' : '62'">
             <v-row no-gutters>
                 <v-row no-gutters>
                     <template v-if="!$vuetify.breakpoint.xs">
@@ -15,6 +15,7 @@
                             <v-divider vertical></v-divider>
                         </v-col>
                     </template>
+                    <v-app-bar-nav-icon @click="showNavDrawer = true"></v-app-bar-nav-icon>
                     <v-col cols="auto" v-if="$data.chat" align-self="center">
                         <v-avatar @click="showUser($data.chat.notSelf)" class="clickable mx-2" color="primary">
                             <img v-if="$data.chat.notSelf.profilePicture" :src="$getAvatarUrl('user', $data.chat.notSelf)">
@@ -41,8 +42,9 @@
                     </v-col>
                 </v-row>
                 <v-row v-if="chat">
+                    <v-col cols="1"></v-col>
                     <v-col>
-                        <span v-if="$vuetify.breakpoint.xs" style="font-size: 14px;" class="ml-2 secondary--text text--lighten-2"><b>last seen:</b> {{ new Date(chat.notSelf.lastSeen).toLocaleString() }}</span>
+                        <span v-if="$vuetify.breakpoint.xs && chat && !chat.notSelf.isOnline && chat.notSelf.lastSeen" style="font-size: 14px;" class="ml-6 secondary--text text--lighten-2"><b>last seen:</b> {{ new Date(chat.notSelf.lastSeen).toLocaleString() }}</span>
                     </v-col>
                 </v-row>
             </v-row>
@@ -81,7 +83,7 @@
             <MessageAlerts style="position: fixed;" @open-chat="openChat"></MessageAlerts>
             <v-container fluid>
                 <!-- the reason we are not checking for blockedBy here is that we dont want other users trolling us by blocking/unblocking us, reloading our Chatwindow every time -->
-                <ChatWindow @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" :style="'height: ' + ($vuetify.breakpoint.xs ? '81' : '89') + 'vh;'"/>
+                <ChatWindow @show-user="showUser" :key="$route.params.chatId + $store.state.blockedUsers" :style="'height: ' + ($vuetify.breakpoint.xs ? (chat && !chat.notSelf.isOnline && chat.notSelf.lastSeen ? '75' : '81') : '89') + 'vh;'"/>
                 <UserProfileDialog ref="userDialog" @open-direct-chat="openDirectChat" @open-group="openGroup"></UserProfileDialog>
                 <UserFinderDialog ref="finderDialog" @selected-user="showUser"></UserFinderDialog>
             </v-container>

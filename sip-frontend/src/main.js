@@ -10,8 +10,8 @@ import './assets/css/main.css'
 //global event bus
 Vue.prototype.$eventHub = new Vue();
 
-Vue.prototype.$apiHost = "192.168.178.35:8080/sip-webservice"; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
-Vue.prototype.$uploadHost = "192.168.178.35:8080/upload"; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
+Vue.prototype.$apiHost = ""; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
+Vue.prototype.$uploadHost = ""; //empty if deployed on same server otherwise point to upload location, e.g.: 192.168.1.1:8080/upload (no trailing '/', no protocol)
 
 Vue.prototype.$getApiUrl = function(protocol){
 	if(Vue.prototype.$apiHost){

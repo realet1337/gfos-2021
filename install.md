@@ -29,4 +29,4 @@ The app needs a few things to work:
 
 And that's it! You should be good to go. (╹ڡ╹ )
 
-It is also possible to deploy the Web-App as a static build with the Webservice on a different server. To achieve that, simply change the `$apiHost` and `$uploadHost` attributes in `sip-frontend/src/main.js` to point to your Webservice and run `npm run build` in the `sip-frontend` directory. This will generate static files that can be deployed separately from the Webservice. The Webservice can be built by running `mvn clean install` in the `sip-webservice directory.` Don't forget to account for CORS though!
+It is also possible to deploy the Web-App as a static build with the Webservice on a different server. To achieve that, simply change the `$apiHost` and `$uploadHost` attributes in `sip-frontend/src/main.js` to point to your Webservice and run `npm run build` in the `sip-frontend` directory. This will generate static files that can be deployed separately from the Webservice. The Webservice can be built by running `mvn clean install` in the `sip-webservice` directory. Don't forget to account for CORS though!

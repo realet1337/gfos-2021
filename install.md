@@ -10,11 +10,21 @@ The app needs a few things to work:
     
     ```
     <system-properties>
-	    <property  name="com.realet.sip.uploadDir"  value="/var/www/sip/upload"/>
+	    <property  name="com.realet.sip.uploadDir"  value="<Upload Directory here>"/>
     </system-properties>
     ```
  2. A MySql datasource called "MySqlDS". Here is a great walkthrough: https://medium.com/@hasnat.saeed/install-and-configure-mysql-jdbc-driver-on-jboss-wildfly-e751a3be60d3. Make sure to download the newest version of Connector/J and configure the module with version 1.9 (`xmlns="urn:jboss:module:1.9"`).
+ 
+ 3. A file handler for static content for URL `/upload`. This should serve the same directory specified by `com.realet.sip.uploadDir`. If you're on WildFly, you can do this by adding
+ 
+	 `<location  name="/upload"  handler="uploads"/>` 
+	
+	`<file  name="uploads"  path="<Upload Directory here>"/>`    
+	
+	next to the respective tags for the URL `/` which is being served from `${jboss.home.dir}/welcome-content`.
 
-3. The necessary databases schema. To generate these tables, simply run `create.sql` from the `dist` directory. `dist` also holds `drop.sql` which drops all of those tables.
+4. The necessary databases schema. To generate these tables, simply run `create.sql` from the `dist` directory. `dist` also holds `drop.sql` which drops all of those tables.
+
+(*Note: The App will attempt to register for web-context `/`. Most Application servers occupy this already, meaning that it won't be possible to open the App. To avoid this on WildFly, either rename the `welcome-content` folder or remove the handler altogether.)* 
 
 And that's it! You should be good to go. (╹ڡ╹ )

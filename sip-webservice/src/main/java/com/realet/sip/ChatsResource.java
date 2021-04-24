@@ -253,14 +253,14 @@ public class ChatsResource {
 
             List<Permission> permissions = PermissionsFacade.findGroupChatPermissions(chatId, tokenUserId);
 
-                boolean canRead = false;
+                boolean canWrite = false;
 
                 for(Permission p: permissions){
-                    canRead = canRead || p.isCanRead();
+                    canWrite = canWrite || p.isCanWrite();
                 }
 
 
-                if(!canRead){
+                if(!canWrite){
                 return Response.status(403).entity("Insufficient permissions").build();
             }
 

@@ -279,7 +279,7 @@ export default {
         },
         initGroup: function(){
             //get chats
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/chats', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/chats', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -313,7 +313,7 @@ export default {
                 }
             });
 
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/basic-users', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/basic-users', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -334,7 +334,7 @@ export default {
                 }
             });
 
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/roles', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -375,7 +375,7 @@ export default {
         },
         getGroups: function(){
             //get groups
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$store.state.userId + '/groups', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/groups', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -431,7 +431,7 @@ export default {
             this.$refs.chatEditorDialog.show(chat);
         },
         deleteChat: function(chat){
-            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/chats/' + chat.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/chats/' + chat.id, {
                 headers:{
                         'Authorization': 'Bearer ' + this.$store.state.token,
                 }

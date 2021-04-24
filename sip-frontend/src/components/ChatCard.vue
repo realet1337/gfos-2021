@@ -44,7 +44,7 @@ export default {
         }
     },
     created: function(){
-        window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/chats/' + this.$props.chat.id + '/chat-messages', {
+        window.axios.get(Vue.prototype.$getApiUrl('http') + '/chats/' + this.$props.chat.id + '/chat-messages', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 },

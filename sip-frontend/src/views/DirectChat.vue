@@ -185,7 +185,7 @@ export default {
             this.$refs.finderDialog.show();
         },
         fetchChats: function(){
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$store.state.userId + '/direct-chats/', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/direct-chats/', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

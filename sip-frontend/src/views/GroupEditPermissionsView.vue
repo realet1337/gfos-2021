@@ -148,7 +148,7 @@ export default {
     },
     methods: {
         fetchRoles: function(){
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/roles', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -159,7 +159,7 @@ export default {
             });
         },
         fetchChats: function(){
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/groups/' + this.$route.params.groupId + '/chats', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/chats', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -170,7 +170,7 @@ export default {
             });
         },
         fetchPermissions: function(){
-            window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/chats/' + this.chat.id + '/permissions', {
+            window.axios.get(Vue.prototype.$getApiUrl('http') + '/chats/' + this.chat.id + '/permissions', {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -193,7 +193,7 @@ export default {
                 chat: this.chat,
                 role: role,
             }
-            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/chats/' + this.chat.id + '/permissions', permission, {
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/chats/' + this.chat.id + '/permissions', permission, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -204,7 +204,7 @@ export default {
             });
         },
         updatePermission: function(permission){
-            window.axios.put(Vue.prototype.$getApiUrl('http') + '/api/permissions', permission, {
+            window.axios.put(Vue.prototype.$getApiUrl('http') + '/permissions', permission, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
@@ -215,7 +215,7 @@ export default {
             });
         },
         deleteException: function(permission){
-            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/api/permissions/' + permission.id, {
+            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/permissions/' + permission.id, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }

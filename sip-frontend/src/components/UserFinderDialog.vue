@@ -42,7 +42,7 @@ export default {
             if(this.isValid){
                 this.errorMessage = '';
 
-                window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + this.$data.id,{
+                window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$data.id,{
                     headers:{
                             'Authorization': 'Bearer ' + this.$store.state.token,
                     }

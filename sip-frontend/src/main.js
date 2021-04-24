@@ -10,14 +10,24 @@ import './assets/css/main.css'
 //global event bus
 Vue.prototype.$eventHub = new Vue();
 
-Vue.prototype.$apiHost = "192.168.178.35:8080";
+Vue.prototype.$apiHost = "192.168.178.35:8080/sip-webservice"; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
+Vue.prototype.$uploadHost = "192.168.178.35:8080/upload"; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
 
 Vue.prototype.$getApiUrl = function(protocol){
 	if(Vue.prototype.$apiHost){
 		return protocol + '://' + Vue.prototype.$apiHost
 	}
 	else{
-		return protocol + '://' + document.location.host;
+		return protocol + '://' + document.location.host + '/api';
+	}
+};
+
+Vue.prototype.$getUploadUrl = function(protocol){
+	if(Vue.prototype.$apiHost){
+		return protocol + '://' + Vue.prototype.$uploadHost
+	}
+	else{
+		return protocol + '://' + document.location.host + '/upload';
 	}
 };
 
@@ -36,16 +46,16 @@ Vue.prototype.$void = [
 
 Vue.prototype.$getAvatarUrl = function (type, obj){
 	if(type === "user"){
-			return Vue.prototype.$getApiUrl('http') + "/upload/pic/user/" + obj.profilePicture + ".jpg";
+			return Vue.prototype.$getUploadUrl('http') + "/pic/user/" + obj.profilePicture + ".jpg";
 	}else if(type==="group") {
-			return Vue.prototype.$getApiUrl('http') + "/upload/pic/group/" + obj.picture + ".jpg";
+			return Vue.prototype.$getUploadUrl('http') + "/pic/group/" + obj.picture + ".jpg";
 	}
 	return;
 	
 }
 
 function createUserWatcher(){
-	var ws = new WebSocket(Vue.prototype.$getApiUrl('ws') + '/api/users/' +  store.state.userId + '/websockets');
+	var ws = new WebSocket(Vue.prototype.$getApiUrl('ws') + '/users/' +  store.state.userId + '/websockets');
 	ws.onopen = function(){
 		ws.send('Bearer ' + store.state.token);
 	}
@@ -85,7 +95,7 @@ Vue.prototype.$initApp = function(){
 	var abort = false;
 	var todo = 4;
 
-	window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + store.state.userId + '/blocked-users', {
+	window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + store.state.userId + '/blocked-users', {
 		headers:{
 				'Authorization': 'Bearer ' + store.state.token,
 		}
@@ -103,7 +113,7 @@ Vue.prototype.$initApp = function(){
 			router.push('/');
 		}
 	});
-	window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + store.state.userId + '/blocked-by', {
+	window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + store.state.userId + '/blocked-by', {
 		headers:{
 				'Authorization': 'Bearer ' + store.state.token,
 		}
@@ -122,7 +132,7 @@ Vue.prototype.$initApp = function(){
 		}
 	});
 
-	window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + store.state.userId).then((response) => {
+	window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + store.state.userId).then((response) => {
 		store.commit('setUser', response.data);
 		todo--;
 		if(todo == 0){
@@ -137,7 +147,7 @@ Vue.prototype.$initApp = function(){
 		}
 	});
 
-	window.axios.get(Vue.prototype.$getApiUrl('http') + '/api/users/' + store.state.userId + '/profile',{
+	window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + store.state.userId + '/profile',{
 		headers:{
 				'Authorization': 'Bearer ' + store.state.token,
 		}

@@ -76,30 +76,42 @@ import org.hibernate.annotations.CascadeType;
     "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
     "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class),
 
+    //raw:
+    // (SELECT DISTINCT Users.* FROM Users JOIN RoleMembership ON Users.id = RoleMembership.user_id JOIN Roles ON RoleMembership.role_id = Roles.id JOIN Permissions ON Roles.id = Permissions.role_id WHERE Permissions.chat_id = 1 AND Permissions.canRead) UNION (SELECT Users.*
+    // FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE (SELECT canRead
+    // FROM Permissions WHERE Permissions.chat_id = 1 AND Permissions.role_id IS NULL) AND GroupMembership.group_id = (SELECT group_id FROM Chats WHERE id = 1));
     
     //PARAMETERS:
     //?1 = chatid
 
-    @NamedNativeQuery(name = "User.findGroupChatReaders", query =
-        "( "
-        + " SELECT DISTINCT Users.* "
-        + " FROM            Users "
-        + " JOIN            RoleMembership "
-        + " ON              Users.id = RoleMembership.user_id "
-        + " JOIN            Roles "
-        + " ON              RoleMembership.role_id = Roles.id "
-        + " JOIN            Permissions "
-        + " ON              Roles.id = Permissions.role_id "
-        + " WHERE           Permissions.chat_id = ?1) "
-        + "UNION "
-        + "      ( "
-        + "             SELECT * "
-        + "             FROM   Users "
-        + "             WHERE  ( "
-        + "                           SELECT canRead "
-        + "                           FROM   Permissions "
-        + "                           WHERE  Permissions.chat_id = ?1 "
-        + "                           AND    Permissions.role_id IS NULL))",
+    @NamedNativeQuery(name = "User.findGroupChatReaders", query = ""
+    + "( "
+    + " SELECT DISTINCT Users.* "
+    + " FROM            Users "
+    + " JOIN            RoleMembership "
+    + " ON              Users.id = RoleMembership.user_id "
+    + " JOIN            Roles "
+    + " ON              RoleMembership.role_id = Roles.id "
+    + " JOIN            Permissions "
+    + " ON              Roles.id = Permissions.role_id "
+    + " WHERE           Permissions.chat_id = ?1 "
+    + " AND             Permissions.canRead) "
+    + "UNION "
+    + "      ( "
+    + "             SELECT Users.* "
+    + "             FROM   Users "
+    + "             JOIN   GroupMembership "
+    + "             ON     Users.id = GroupMembership.user_id "
+    + "             WHERE  ( "
+    + "                           SELECT canRead "
+    + "                           FROM   Permissions "
+    + "                           WHERE  Permissions.chat_id = ?1 "
+    + "                           AND    Permissions.role_id IS NULL) "
+    + "             AND    GroupMembership.group_id = "
+    + "                    ( "
+    + "                           SELECT group_id "
+    + "                           FROM   Chats "
+    + "                           WHERE  id = ?1))",
         resultClass = User.class)
 })
 

@@ -41,7 +41,7 @@ export default {
 
         if(cookie !== ''){
 
-            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/auth/validate',
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/auth/validate',
             new URLSearchParams({
                 'token': cookie
             })

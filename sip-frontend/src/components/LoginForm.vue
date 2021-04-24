@@ -60,7 +60,7 @@ export default {
 
             this.$data.error = false
 
-            window.axios.post(Vue.prototype.$getApiUrl('http') + '/api/auth/login', 
+            window.axios.post(Vue.prototype.$getApiUrl('http') + '/auth/login', 
             new URLSearchParams({
                     'email': this.$data.email,
                     'password': this.$data.password

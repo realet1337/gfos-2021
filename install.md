@@ -23,7 +23,7 @@ The app needs a few things to work:
 	
 	next to the respective tags for the URL `/` which is being served from `${jboss.home.dir}/welcome-content`.
 
-4. The necessary databases schema. To generate these tables, simply run `create.sql` from the `dist` directory. `dist` also holds `drop.sql` which drops all of those tables.
+4. The necessary database schema. To generate these tables, simply run `create.sql` from the `dist` directory. `dist` also holds `drop.sql` which drops all of those tables.
 
 (*Note: The App will attempt to register for web-context `/`. Most Application servers occupy this already, meaning that it won't be possible to open the App. To avoid this on WildFly, either rename the `welcome-content` folder or remove the handler altogether.)* 
 

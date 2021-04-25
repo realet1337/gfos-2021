@@ -1,0 +1,1 @@
+alias docs="rm -rf ./target/site/; mvn javadoc:javadoc -Dshow=private"

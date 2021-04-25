@@ -10,13 +10,37 @@ import com.realet.sip.Chat;
 import com.realet.sip.ChatMessage;
 import com.realet.sip.User;
 
+
+/**
+ * A serialization Gson-TypeAdapter for the {@link ChatMessage} class.
+ */
 public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
 
+    /**
+     * <ul>
+     * <li>0: Don't serialize any attributes as objects, instead just provide the ID of that object.</li> 
+     * <li>1: Serialize {@link ChatMessage#author} as object, all other object attributes as IDs.</li>
+     * <li>2: Serialize {@link ChatMessage#author}, {@link ChatMessage#chat} as objects.</li>
+     * </ul>
+     */
     int verbosity;
     
-    //0: all IDs
-    //1: above except author as obj
-    //2: above except chat as obj
+    
+
+
+    /**
+     * Serialization method. Will write the following to "out" parameter: 
+     * {@link ChatMessage#id}, 
+     * {@link ChatMessage#content}, 
+     * {@link ChatMessage#sent}, 
+     * {@link ChatMessage#expires} if existent, 
+     * {@link ChatMessage#chat} depending on {@link ChatMessageAdapter#verbosity}, 
+     * {@link ChatMessage#author} depending on {@link ChatMessageAdapter#verbosity},
+     * {@link ChatMessage#edited} if existent. 
+     * @param out JsonWriter object that will receive the serialized {@link ChatMessage} Object.
+     * @param value {@link ChatMessage} object that will be serialized.
+     * @throws IOException
+     */
 
     @Override
     public void write(JsonWriter out, ChatMessage value) throws IOException {
@@ -50,6 +74,13 @@ public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
         out.endObject();
         
     }
+
+    /**
+     * Non-functional deserialization method
+     * @param in
+     * @return null
+     * @throws IOException
+     */
 
     @Override
     public ChatMessage read(JsonReader in) throws IOException {

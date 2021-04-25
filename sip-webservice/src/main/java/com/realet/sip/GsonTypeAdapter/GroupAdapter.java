@@ -10,8 +10,21 @@ import com.google.gson.stream.JsonWriter;
 import com.realet.sip.Group;
 import com.realet.sip.User;
 
+/**
+ * A serialization Gson-TypeAdapter for the {@link Group} class.
+ */
 public class GroupAdapter extends TypeAdapter<Group>{
-
+    /**
+     * Serialization method. Will write the following to "out" parameter: 
+     * {@link Group#id}, 
+     * {@link Group#description} if existent, 
+     * {@link Group#name}, 
+     * {@link Group#picture} if existent, 
+     * {@link Group#owner} as an object, 
+     * @param out JsonWriter object that will receive the serialized {@link Group} Object.
+     * @param value {@link Group} object that will be serialized.
+     * @throws IOException
+     */
     @Override
     public void write(JsonWriter out, Group value) throws IOException {
         out.beginObject();
@@ -32,6 +45,12 @@ public class GroupAdapter extends TypeAdapter<Group>{
         
     }
 
+    /**
+     * Non-functional deserialization method
+     * @param in
+     * @return null
+     * @throws IOException
+     */
     @Override
     public Group read(JsonReader in) throws IOException {
         // TODO Auto-generated method stub

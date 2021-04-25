@@ -41,14 +41,6 @@ public class Role{
 
     @Column(name = "role_color", nullable = false)
     private String color;
-    
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
 
     @ManyToMany
     @JoinTable(name = "RoleMembership",
@@ -169,6 +161,14 @@ public class Role{
 
     public void setPriority(long priority) {
         this.priority = priority;
+    }
+    
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
 }

@@ -24,9 +24,6 @@ public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
      * </ul>
      */
     int verbosity;
-    
-    
-
 
     /**
      * Serialization method. Will write the following to "out" parameter: 
@@ -88,6 +85,10 @@ public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
         return null;
     }
 
+    /**
+     * Constructor for {@link ChatMessageAdapter}
+     * @param verbosity Value for {@link ChatMessageAdapter#verbosity}
+     */
     public ChatMessageAdapter(int verbosity) {
         this.verbosity = verbosity;
     }

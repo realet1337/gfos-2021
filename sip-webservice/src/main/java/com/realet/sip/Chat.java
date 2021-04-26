@@ -32,7 +32,11 @@ import org.hibernate.annotations.CascadeType;
 })
 
 /**
- * The chat class is a container for {@link ChatMessage ChatMessages}. It can either belong to a {@link Group}, in which case it has a {@link Chat#name name}, or have two {@link Users Users}, modelling a direct chat. 
+ * Die {@link Chat} Klasse ist ein Behälter für {@link ChatMessage ChatMessages}. Ein {@link Chat} kann entweder zu einer {@link Group} gehören, in diesem Fall hat er einen {@link Chat#name name}, oder zwei {@link Users Users} haben, wodurch er eine Direkte-Unterhaltung modelliert. 
+ * Definiert eine NamedQuery "Chat.findByUsers", welchen eine Direkt-Unterhaltung zweier {@link User} findet. Akzeptiert zwei Parameter: "user1", "user2".
+ * Definiert eine NamedQuery "Chat.findByGroup", welche alle {@link Chat Chats} einer {@link Group} findet. Akzeptiert einen Parameter: "group".
+ * Definiert eine NamedNativeQuery "Chat.findetDirectChatsByUser", welche alle Direkt-Unterhaltungen eines {@link User Users} findet und diese nach {@link ChatMessage#sent} der zuletzt gesendeten Nachricht sortiert. Akzeptiert einen Parameter: 1: {@link User#id}.
+ * Ein JPA-Entity für eine Tabelle names "Chats".
  */
 public class Chat{
     
@@ -54,7 +58,7 @@ public class Chat{
     private User user2;
 
     /**
-     * This is only set if the chat belongs to a {@link Group}, meaning that {@link Chat#group} is set.
+     * Dieses Attribut existiert nur, wenn der {@link Chat} zu einer {@link Group} gehört ({@link Chat#group} ist gesetzt).
      */
     private String name;
 
@@ -111,7 +115,7 @@ public class Chat{
     }
 
     /**
-     * This method only compares the {@link Chat#id} of both objects.
+     * Diese Methode vergleicht nur die {@link Chat#id} beider Objekte.
      */
     @Override
     public boolean equals(Object obj) {

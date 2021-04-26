@@ -43,7 +43,7 @@ public class RolesFacade {
 
         EntityManager em = emf.createEntityManager();
 
-        return em.createNamedQuery("Role.findUserGroupRoles", Role.class).setParameter("group", group).setParameter("user", user).getResultList();
+        return em.createNamedQuery("Role.findAdminRolesByUserAndGroup", Role.class).setParameter("group", group).setParameter("user", user).getResultList();
     }
 
     public static void add(Role role){

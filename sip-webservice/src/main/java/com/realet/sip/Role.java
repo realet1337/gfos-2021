@@ -30,7 +30,14 @@ import org.hibernate.annotations.CascadeType;
     @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.admin = true")
 })
 /**
- * A role belongs to a {@link Group}. Roles are used to regulate access to {@link Chat Chats}.
+ * Eine {@link Role} gehört zu einer {@link Group}. {@link Roles} regulieren Zugriff auf {@link Chat Chats}.
+ * Definiert eine NamedQuery "Role.findGroupRolesOrderedByPriority", welche alle {@link Role Roles} einer {@link Group} findet und aufsteigend nach {@link Role#priority} sortiert. 
+ *  Akzeptiert einen Parameter: "group".
+ * Definiert eine NamedQuery "Role.findUserGroupRoles", welche alle {@link Role Roles} eines {@link User Users} in einer {@link Group} findet. 
+ *  Akzeptiert zwei Parameter: "group", "user".
+ * Definiert eine NamedQuery "Role.findAdminRolesByUserAndGroup", welche alle {@link Role Roles} eines {@link User Users} in einer {@link Group}, die {@link Role#admin}==true haben, findet. 
+ *  Akzeptiert zwei Parameter: "group", "user".
+ * Ein JPA-Entity für eine Tabelle names "Roles".
  */
 public class Role{
 
@@ -42,6 +49,9 @@ public class Role{
     @Column(name = "role_name", nullable = false)
     private String name;
 
+    /**
+     * Hex code. Ex.: "#FFFFFF"
+     */
     @Column(name = "role_color", nullable = false)
     private String color;
 
@@ -128,6 +138,9 @@ public class Role{
         return result;
     }
 
+    /**
+     * Diese Methode vergleicht nur die {@link Role#id} beider Objekte.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

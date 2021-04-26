@@ -23,8 +23,10 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 /**
- * The {@link Group} class models a group. A group has {@link Role Roles}, {@link User Users} and {@link Chat Chats}. 
- * {@link Chat Chats} that belong to {@link Group Groups} can have names.
+ * Die {@link Group} Klasse modelliert eine Gruppe. Eine Gruppe ist eine Sammlung von {@link Role Roles}, {@link User Users} und {@link Chat Chats}. 
+ * {@link Chat Chats}, die zu einer {@link Group Group} gehören, können Namen haben.
+ * Definiert eine NamedQuery "Group.findShared", welche alle gemeinsamen Gruppen zweier {@link User} findet. Akzeptiert zwei Parameter: "user1", "user2".
+ * Ein JPA-Entity für eine Tabelle names "Groups".
  */
 @Entity
 @Table(name="`Groups`")
@@ -44,6 +46,9 @@ public class Group{
     @Column(name = "group_description")
     private String description;
 
+    /**
+     * Dateiname des Bilds ohne Pfad oder Endung.
+     */
     private String picture;
 
     @ManyToOne
@@ -148,7 +153,7 @@ public class Group{
     }
 
     /**
-     * This method only compares the {@link Group#id} of both objects.
+     * Diese Methode vergleicht nur die {@link Group#id} beider Objekte.
      */
     @Override
     public boolean equals(Object obj) {

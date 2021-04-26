@@ -13,6 +13,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
+/**
+ * Die {@link Session}-Klasse modelliert eine Sitzung.
+ * Definiert eine NamedQuery "Session.getAllUserSessionsExcept", welche alle {@link Session Sessions} eines User, die nicht ein bestimmtes token haben, findet. 
+    *  Akzeptiert zwei Parameter: "user", "token".
+ * Ein JPA-Entity für eine Tabelle names "Sessions".
+ */
 @Entity
 @Table(name = "Sessions")
 @NamedQueries({
@@ -20,6 +27,9 @@ import javax.persistence.TemporalType;
 })
 public class Session{
 
+    /**
+     * MD5-Hash, um Einzigartigkeit zu garantieren und das Erraten eines Tokens praktisch unmöglich zu machen.
+     */
     @Id
     private String token;
 
@@ -70,6 +80,9 @@ public class Session{
         return result;
     }
 
+    /**
+     * Diese Methode vergleicht nur das {@link Session#token} beider Objekte.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

@@ -9,6 +9,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Ein {@link UserProfile} gehört zu einem {@link User} und speichert persönliche Konfigurationen des Nutzers.
+ * Ein JPA-Entity für eine Tabelle names "UserProfiles"
+ */
 @Entity
 @Table(name = "UserProfiles")
 public class UserProfile {
@@ -30,12 +34,21 @@ public class UserProfile {
         this.user = user;
     }
 
+    /**
+     * Anweisung an die Client-Anwendung, ob Nachrichten von {@link User Usern}, die den eigenen {@link User} blockiert haben, gezeigt werden sollten. 
+     */
     @Column(name = "reverse_blocking", nullable = false)
     private boolean reverseBlocking;
 
+    /**
+     * Anweisung an die Client-Anwendung, wie viele Nachricheten gleichzeitig geladen werden sollten.
+     */
     @Column(name = "max_loaded_messages", nullable = false)
     private int maxLoadedMessages;
 
+    /**
+     * Anweisung an die Client-Anwendung, wie viele neue Nachrichten geladen werden sollten, wenn der Nutzer zum Ende der geladenen Nachrichten gescrollt hat.
+     */
     @Column(name = "message_chunk_size", nullable = false)
     private int messageChunkSize;
 

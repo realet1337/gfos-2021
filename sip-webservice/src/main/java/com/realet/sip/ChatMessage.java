@@ -14,7 +14,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * This class models a singular ChatMessage. It contains text and must belong to a chat.
+ * Diese Klasse repräsentiert eine einzelne {@link ChatMessage}. Sie enthält Text und gehört zu einem {@link Chat}. 
+ * Eine {@link ChatMessage} hat einen {@link ChatMessage#author} und enthält Informationen darüber, wann sie geschrieben, und das letzte Mal bearbeitet wurde. 
+ * Ein JPA-Entity für eine Tabelle names "ChatMessages".
  */
 
 @Entity
@@ -29,6 +31,9 @@ public class ChatMessage{
     @Column(nullable = false)
     private String content;
 
+    /**
+     * Nicht implementiert.
+     */
     @Temporal(TemporalType.TIMESTAMP)
     private Date expires;
 
@@ -126,7 +131,7 @@ public class ChatMessage{
     }
 
     /**
-     * This method only compares the {@link ChatMessage#id} of both objects.
+     * Diese Methode vergleicht nur die {@link ChatMessage#id} beider Objekte.
      */
     @Override
     public boolean equals(Object obj) {

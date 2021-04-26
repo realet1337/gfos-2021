@@ -25,7 +25,16 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-
+/**
+ * Die {@link User}-Klasse repraesentiert einen Nutzer der Applikation. Ein {@link User} enthält die Anmelde-, sowie Anzeigeinformationen eines Nutzers.
+ * Definiert eine NamedQuery "User.findByEmail", welche einen {@link User} anhand seiner {@link User#email} findet. 
+ *  Akzeptiert einen Parameter: "email".
+ * Definiert eine NamedNativeQuery "User.findBasicGroupMembers", welche alle {@link User} ohne {@link Role} einer {@link Group} findet. 
+ *  Akzeptiert einen Parameter: 1: {@link Group#id}.
+ * Definiert eine NamedNativeQuery "User.findGroupChatReaders", welche alle {@link User}, die einen bestimmten {@link Chat} lesen können, findet. 
+ *  Akzeptiert einen Parameter: 1: {@link Chat#id}.
+ * Ein JPA-Entity für eine Tabelle names "Users".
+ */
 @Entity
 @Table(name = "Users")
 @NamedQueries({
@@ -35,46 +44,46 @@ import org.hibernate.annotations.CascadeType;
 })
 @NamedNativeQueries({
 
-    /* old query (ignore)
-        SELECT Users.*
-        FROM   Users
-            JOIN RoleMembership
-                ON Users.id = RoleMembership.user_id
-            JOIN Roles AS Roles
-                ON RoleMembership.role_id = Roles.id
-            JOIN Permissions
-                ON Permissions.role_id = Roles.id
-        WHERE  Roles.id = (SELECT Min(priority)
-                        FROM   Roles AS subRoles
-                                JOIN RoleMembership AS subRoleMembership
-                                    ON subRoleMembership.role_id = subRoles.id
-                                JOIN Users AS subUsers
-                                    ON subRoleMembership.user_id = subUsers.id
-                        WHERE  subRoles.group_id = ?1
-                                AND subUsers.id = Users.id)
-            AND Permissions.chat_id = (SELECT Max(chat_id)
-                                        FROM   Permissions AS subPermissions
-                                        WHERE  subPermissions.role_id = Roles.id
-                                                AND subPermissions.chat_id = ?2)
-            AND Permissions.canRead = true
-        UNION
-        SELECT Users.*
-        FROM   Users
-            JOIN GroupMembership
-                ON Users.id = GroupMembership.user_id
-        WHERE  GroupMembership.group_id = ?1
-            AND Users.id NOT IN (SELECT Users.id
-                                    FROM   Users
-                                        JOIN RoleMembership
-                                            ON RoleMembership.user_id = Users.id
-                                        JOIN Roles
-                                            ON RoleMembership.role_id = Roles.id
-                                    WHERE  Roles.group_id = ?1) 
-    */
-
     @NamedNativeQuery(name = "User.findBasicGroupMembers", query = "SELECT Users.* FROM Users JOIN GroupMembership ON Users.id = GroupMembership.user_id WHERE GroupMembership.group_id = ?1 " + 
     "AND Users.id NOT IN (SELECT Users.id FROM Users JOIN RoleMembership ON RoleMembership.user_id = Users.id " + 
     "JOIN Roles ON RoleMembership.role_id = Roles.id WHERE Roles.group_id = ?1)", resultClass = User.class),
+
+    /* old query (ignore)
+    SELECT Users.*
+    FROM   Users
+        JOIN RoleMembership
+            ON Users.id = RoleMembership.user_id
+        JOIN Roles AS Roles
+            ON RoleMembership.role_id = Roles.id
+        JOIN Permissions
+            ON Permissions.role_id = Roles.id
+    WHERE  Roles.id = (SELECT Min(priority)
+                    FROM   Roles AS subRoles
+                            JOIN RoleMembership AS subRoleMembership
+                                ON subRoleMembership.role_id = subRoles.id
+                            JOIN Users AS subUsers
+                                ON subRoleMembership.user_id = subUsers.id
+                    WHERE  subRoles.group_id = ?1
+                            AND subUsers.id = Users.id)
+        AND Permissions.chat_id = (SELECT Max(chat_id)
+                                    FROM   Permissions AS subPermissions
+                                    WHERE  subPermissions.role_id = Roles.id
+                                            AND subPermissions.chat_id = ?2)
+        AND Permissions.canRead = true
+    UNION
+    SELECT Users.*
+    FROM   Users
+        JOIN GroupMembership
+            ON Users.id = GroupMembership.user_id
+    WHERE  GroupMembership.group_id = ?1
+        AND Users.id NOT IN (SELECT Users.id
+                                FROM   Users
+                                    JOIN RoleMembership
+                                        ON RoleMembership.user_id = Users.id
+                                    JOIN Roles
+                                        ON RoleMembership.role_id = Roles.id
+                                WHERE  Roles.group_id = ?1) 
+    */
 
     //raw:
     // (SELECT DISTINCT Users.* FROM Users JOIN RoleMembership ON Users.id = RoleMembership.user_id JOIN Roles ON RoleMembership.role_id = Roles.id JOIN Permissions ON Roles.id = Permissions.role_id WHERE Permissions.chat_id = 1 AND Permissions.canRead) UNION (SELECT Users.*
@@ -117,18 +126,23 @@ import org.hibernate.annotations.CascadeType;
 
 public class User{
     
-    //directly matching database column names
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
     
+    /**
+     * Kann keine Leerzeichen enthalten.
+     */
     @Column(nullable = false)
     private String username;
 
     @Column(name = "e_mail", nullable = false, unique = true)
     private String email;
 
+    /**
+     * Bcrypt-Hash mit 10 Runden.
+     */
     private String pass;
 
     private String info;
@@ -142,6 +156,9 @@ public class User{
     @Column(name = "is_online")
     private boolean isOnline;
 
+    /**
+     * Dateiname des Bilds ohne Pfad oder Endung.
+     */
     @Column(name = "profile_picture")
     private String profilePicture;
 
@@ -323,6 +340,9 @@ public class User{
         this.profilePicture = profilePicture;
     }
 
+    /**
+     * Diese Methode vergleicht nur die {@link User#id} beider Objekte.
+     */
     public User(String username, String email, String pass, String info, String status, Date lastSeen,
             boolean isOnline, String profilePicture) {
         this.username = username;

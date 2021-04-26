@@ -6,10 +6,19 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * Manager-Klasse für {@link Group Groups}
+ */
 public class GroupsFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link GroupsFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link GroupsFacade#emf}.
+     */
     public static void initialize(EntityManagerFactory emf){
 
         GroupsFacade.emf = emf;
@@ -25,6 +34,9 @@ public class GroupsFacade {
 
     }
 
+    /**
+     * Findet alle gemeinsamen Gruppen zweier {@link User}.
+     */
     public static List<Group> findShared(User user1, User user2){
 
         EntityManager em = emf.createEntityManager();

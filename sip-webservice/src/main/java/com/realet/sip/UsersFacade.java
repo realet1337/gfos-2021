@@ -7,10 +7,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
+/**
+ * Manager-Klasse für {@link User Users}
+ */
 public class UsersFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link UsersFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link UsersFacade#emf}.
+     */
     public static void initialize(EntityManagerFactory emf){
 
         UsersFacade.emf = emf;
@@ -57,6 +66,9 @@ public class UsersFacade {
 
     }
 
+    /**
+     * Findet alle {@link Chat Chats} einer {@link Group}
+     */
     public static List<User> findGroupChatReaders(long chatId, long groupId){
 
         EntityManager em = emf.createEntityManager();
@@ -64,6 +76,9 @@ public class UsersFacade {
         return em.createNamedQuery("User.findGroupChatReaders", User.class).setParameter(1, chatId).getResultList();
     }
 
+    /**
+     * Findet alle {@link User} einer {@link Group}, die in dieser {@link Group} kein Teil einer {@link Role} sind.
+     */
     public static List<User> findBasicGroupMembers(long groupId){
 
         EntityManager em = emf.createEntityManager();

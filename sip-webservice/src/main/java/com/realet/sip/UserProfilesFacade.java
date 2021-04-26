@@ -5,10 +5,19 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * Manager-Klasse für {@link UserProfile UserProfiles}
+ */
 public class UserProfilesFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link UserProfilesFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link UserProfilesFacade#emf}.
+     */
     public static void initialize(EntityManagerFactory emf){
 
         UserProfilesFacade.emf = emf;

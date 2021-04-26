@@ -6,10 +6,19 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * Manager-Klasse für {@link Role Roles}
+ */
 public class RolesFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link RolesFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link RolesFacade#emf}.
+     */
     public static void initialize(EntityManagerFactory emf){
 
         RolesFacade.emf = emf;

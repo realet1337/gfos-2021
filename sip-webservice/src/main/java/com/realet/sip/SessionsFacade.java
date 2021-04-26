@@ -7,10 +7,19 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * Manager-Klasse für {@link Session Sessions}
+ */
 public class SessionsFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link SessionsFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link SessionsFacade#emf}.
+     */
     public static void initialize(EntityManagerFactory emf){
 
         SessionsFacade.emf = emf;
@@ -25,6 +34,11 @@ public class SessionsFacade {
         return session != null ? Optional.of(session) : Optional.empty();
 
     }
+
+    /**
+     * Findet eine {@link User#id} eines {@link Session#user} einer {@link Session} mit einem bestimmten {@link Session#token}.
+     * @throws IllegalAccessException Falls keine Session mit dem gegebenen Token gefunden werden kann.
+     */
 
     public static long findUserIdByToken(String token) throws IllegalAccessException{
 
@@ -43,6 +57,9 @@ public class SessionsFacade {
 
     }
 
+    /**
+     * Entfernt alle {@link Session Sessions} mit einem bestimmten {@link Session#user}, außer eine {@link Session} mit einem bestimmten {@link Session#token}.
+     */
     public static void removeAllUserSessionsExcept(String token, User user){
 
         EntityManager em = emf.createEntityManager();

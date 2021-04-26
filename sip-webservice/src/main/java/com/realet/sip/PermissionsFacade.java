@@ -7,10 +7,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
+/**
+ * Manager-Klasse für {@link Permission Permissions}
+ */
 public class PermissionsFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link PermissionsFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link PermissionsFacade#emf}.
+     */
     public static void initialize(EntityManagerFactory emf){
 
         PermissionsFacade.emf = emf;
@@ -26,6 +35,9 @@ public class PermissionsFacade {
 
     }
 
+    /**
+     * Findet eine Liste von maximal 3 {@link Permission Permissions}, die die Berechtigung eines Nutzers zu einem {@link Chat} einer {@link Group} hinreichend beschreiben. 
+     */
     public static List<Permission> findGroupChatPermissions(long chatId, long userId) throws IllegalArgumentException{
 
         EntityManager em = emf.createEntityManager();

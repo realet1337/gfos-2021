@@ -3,6 +3,9 @@ package com.realet.sip;
 import org.jboss.resteasy.annotations.jaxrs.FormParam;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
+/**
+ * Behälter-Klasse, die den "file"-Parameter eines multipart/form-data Requests aufnimmt. 
+ */
 public class FileUploadForm {
 
     public FileUploadForm() {

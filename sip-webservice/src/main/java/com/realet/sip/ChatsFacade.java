@@ -7,10 +7,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
+/**
+ * Manager-Klasse für {@link Chat Chats}
+ */
 public class ChatsFacade {
 
+    /**
+     * Die EntityManagerFactory die für alle Operationen von {@link ChatsFacade} verwendet wird.
+     */
     static EntityManagerFactory emf;
 
+    /**
+     * Setzt {@link ChatsFacade#emf}
+     */
     public static void initialize(EntityManagerFactory emf){
 
         ChatsFacade.emf = emf;
@@ -26,6 +35,9 @@ public class ChatsFacade {
 
     }
 
+    /**
+     * Findet Direkt-Unterhaltung zweier {@link User}.
+     */
     public static Optional<Chat> findByUsers(User user1, User user2){
 
         EntityManager em = emf.createEntityManager();
@@ -41,6 +53,9 @@ public class ChatsFacade {
 
     }
 
+    /**
+     * Findet alle Direkt-Unterhaltungen eines {@link User Users} und sortiert sie nach dem Sendedatum der zuletzt gesendeten {@link ChatMessage}.
+     */
     public static List<Chat> findDirectChatsByUser(User user){
 
         EntityManager em = emf.createEntityManager();

@@ -22,6 +22,10 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+/**
+ * The {@link Group} class models a group. A group has {@link Role Roles}, {@link User Users} and {@link Chat Chats}. 
+ * {@link Chat Chats} that belong to {@link Group Groups} can have names.
+ */
 @Entity
 @Table(name="`Groups`")
 @NamedQueries({
@@ -143,6 +147,9 @@ public class Group{
         return result;
     }
 
+    /**
+     * This method only compares the {@link Group#id} of both objects.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

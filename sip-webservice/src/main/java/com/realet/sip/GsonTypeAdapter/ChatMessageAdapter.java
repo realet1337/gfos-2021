@@ -12,30 +12,30 @@ import com.realet.sip.User;
 
 
 /**
- * A serialization Gson-TypeAdapter for the {@link ChatMessage} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link ChatMessage} Klasse.
  */
 public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
 
     /**
      * <ul>
-     * <li>0: Don't serialize any attributes as objects, instead just provide the ID of that object.</li> 
-     * <li>1: Serialize {@link ChatMessage#author} as object, all other object attributes as IDs.</li>
-     * <li>2: Serialize {@link ChatMessage#author}, {@link ChatMessage#chat} as objects.</li>
+     * <li>0: Keine Attribute werden als Objekt serialisiert, stattdessen wird die ID des Objekts angegeben.</li> 
+     * <li>1: Serialisiere {@link ChatMessage#author} als Objekt, alle anderen Objekt-Attribute als IDs.</li>
+     * <li>2: Serialisiere {@link ChatMessage#author}, {@link ChatMessage#chat} als Objekte.</li>
      * </ul>
      */
     int verbosity;
 
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link ChatMessage#id}, 
      * {@link ChatMessage#content}, 
      * {@link ChatMessage#sent}, 
-     * {@link ChatMessage#expires} if existent, 
-     * {@link ChatMessage#chat} depending on {@link ChatMessageAdapter#verbosity}, 
-     * {@link ChatMessage#author} depending on {@link ChatMessageAdapter#verbosity},
-     * {@link ChatMessage#edited} if existent. 
-     * @param out JsonWriter object that will receive the serialized {@link ChatMessage} Object.
-     * @param value {@link ChatMessage} object that will be serialized.
+     * {@link ChatMessage#expires}, falls existent, 
+     * {@link ChatMessage#chat}, abhängig von {@link ChatMessageAdapter#verbosity}, 
+     * {@link ChatMessage#author}, abhängig von {@link ChatMessageAdapter#verbosity},
+     * {@link ChatMessage#edited}, falls existent. 
+     * @param out JsonWriter object that will receive the serialized {@link ChatMessage} Objekt erhält.
+     * @param value Zu serialisierendes {@link ChatMessage} Objekt.
      * @throws IOException
      */
 
@@ -73,7 +73,7 @@ public class ChatMessageAdapter extends TypeAdapter<ChatMessage> {
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

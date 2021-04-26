@@ -8,21 +8,21 @@ import com.google.gson.stream.JsonWriter;
 import com.realet.sip.User;
 
 /**
- * A serialization Gson-TypeAdapter for the {@link User} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link User} Klasse.
  */
 public class UserAdapter extends TypeAdapter<User>{
 
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link User#id}, 
      * {@link User#username}, 
-     * {@link User#info} if existent, 
-     * {@link User#profilePicture} if existent, 
+     * {@link User#info}, falls existent, 
+     * {@link User#profilePicture}, falls existent, 
      * {@link User#isOnline}, 
-     * {@link User#status} if existent, 
-     * {@link User#lastSeen} if existent, 
-     * @param out JsonWriter object that will receive the serialized {@link User} Object.
-     * @param value {@link User} object that will be serialized.
+     * {@link User#status}, falls existent, 
+     * {@link User#lastSeen}, falls existent, 
+     * @param out JsonWriter Objekt, welches das serialisierte {@link User} Objekt erhält.
+     * @param value Zu serialisierendes {@link User} Objekt.
      * @throws IOException
      */
     @Override
@@ -49,7 +49,7 @@ public class UserAdapter extends TypeAdapter<User>{
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

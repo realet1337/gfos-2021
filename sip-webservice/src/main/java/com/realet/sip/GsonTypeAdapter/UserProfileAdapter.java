@@ -8,18 +8,18 @@ import com.google.gson.stream.JsonWriter;
 import com.realet.sip.UserProfile;
 
 /**
- * A serialization Gson-TypeAdapter for the {@link UserProfile} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link UserProfile} Klasse.
  */
 public class UserProfileAdapter extends TypeAdapter<UserProfile>{
 
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link UserProfile#id}, 
      * {@link UserProfile#reverseBlocking}, 
      * {@link UserProfile#maxLoadedMessages}, 
      * {@link UserProfile#messageChunkSize}, 
-     * @param out JsonWriter object that will receive the serialized {@link UserProfile} Object.
-     * @param value {@link UserProfile} object that will be serialized.
+     * @param out JsonWriter Objekt, welches das serialisierte {@link UserProfile} Objekt erhält.
+     * @param value Zu serialisierendes {@link UserProfile} Objekt.
      * @throws IOException
      */
     @Override
@@ -46,7 +46,7 @@ public class UserProfileAdapter extends TypeAdapter<UserProfile>{
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

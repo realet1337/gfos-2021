@@ -11,20 +11,20 @@ import com.realet.sip.Group;
 import com.realet.sip.User;
 
 /**
- * A serialization Gson-TypeAdapter for the {@link Chat} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link Chat} Klasse.
  */
 
 public class ChatAdapter extends TypeAdapter<Chat>{
 
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link Chat#id}, 
-     * {@link Chat#group} as an object if existent, 
-     * {@link Chat#user1} as an object if existent, 
-     * {@link Chat#user2} as an object if existent, 
-     * {@link Chat#name} if existent.
-     * @param out JsonWriter object that will receive the serialized {@link Chat} Object.
-     * @param value {@link Chat} object that will be serialized.
+     * {@link Chat#group} als Objekt, falls existent, 
+     * {@link Chat#user1} als Objekt, falls existent, 
+     * {@link Chat#user2} als Objekt, falls existent, 
+     * {@link Chat#name}, falls existent.
+     * @param out JsonWriter Objekt, welches das serialisierte {@link Chat} Objekt erhält.
+     * @param value Zu serialisierendes {@link Chat} Objekt.
      * @throws IOException
      */
     @Override
@@ -53,7 +53,7 @@ public class ChatAdapter extends TypeAdapter<Chat>{
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

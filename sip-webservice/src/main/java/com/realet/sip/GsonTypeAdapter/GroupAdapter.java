@@ -11,18 +11,18 @@ import com.realet.sip.Group;
 import com.realet.sip.User;
 
 /**
- * A serialization Gson-TypeAdapter for the {@link Group} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link Group} Klasse.
  */
 public class GroupAdapter extends TypeAdapter<Group>{
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link Group#id}, 
-     * {@link Group#description} if existent, 
+     * {@link Group#description}, falls existent, 
      * {@link Group#name}, 
-     * {@link Group#picture} if existent, 
-     * {@link Group#owner} as an object, 
-     * @param out JsonWriter object that will receive the serialized {@link Group} Object.
-     * @param value {@link Group} object that will be serialized.
+     * {@link Group#picture}, falls existent, 
+     * {@link Group#owner}, als Objekt, 
+     * @param out JsonWriter Objekt, welches das serialisierte {@link Group} Objekt erhält.
+     * @param value Zu serialisierendes {@link Group} Objekt.
      * @throws IOException
      */
     @Override
@@ -46,7 +46,7 @@ public class GroupAdapter extends TypeAdapter<Group>{
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

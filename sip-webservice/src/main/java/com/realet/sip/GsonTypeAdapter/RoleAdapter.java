@@ -11,7 +11,7 @@ import com.realet.sip.Role;
 import com.realet.sip.User;
 
 /**
- * A serialization Gson-TypeAdapter for the {@link Role} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link Role} Klasse.
  */
 
 public class RoleAdapter extends TypeAdapter<Role> {
@@ -25,16 +25,16 @@ public class RoleAdapter extends TypeAdapter<Role> {
     int verbosity;
 
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link Role#id}, 
      * {@link Role#name}, 
      * {@link Role#color}, 
-     * {@link Role#group} as an object if existent, 
+     * {@link Role#group}, als Objekt, falls existent, 
      * {@link Role#priority}, 
-     * {@link Role#users} depending on {@link RoleAdapter#verbosity},
+     * {@link Role#users}, abhängig von {@link RoleAdapter#verbosity},
      * {@link Role#admin}. 
-     * @param out JsonWriter object that will receive the serialized {@link Role} Object.
-     * @param value {@link Role} object that will be serialized.
+     * @param out JsonWriter Objekt, welches das serialisierte {@link Role} Objekt erhält.
+     * @param value Zu serialisierendes {@link Role} Objekt.
      * @throws IOException
      */
     @Override
@@ -68,7 +68,7 @@ public class RoleAdapter extends TypeAdapter<Role> {
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

@@ -13,6 +13,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * This class models a singular ChatMessage. It contains text and must belong to a chat.
+ */
+
 @Entity
 @Table(name = "ChatMessages")
 public class ChatMessage{
@@ -121,6 +125,9 @@ public class ChatMessage{
         return result;
     }
 
+    /**
+     * This method only compares the {@link ChatMessage#id} of both objects.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

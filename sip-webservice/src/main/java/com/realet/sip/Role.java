@@ -29,6 +29,9 @@ import org.hibernate.annotations.CascadeType;
     @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group"),
     @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.admin = true")
 })
+/**
+ * A role belongs to a {@link Group}. Roles are used to regulate access to {@link Chat Chats}.
+ */
 public class Role{
 
     @Id

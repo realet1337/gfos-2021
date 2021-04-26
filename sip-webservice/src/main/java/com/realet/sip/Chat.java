@@ -31,6 +31,9 @@ import org.hibernate.annotations.CascadeType;
     @NamedNativeQuery(name = "Chat.findDirectChatsByUser", query = "SELECT * from Chats WHERE user1_id = ? OR user2_id = ? ORDER BY (SELECT MAX(sent) FROM ChatMessages WHERE chat_id = Chats.id) DESC", resultClass = Chat.class)
 })
 
+/**
+ * The chat class is a container for {@link ChatMessage ChatMessages}. It can either belong to a {@link Group}, in which case it has a {@link Chat#name name}, or have two {@link Users Users}, modelling a direct chat. 
+ */
 public class Chat{
     
     @Id
@@ -50,6 +53,9 @@ public class Chat{
     @JoinColumn(name = "user2_id")
     private User user2;
 
+    /**
+     * This is only set if the chat belongs to a {@link Group}, meaning that {@link Chat#group} is set.
+     */
     private String name;
 
     @Cascade(CascadeType.DELETE)
@@ -104,6 +110,9 @@ public class Chat{
         return result;
     }
 
+    /**
+     * This method only compares the {@link Chat#id} of both objects.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

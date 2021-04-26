@@ -10,18 +10,18 @@ import com.realet.sip.Permission;
 import com.realet.sip.Role;
 
 /**
- * A serialization Gson-TypeAdapter for the {@link Permission} class.
+ * Ein Serialisierungs-Gson-TypeAdapter für die {@link Permission} Klasse.
  */
 public class PermissionAdapter extends TypeAdapter<Permission>{
 
     /**
-     * Serialization method. Will write the following to "out" parameter: 
+     * Serialisierungs-Methode. Schreibt folgendes in den "out" Parameter: 
      * {@link Permission#id}, 
      * {@link Permission#canRead}, 
      * {@link Permission#canWrite}, 
-     * {@link Permission#role} as an object, without attributes as objects, if existent, 
-     * @param out JsonWriter object that will receive the serialized {@link Permission} Object.
-     * @param value {@link Permission} object that will be serialized.
+     * {@link Permission#role}, als Objekt, mit Attributen als IDs, falls existent, 
+     * @param out JsonWriter Objekt, welches das serialisierte {@link Permission} Objekt erhält.
+     * @param value Zu serialisierendes {@link Permission} Objekt.
      * @throws IOException
      */
     @Override
@@ -45,7 +45,7 @@ public class PermissionAdapter extends TypeAdapter<Permission>{
     }
 
     /**
-     * Non-functional deserialization method
+     * Nicht funktionelle Entserialisierungs-Methode.
      * @param in
      * @return null
      * @throws IOException

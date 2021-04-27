@@ -20,9 +20,19 @@ import org.json.JSONObject;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+/**
+ * RestEasy Resource-Klasse, die für Authentifizierung zuständig ist.
+ */
 @Path("/auth")
 public class AuthResource {
 
+    /**
+     * Erstellt eine {@link Session} und speichert sie in der Datenbank, falls die Authentifizierung erfolgreich verläuft.
+     * @param email
+     * @param password
+     * @return Status Code 200 mit JSON-Objekt {"token":&lt;{@link Session#token}&gt;,"userId":&lt;{@link User#id}&gt;}
+     * Status Code 403, falls die Authentifizierung fehlschlägt
+     */
     @POST
     @Path("/login")    
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -67,6 +77,12 @@ public class AuthResource {
         
     }
 
+    /**
+     * Findet eine {@link Session} anhand des "token"-Parameters und entfernt sie aus der Datenbank.
+     * @param token
+     * @return Status Code 200
+     * Status Code 403, falls keine Session mit diesem {@link Session#token} gefunden werden konnte.
+     */
     @POST
     @Path("/logout")    
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -88,6 +104,12 @@ public class AuthResource {
 
     }
 
+    /**
+     * Überprüft ob eine Session existiert
+     * @param token
+     * @return Status Code 200 mit {"userId":&lt;{@link User#id}&gt;}
+     * Status Code 403, falls keine {@link Session} mit diesem {@link Session#token} existiert.
+     */
     @POST
     @Path("/validate")    
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

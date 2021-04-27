@@ -487,7 +487,7 @@ public class ChatsResource {
      * @param chatId
      * @param userId
      * @param token
-     * @return Status Code 200, 
+     * @return Status Code 200 mit {@link Permission Permissions}, serialisiert durch {@link PermissionAdapter}, 
      * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
      * Status Code 400, falls der {@link Chat} eine Direkt-Unterhaltung ist.

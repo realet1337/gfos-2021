@@ -100,7 +100,7 @@ public class ChatMessagesResource {
     @PUT
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addChatMessage(ChatMessage chatMessage, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
+    public Response updateChatMessage(ChatMessage chatMessage, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
 
         if(chatMessage.getContent().equals("")){
             return Response.status(400).build();

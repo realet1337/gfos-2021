@@ -30,10 +30,20 @@ import org.json.JSONObject;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
-
+/**
+ * RestEasy Resource-Klasse für {@link Group Groups}.
+ */
 @Path("/groups")
 public class GroupsResource {
 
+    /**
+     * Findet eine {@link Group}.
+     * @param groupId
+     * @param token
+     * @return Status Code 200 mit {@link Group}, serialisiert durch {@link GroupAdapter}
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     */
     @GET
     @Path("/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -67,6 +77,14 @@ public class GroupsResource {
 
     }
     
+    /**
+     * Findet alle {@link Chat Chats} einer {@link Group}.
+     * @param groupId
+     * @param token
+     * @return Status Code 200 mit {@link Chat Chats}, serialisiert durch {@link ChatAdapter}
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     */
     @GET
     @Path("/{groupId}/chats")
     @Produces(MediaType.APPLICATION_JSON)
@@ -100,6 +118,14 @@ public class GroupsResource {
         ).build();
     }
 
+    /**
+     * Findet alle {@link User} ohne {@link Role} in einer {@link Group}.
+     * @param groupId
+     * @param token
+     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter}
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     */
     @GET
     @Path("/{groupId}/basic-users")
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,6 +159,14 @@ public class GroupsResource {
         ).build();
     }
 
+    /**
+     * Findet alle {@link User} einer {@link Group}.
+     * @param groupId
+     * @param token
+     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter}
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     */
     @GET
     @Path("/{groupId}/users")
     @Produces(MediaType.APPLICATION_JSON)
@@ -166,6 +200,14 @@ public class GroupsResource {
         ).build();
     }
 
+    /**
+     * Findet alle {@link Role Roles} einer {@link Group}.
+     * @param groupId
+     * @param token
+     * @return Status Code 200 mit {@link Role Roles}, serialisiert durch {@link RoleAdapter}mit einer {@link RoleAdapter#verbosity} von 1
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     */
     @GET
     @Path("/{groupId}/roles")
     @Produces(MediaType.APPLICATION_JSON)
@@ -202,6 +244,15 @@ public class GroupsResource {
         ).build();
     }
 
+    /**
+     * Erstellt eine {@link group}. Erstellt automatisch einen {@link Chat} und eine {@link Permission} mit {@link Permission#canRead} == true und {@link Permission#canWrite} == true.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link Group#name}. 
+     * @param group
+     * @param token
+     * @return Status Code 201,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link Group#name} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @POST
     public Response createGroup(Group group, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
         if(token == null){
@@ -253,6 +304,16 @@ public class GroupsResource {
         return Response.status(201).entity(new JSONObject().put("id", group.getId()).toString()).build();
     }
 
+    /**
+     * Erstellt einen {@link Chat} und fügt ihn zu einer {@link Group} hinzu. Erstellt automatisch eine {@link Permission} mit {@link Permission#canRead} == true und {@link Permission#canWrite} == true.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link Chat#name}. 
+     * @param group
+     * @param token
+     * @return Status Code 201,
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link Chat#name} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @POST
     @Path("/{groupId}/chats/")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -305,6 +366,17 @@ public class GroupsResource {
         return Response.status(201).build();
     }
 
+    /**
+     * Aktualisiert eine {@link group}.
+     * {@link Group#owner} wird in jedem Fall beibehalten.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link Group#name}. 
+     * @param group
+     * @param token
+     * @return Status Code 201,
+     * Status Code 404, falls keine {@link Group} mit derselben {@link Group#id} gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link Group#name} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateGroup(Group group, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){

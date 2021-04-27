@@ -29,6 +29,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * RestEasy Resource-Klasse für den Upload von Bildern.
+ */
 @Path("/images")
 public class ImagesResource {
     

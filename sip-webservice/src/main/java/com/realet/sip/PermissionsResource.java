@@ -12,9 +12,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.HttpHeaders;
 
+/**
+ * RestEasy Resource-Klasse für {@link Permission Permissions}.
+ */
 @Path("/permissions")
 public class PermissionsResource {
 
+    /**
+     * Aktualisiert eine {@link Permission}.
+     * {@link Permission#chat} und {@link Permission#role} werden in jedem Fall beibehalten.
+     * @param chatMessage
+     * @param token
+     * @return Status Code 200
+     * Status Code 404, falls keine {@link Permission} mit derselben {@link Permission#id} gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePermission(Permission permission, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -50,6 +62,16 @@ public class PermissionsResource {
 
     }
 
+    /**
+     * Entfernt eine {@link Permission} anhand ihrer {@link Permission#id}. 
+     * @param id
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls keine {@link Permission} mit dieser {@link Permission#id} existiert, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls die {@link Permission} keine {@link Permission#role} hat. 
+     *  In diesem Fall ist die {@link Permission} die Grundregel für diesen Chat und kann nicht gelöscht werden. 
+     */
     @DELETE
     @Path("/{permissionId}")
     public Response deletePermission(@PathParam("permissionId") long permissionId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){

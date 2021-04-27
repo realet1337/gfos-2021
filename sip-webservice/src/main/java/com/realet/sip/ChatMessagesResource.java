@@ -20,10 +20,21 @@ import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatMessageAdapter;
 
 
-
+/**
+ * RestEasy Resource-Klasse für {@link ChatMessage ChatMessages}.
+ */
 @Path("/chat-messages")
 public class ChatMessagesResource {
 
+    /**
+     * Entfernt eine {@link ChatMessage} anhand ihrer {@link ChatMessage#id}. 
+     * Sendet die entsprechende Information an alle WebSockets, die den Chat beobachten.
+     * @param id
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls keine {@link ChatMessage} mit dieser {@link ChatMessage#id} existiert, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @DELETE
     @Path("/{id}")
     public Response removeMessage(@PathParam("id") long id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -44,7 +55,7 @@ public class ChatMessagesResource {
         Optional<ChatMessage> chatMessage = ChatMessagesFacade.findById(id);
         
         if(chatMessage.isEmpty()){
-            return Response.status(404).entity("Chat not found").build();
+            return Response.status(404).entity("ChatMessage not found").build();
         }
 
         if(chatMessage.get().getAuthor().getId() != tokenUserId){
@@ -75,6 +86,16 @@ public class ChatMessagesResource {
 
     }
 
+    /**
+     * Aktualisiert den {@link ChatMessage#content} einer {@link ChatMessage}.
+     * Sendet die entsprechende Information an alle WebSockets, die den Chat beobachten.
+     * @param chatMessage
+     * @param token
+     * @return Status Code 200
+     * Status Code 404, falls keine {@link ChatMessage} mit derselben {@link ChatMessage#id} gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     * Status Code 400, falls der {@link ChatMessage#content} der neuen {@link ChatMessage} leer oder nicht vorhanden ist, oder nur Leerzeichen enthält.
+     */
     @PUT
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)

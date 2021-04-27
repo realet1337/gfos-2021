@@ -2,8 +2,10 @@ package com.realet.sip;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +40,6 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 @Path("/users")
 public class UsersResource {
 
-    private static final String salt = "rz3hrh40";
     /***
      * Findet einen {@link User}
      * @param id
@@ -446,7 +447,7 @@ public class UsersResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user){
         user.setOnline(false);
-        user.setPass(BCrypt.withDefaults().hash(10, UsersResource.salt.getBytes(), user.getPass().getBytes()).toString());
+        user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
         UserProfile userProfile;
 
         if(user.getUsername() == null){
@@ -571,7 +572,7 @@ public class UsersResource {
         user.setLastSeen(oldUser.get().getLastSeen());
         user.setOnline(oldUser.get().isOnline());
         if(user.getPass() != null){
-            user.setPass(BCrypt.withDefaults().hash(10, UsersResource.salt.getBytes(), user.getPass().getBytes()).toString());
+            user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
 
             //log out all other users
             SessionsFacade.removeAllUserSessionsExcept(token, oldUser.get());

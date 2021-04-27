@@ -3,8 +3,14 @@ package com.realet.sip;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Manager-Klasse für {@link javax.websocket.Session}-Objekte, die für einen {@link Chat} registriert sind. 
+ */
 public class ChatWebsocketManagement {
 
+    /**
+     * Format: chatId =&gt; {@link javax.websocket.Session}
+     */
     static HashMap<Long, ArrayList<javax.websocket.Session>> sessions = new HashMap<>();
 
     public static ArrayList<javax.websocket.Session> getSessions(long chatId){

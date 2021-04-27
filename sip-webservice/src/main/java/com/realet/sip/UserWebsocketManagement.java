@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
+/**
+ * Manager-Klasse für {@link javax.websocket.Session}-Objekte, die für einen {@link User} registriert sind. 
+ */
 public class UserWebsocketManagement {
 
+    /**
+     * Format: userId =&gt; {@link javax.websocket.Session}
+     */
     private static HashMap<Long, ArrayList<javax.websocket.Session>> sessions = new HashMap<>();
 
     public static ArrayList<javax.websocket.Session> getSessions(long userId){

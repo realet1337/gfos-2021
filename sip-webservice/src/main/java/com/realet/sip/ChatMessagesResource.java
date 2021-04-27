@@ -89,6 +89,7 @@ public class ChatMessagesResource {
     /**
      * Aktualisiert den {@link ChatMessage#content} einer {@link ChatMessage}.
      * Sendet die entsprechende Information an alle WebSockets, die den Chat beobachten.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link ChatMessage#content}.
      * @param chatMessage
      * @param token
      * @return Status Code 200

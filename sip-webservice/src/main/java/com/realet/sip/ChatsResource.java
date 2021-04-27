@@ -22,52 +22,64 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.realet.sip.GsonTypeAdapter.ChatAdapter;
 import com.realet.sip.GsonTypeAdapter.ChatMessageAdapter;
 import com.realet.sip.GsonTypeAdapter.PermissionAdapter;
 
+/**
+ * RestEasy Resource-Klasse für {@link Chat Chats}.
+ */
 @Path("/chats")
 public class ChatsResource {
 
-    @GET
-    @Path("/{id}")    
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getChat(@PathParam("id") long id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
-        //TODO: (LATER) REMOVE THIS METHOD IT ISN'T NECESSARY
+    // @GET
+    // @Path("/{id}")    
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response getChat(@PathParam("id") long id, @HeaderParam(HttpHeaders.AUTHORIZATION) String token) {
+    //     //(LATER) REMOVE THIS METHOD IT ISN'T NECESSARY
 
-        if(token == null){
-            return Response.status(403).build();
-        }
+    //     if(token == null){
+    //         return Response.status(403).build();
+    //     }
 
-        token = token.split(" ")[1];
+    //     token = token.split(" ")[1];
 
-        Optional<Chat> chat = ChatsFacade.findById(id);
-        if(chat.isPresent()){
+    //     Optional<Chat> chat = ChatsFacade.findById(id);
+    //     if(chat.isPresent()){
 
-            //validate access
-            try {
-                long user_id = SessionsFacade.findUserIdByToken(token);
-                if(user_id == chat.get().getUser1().getId() || 
-                    user_id == chat.get().getUser2().getId()){
-                    return Response.ok(new Gson().toJson(chat.get())).build();
-                }else{
+    //         //validate access
+    //         try {
+    //             long user_id = SessionsFacade.findUserIdByToken(token);
+    //             if(user_id == chat.get().getUser1().getId() || 
+    //                 user_id == chat.get().getUser2().getId()){
+    //                 return Response.ok(new Gson().toJson(chat.get())).build();
+    //             }else{
 
-                    return Response.status(403).build();
+    //                 return Response.status(403).build();
 
-                }
-            } catch (IllegalAccessException e) {
+    //             }
+    //         } catch (IllegalAccessException e) {
 
-                return Response.status(403).build();
-            }
+    //             return Response.status(403).build();
+    //         }
 
-        }
+    //     }
 
-        return Response.status(404).build();
+    //     return Response.status(404).build();
         
-    }
+    // }
 
+    /**
+     * Findet eine Direkt-Unterhaltung zweier {@link User}
+     * @param user1Id
+     * @param user2Id
+     * @param token
+     * @return Status Code 200 mit {@link Chat}, serialisiert durch {@link ChatAdapter}, 
+     * Status Code 404, falls ein {@link User} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * 
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -123,6 +135,20 @@ public class ChatsResource {
 
     }
 
+    /**
+     * Findet {@link ChatMessage ChatMessages} eines {@link Chat Chats} mittels {@link ChatMessagesFacade#find}.
+     * @param chatId
+     * @param count
+     * @param beforeId
+     * @param afterId
+     * @param userId
+     * @param reverseBlocking
+     * @param token
+     * @return Status Code 200 mit {@link ChatMessage ChatMessages}, serialisiert durch {@link ChatMessageAdapter} mit einer {@link ChatMessageAdapter#verbosity} von 1, 
+     * Status Code 404, falls der {@link Chat} oder eine angegebene einschränkende {@link ChatMessage} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls "count" nicht zwischen 1 und 1000 liegt oder sowohl "beforeId" und "afterId" ungleich 0 sind.
+     */
     @GET
     @Path("/{chatId}/chat-messages")    
     @Produces(MediaType.APPLICATION_JSON)
@@ -211,6 +237,18 @@ public class ChatsResource {
         ).build();
     }
 
+    /**
+     * Fügt eine {@link ChatMessage} zu einem {@link Chat} hinzu.
+     * Sendet diese {@link ChatMessage} an alle WebSockets, die für {@link User} registriert sind, welche diesen {@link Chat} lesen können.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link ChatMessage#content}.
+     * @param chatMessage
+     * @param chatId
+     * @param token
+     * @return Status Code 201, 
+     * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls der {@link ChatMessage#content} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @POST
     @Path("/{chatId}/chat-messages")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -336,15 +374,22 @@ public class ChatsResource {
                     }
                 }
             }
-        }
-
-
-        
+        }      
         
         return Response.status(201).build();
 
     }
 
+    /**
+     * Aktualisiert einen {@link Chat}.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link Chat#name}.
+     * @param inputChat
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls der {@link ChatMessage#content} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht, oder der {@link Chat} eine Direkt-Unterhaltung ist.
+     */
     @PUT
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -396,6 +441,15 @@ public class ChatsResource {
         return Response.status(200).build();
     }
 
+    /**
+     * Entfernt einen {@link Chat}.
+     * @param inputChat
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls der {@link Chat} eine Direkt-Unterhaltung ist.
+     */
     @DELETE
     @Path("/{chatId}")
     public Response deleteChat(@PathParam("chatId") long chatId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -428,7 +482,16 @@ public class ChatsResource {
         return Response.status(200).build();
     }
 
-
+    /**
+     * Findet alle {@link Permission Permissions} eines {@link Chat Chats}.
+     * @param chatId
+     * @param userId
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls der {@link Chat} eine Direkt-Unterhaltung ist.
+     */
     @GET
     @Path("/{chatId}/permissions")
     @Produces(MediaType.APPLICATION_JSON)
@@ -482,6 +545,18 @@ public class ChatsResource {
 
     }
 
+    /**
+     * Fügt eine {@link Permission} für einen Chat hinzu.
+     * @param chatId
+     * @param permission
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls die {@link Permission} keine {@link Permission#role} hat,
+     *  die {@link Permission#role} nicht zur {@link Chat#group} gehört
+     *  oder bereits eine {@link Permission} für die {@link Permission#role} und den {@link Chat} existiert.
+     */    
     @POST
     @Path("/{chatId}/permissions")
     @Consumes(MediaType.APPLICATION_JSON)

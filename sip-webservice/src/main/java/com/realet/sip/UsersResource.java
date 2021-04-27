@@ -32,9 +32,20 @@ import com.realet.sip.GsonTypeAdapter.UserProfileAdapter;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+/**
+ * RestEasy Resource-Klasse für {@link User Users}.
+ */
 @Path("/users")
 public class UsersResource {
 
+    private static final String salt = "rz3hrh40";
+    /***
+     * Findet einen {@link User}
+     * @param id
+     * @return Status Code 200 mit {@link User}, serialisiert durch {@link UserAdapter}, 
+     * Status Code 404, falls der {@link User} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Path("/{id}")    
     @Produces(MediaType.TEXT_PLAIN)
@@ -55,6 +66,14 @@ public class UsersResource {
         }
     }
     
+    /**
+     * Findet alle Direkt-Unterhaltungen eines {@link User Users}.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link Chat Chats}, serialisiert durch {@link ChatAdapter}, 
+     * Status Code 404, falls der {@link User} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Path("/{userId}/direct-chats")
     @Produces(MediaType.APPLICATION_JSON)
@@ -83,6 +102,13 @@ public class UsersResource {
 
     }
 
+    /**
+     * Findet alle {@link Group Groups} eines {@link User Users}.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link Group Groups}, serialisiert durch {@link GroupAdapter}, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Path("/{userId}/groups")
     @Produces(MediaType.APPLICATION_JSON)
@@ -113,6 +139,15 @@ public class UsersResource {
 
     }
 
+    /**
+     * Findet alle gemeinsamen {@link Group Groups} zweier {@link User}.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link Group Groups}, serialisiert durch {@link GroupAdapter}, 
+     * Status Code 404, falls einer der beiden {@link User} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls beide {@link User#id} identisch sind.
+     */
     @GET
     @Path("/{user1Id}/shared-groups/{user2Id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,6 +189,14 @@ public class UsersResource {
         
     }
 
+    /**
+     * Findet alle {@link User}, die ein {@link User} blockiert hat.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter}, 
+     * Status Code 404, falls der {@link User} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Path("/{userId}/blocked-users")
     @Produces(MediaType.APPLICATION_JSON)
@@ -184,6 +227,15 @@ public class UsersResource {
 
     }
 
+    /**
+     * Fügt einen {@link User} zu {@link User#blockedUsers} eines anderen {@link User Users} hinzu.
+     * Informiert alle WebSockets, die für diesen {@link User} registriert sind.
+     * @param userId
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls einer (oder beide) der {@link User} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @POST
     @Path("/{userId}/blocked-users")
     public Response addBlockedUser(@PathParam("userId") long userId, User input, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -233,6 +285,16 @@ public class UsersResource {
 
     }
 
+    /**
+     * Entfernt einen {@link User} von {@link User#blockedUsers} eines anderen {@link User Users} hinzu.
+     * Informiert alle WebSockets, die für diesen {@link User} registriert sind.
+     * @param userId
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls einer (oder beide) der {@link User} nicht gefunden werden konnte
+     *  oder der {@link User} nicht blockiert ist, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @DELETE
     @Path("/{userId}/blocked-users/{blockedUserId}")
     public Response removeBlockedUser(@PathParam("userId") long userId, @PathParam("blockedUserId") long blockedUserId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -284,6 +346,14 @@ public class UsersResource {
 
     }
 
+    /**
+     * Findet alle {@link User}, von denen ein {@link User} blockiert ist.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter}, 
+     * Status Code 404, falls der {@link User} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Path("/{userId}/blocked-by")
     @Produces(MediaType.APPLICATION_JSON)
@@ -314,6 +384,14 @@ public class UsersResource {
 
     }
 
+    /**
+     * Findet alle {@link Role Roles} eines {@link User Users} in einer {@link Group}.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link Role Role}, serialisiert durch {@link RoleAdapeter} mit einer {@link RoleAdapter#verbosity} von 0, 
+     * Status Code 404, falls die {@link Group} oder der {@link User} nicht gefunden werden konnten, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Path("/{userId}/roles")
     @Produces(MediaType.APPLICATION_JSON)
@@ -356,12 +434,24 @@ public class UsersResource {
 
     }
 
+    /**
+     * Erstellt einen {@link User}. Kann optional außerdem ein {@link UserProfile} erstellen.
+     * @param user
+     * @return Status Code 201,
+     * Status Code 400, falls {@link User#username} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht,
+     *  ein {@link UserProfile} gegeben ist, bei dem {@link UserProfile#maxLoadedMessages} kleiner ist als {@link UserProfile#messageChunkSize}
+     *  oder ein anderer {@link User} diese {@link User#email} bereits verwendet.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user){
         user.setOnline(false);
-        user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
+        user.setPass(BCrypt.withDefaults().hash(10, UsersResource.salt.getBytes(), user.getPass().getBytes()).toString());
         UserProfile userProfile;
+
+        if(user.getUsername() == null){
+            return Response.status(400).build();
+        }
 
         Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
 
@@ -405,6 +495,13 @@ public class UsersResource {
         }
     }
 
+    /**
+     * Findet das {@link UserProfile} eines {@link User Users}.
+     * @param userId
+     * @param token
+     * @return Status Code 200 mit {@link UserProfile}, serialisiert durch {@link UserProfileAdapter}, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{userId}/profile")
@@ -429,6 +526,15 @@ public class UsersResource {
         ).build();
     }
 
+    /**
+     * Aktualisiert einen {@link User}.
+     * {@link User#email}, {@link User#lastSeen} und {@link User#isOnline} werden in jedem Fall beibehalten.
+     * {@link User#pass} wird beibehalten, falls kein neues Passwort angegeben ist.
+     * @param user
+     * @return Status Code 200, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status Code 400, falls {@link User#username} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(User user, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -465,7 +571,7 @@ public class UsersResource {
         user.setLastSeen(oldUser.get().getLastSeen());
         user.setOnline(oldUser.get().isOnline());
         if(user.getPass() != null){
-            user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
+            user.setPass(BCrypt.withDefaults().hash(10, UsersResource.salt.getBytes(), user.getPass().getBytes()).toString());
 
             //log out all other users
             SessionsFacade.removeAllUserSessionsExcept(token, oldUser.get());
@@ -479,6 +585,13 @@ public class UsersResource {
         return Response.ok().build();
     }
 
+    /**
+     * Löscht einen {@link User} und alle {@link Group Groups} von denen er der {@link Group#owner} ist, sowie seine {@link Session Sessions}.
+     * @param userId
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @DELETE
     @Path("/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)

@@ -15,10 +15,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.HttpHeaders;
 
-
+/**
+ * RestEasy Resource-Klasse für {@link Role Roles}.
+ */
 @Path("/roles")
 public class RolesResource {
 
+    /**
+     * Aktualisiert eine {@link Role}.
+     * {@link Role#priority} und {@link Role#group} werden in jedem Fall beibehalten.
+     * Entfernt Leerzeichen am Anfang und Ende des {@link Role#name}. 
+     * @param chatMessage
+     * @param token
+     * @return Status Code 200
+     * Status Code 404, falls keine {@link Role} mit derselben {@link Role#id} gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls die {@link Role#color} nicht vorhanden oder kein gültiger Hex-Code ist,
+     *  oder der {@link Role#name} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateRole(Role role, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -83,6 +97,14 @@ public class RolesResource {
         return Response.ok().build();
     }
 
+    /**
+     * Entfernt eine {@link Role} anhand ihrer {@link Role#id}. 
+     * @param id
+     * @param token
+     * @return Status Code 200, 
+     * Status Code 404, falls keine {@link Role} mit dieser {@link Role#id} existiert, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @DELETE
     @Path("/{roleId}")
     public Response deleteRole(@PathParam("roleId") long roleId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -113,6 +135,16 @@ public class RolesResource {
         return Response.status(200).build();
     }
 
+    /**
+     * Fügt einen {@link User} zu einer {@link Role} hinzu. Diese Methode verändert den in der Datenbank gespeicherten {@link User} nicht.
+     * @param groupId
+     * @param inputUser
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls der {@link User} oder die {@link Role} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link User} bereits Teil dieser {@link Role} oder nicht Teil der {@link Role#group} ist.
+     */
     @POST
     @Path("/{roleId}/users")
     public Response addUser(@PathParam("roleId") long roleId, User inputUser, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -158,6 +190,16 @@ public class RolesResource {
         
     }
 
+    /**
+     * Entfernt einen {@link User} aus einer {@link Group}. Der {@link User} existiert weiterhin.
+     * @param groupId
+     * @param userId
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls die {@link Group} {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link User} nicht Teil dieser {@link Role} ist.
+     */
     @DELETE
     @Path("/{roleId}/users/{userId}")
     public Response removeUser(@PathParam("roleId") long roleId, @PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){

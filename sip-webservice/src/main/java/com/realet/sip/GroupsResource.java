@@ -435,7 +435,7 @@ public class GroupsResource {
      * @param inputUser
      * @param token
      * @return Status Code 200,
-     * Status Code 404, falls der {@link User} nicht gefunden werden konnte,
+     * Status Code 404, falls der {@link User} oder die {@link Group} nicht gefunden werden konnte,
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
      * Status code 400, falls der {@link User} bereits Teil dieser {@link Group} ist.
      */
@@ -486,7 +486,7 @@ public class GroupsResource {
      * @param userId
      * @param token
      * @return Status Code 200,
-     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 404, falls die {@link Group} oder der {@link User} nicht gefunden werden konnte,
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
      * Status code 400, falls der {@link User} nicht Teil dieser {@link Group} oder der {@link Group#owner} ist.
      */

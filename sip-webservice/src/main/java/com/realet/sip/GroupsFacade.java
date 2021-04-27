@@ -35,7 +35,7 @@ public class GroupsFacade {
     }
 
     /**
-     * Findet alle gemeinsamen Gruppen zweier {@link User}.
+     * Findet alle gemeinsamen {@link Group Groups} zweier {@link User}.
      */
     public static List<Group> findShared(User user1, User user2){
 

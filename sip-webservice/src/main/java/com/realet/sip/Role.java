@@ -22,15 +22,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-@Entity
-@Table(name = "Roles")
-@NamedQueries({
-    @NamedQuery(name = "Role.findGroupRolesOrderedByPriority", query = "SELECT r FROM Role r WHERE r.group = :group ORDER BY r.priority ASC"),
-    @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group"),
-    @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.admin = true")
-})
 /**
- * Eine {@link Role} gehört zu einer {@link Group}. {@link Roles} regulieren Zugriff auf {@link Chat Chats}.
+ * Eine {@link Role} gehört zu einer {@link Group}. {@link Role Roles} regulieren Zugriff auf {@link Chat Chats}.
  * Definiert eine NamedQuery "Role.findGroupRolesOrderedByPriority", welche alle {@link Role Roles} einer {@link Group} findet und aufsteigend nach {@link Role#priority} sortiert. 
  *  Akzeptiert einen Parameter: "group".
  * Definiert eine NamedQuery "Role.findUserGroupRoles", welche alle {@link Role Roles} eines {@link User Users} in einer {@link Group} findet. 
@@ -39,6 +32,13 @@ import org.hibernate.annotations.CascadeType;
  *  Akzeptiert zwei Parameter: "group", "user".
  * Ein JPA-Entity für eine Tabelle names "Roles".
  */
+@Entity
+@Table(name = "Roles")
+@NamedQueries({
+    @NamedQuery(name = "Role.findGroupRolesOrderedByPriority", query = "SELECT r FROM Role r WHERE r.group = :group ORDER BY r.priority ASC"),
+    @NamedQuery(name = "Role.findUserGroupRoles", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group"),
+    @NamedQuery(name = "Role.findAdminRolesByUserAndGroup", query = "SELECT r FROM Role r JOIN r.users u WHERE u = :user AND r.group = :group AND r.admin = true")
+})
 public class Role{
 
     @Id

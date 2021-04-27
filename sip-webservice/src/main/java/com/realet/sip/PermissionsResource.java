@@ -21,7 +21,7 @@ public class PermissionsResource {
     /**
      * Aktualisiert eine {@link Permission}.
      * {@link Permission#chat} und {@link Permission#role} werden in jedem Fall beibehalten.
-     * @param chatMessage
+     * @param permission
      * @param token
      * @return Status Code 200
      * Status Code 404, falls keine {@link Permission} mit derselben {@link Permission#id} gefunden werden konnte,
@@ -64,7 +64,7 @@ public class PermissionsResource {
 
     /**
      * Entfernt eine {@link Permission} anhand ihrer {@link Permission#id}. 
-     * @param id
+     * @param permissionId
      * @param token
      * @return Status Code 200, 
      * Status Code 404, falls keine {@link Permission} mit dieser {@link Permission#id} existiert, 

@@ -245,7 +245,7 @@ public class GroupsResource {
     }
 
     /**
-     * Erstellt eine {@link group}. Erstellt automatisch einen {@link Chat} und eine {@link Permission} mit {@link Permission#canRead} == true und {@link Permission#canWrite} == true.
+     * Erstellt eine {@link Group}. Erstellt automatisch einen {@link Chat} und eine {@link Permission} mit {@link Permission#canRead} == true und {@link Permission#canWrite} == true.
      * Entfernt Leerzeichen am Anfang und Ende des {@link Group#name}. 
      * @param group
      * @param token
@@ -307,7 +307,8 @@ public class GroupsResource {
     /**
      * Erstellt einen {@link Chat} und fügt ihn zu einer {@link Group} hinzu. Erstellt automatisch eine {@link Permission} mit {@link Permission#canRead} == true und {@link Permission#canWrite} == true.
      * Entfernt Leerzeichen am Anfang und Ende des {@link Chat#name}. 
-     * @param group
+     * @param groupId
+     * @param inputChat
      * @param token
      * @return Status Code 201,
      * Status Code 404, falls die {@link Group} nicht gefunden werden konnte, 
@@ -367,7 +368,7 @@ public class GroupsResource {
     }
 
     /**
-     * Aktualisiert eine {@link group}.
+     * Aktualisiert eine {@link Group}.
      * {@link Group#owner} wird in jedem Fall beibehalten.
      * Entfernt Leerzeichen am Anfang und Ende des {@link Group#name}. 
      * @param group
@@ -537,7 +538,7 @@ public class GroupsResource {
     /**
      * Erstellt eine {@link Role} und fügt sie zu einer {@link Group} hinzu.
      * @param groupId
-     * @param inputUser
+     * @param role
      * @param token
      * @return Status Code 200,
      * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,

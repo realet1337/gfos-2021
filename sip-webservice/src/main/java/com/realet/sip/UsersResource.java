@@ -2,10 +2,8 @@ package com.realet.sip;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -142,7 +140,8 @@ public class UsersResource {
 
     /**
      * Findet alle gemeinsamen {@link Group Groups} zweier {@link User}.
-     * @param userId
+     * @param user1Id
+     * @param user2Id
      * @param token
      * @return Status Code 200 mit {@link Group Groups}, serialisiert durch {@link GroupAdapter}, 
      * Status Code 404, falls einer der beiden {@link User} nicht gefunden werden konnte, 
@@ -389,7 +388,7 @@ public class UsersResource {
      * Findet alle {@link Role Roles} eines {@link User Users} in einer {@link Group}.
      * @param userId
      * @param token
-     * @return Status Code 200 mit {@link Role Role}, serialisiert durch {@link RoleAdapeter} mit einer {@link RoleAdapter#verbosity} von 0, 
+     * @return Status Code 200 mit {@link Role}, serialisiert durch {@link RoleAdapter} mit einer {@link RoleAdapter#verbosity} von 0, 
      * Status Code 404, falls die {@link Group} oder der {@link User} nicht gefunden werden konnten, 
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
      */

@@ -29,8 +29,6 @@ public class ChatMessagesResource {
     /**
      * Entfernt eine {@link ChatMessage} anhand ihrer {@link ChatMessage#id}. 
      * Sendet die entsprechende Information an alle WebSockets, die den Chat beobachten.
-     * @param id
-     * @param token
      * @return Status Code 200, 
      * Status Code 404, falls keine {@link ChatMessage} mit dieser {@link ChatMessage#id} existiert, 
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
@@ -90,8 +88,6 @@ public class ChatMessagesResource {
      * Aktualisiert den {@link ChatMessage#content} einer {@link ChatMessage}.
      * Sendet die entsprechende Information an alle WebSockets, die den Chat beobachten.
      * Entfernt Leerzeichen am Anfang und Ende des {@link ChatMessage#content}.
-     * @param chatMessage
-     * @param token
      * @return Status Code 200
      * Status Code 404, falls keine {@link ChatMessage} mit derselben {@link ChatMessage#id} gefunden werden konnte,
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,

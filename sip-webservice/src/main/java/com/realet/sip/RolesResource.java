@@ -25,7 +25,7 @@ public class RolesResource {
      * Aktualisiert eine {@link Role}.
      * {@link Role#priority} und {@link Role#group} werden in jedem Fall beibehalten.
      * Entfernt Leerzeichen am Anfang und Ende des {@link Role#name}. 
-     * @param chatMessage
+     * @param role
      * @param token
      * @return Status Code 200
      * Status Code 404, falls keine {@link Role} mit derselben {@link Role#id} gefunden werden konnte,
@@ -99,7 +99,7 @@ public class RolesResource {
 
     /**
      * Entfernt eine {@link Role} anhand ihrer {@link Role#id}. 
-     * @param id
+     * @param roleId
      * @param token
      * @return Status Code 200, 
      * Status Code 404, falls keine {@link Role} mit dieser {@link Role#id} existiert, 
@@ -137,7 +137,7 @@ public class RolesResource {
 
     /**
      * Fügt einen {@link User} zu einer {@link Role} hinzu. Diese Methode verändert den in der Datenbank gespeicherten {@link User} nicht.
-     * @param groupId
+     * @param roleId
      * @param inputUser
      * @param token
      * @return Status Code 200,
@@ -192,7 +192,7 @@ public class RolesResource {
 
     /**
      * Entfernt einen {@link User} aus einer {@link Group}. Der {@link User} existiert weiterhin.
-     * @param groupId
+     * @param roleId
      * @param userId
      * @param token
      * @return Status Code 200,

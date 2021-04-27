@@ -12,9 +12,20 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+/**
+ * Diese Klasse akzeptiert WebSockets-Verbindungen nach "/chats/{chatId}/websockets". 
+ * Diese werden benutzt, um live Ergeignisse aus einen bestimmten Chat an den Client zu übermitteln.
+ * Das schliesst neue Nachrichten aus, da diese durch die {@link UserWebsocketResource} gesendet werden.
+ * <br>Dies geschieht in folgendem Format:<br>
+ * Nachricht geändert: "updated: &lt;{@link ChatMessage} als JSON&gt;"
+ * Nachricht geändert: "removed: &lt;{@link ChatMessage} als JSON&gt;"
+ */
 @ServerEndpoint("/chats/{chatId}/websockets")
 public class ChatWebsocketResource {
 
+    /**
+     * Ueberprueft, ob der jeweilige {@link Chat} existiert und sendet andernfalls eine entsprechende Nachricht, woraufhin die Verbindung geschlossen wird.
+     */
     @OnOpen
     public void onOpen(javax.websocket.Session session, @PathParam("chatId") long chatId){
         Optional<Chat> chat = ChatsFacade.findById(chatId);
@@ -28,6 +39,10 @@ public class ChatWebsocketResource {
         }
     }
 
+    /**
+     * Ueberprueft Gueltigkeit und Vorrechte einer im Format "Bearer &lt;token&gt;" übermittelten {@link Session} und registriert die WebSockets-Session im {@link ChatWebsocketManagement}.
+     * Sendet gegebenenfalls eine Fehlermeldung zurück.
+     */
     @OnMessage
     public void OnMessage(javax.websocket.Session session, String message, @PathParam("chatId") long chatId){
         if(!message.startsWith("Bearer ") || message.length() < 8){
@@ -107,14 +122,19 @@ public class ChatWebsocketResource {
         }
     }
 
+    /**
+     * Entfernt die WebSockets-Session aus dem {@link ChatWebsocketManagement}.
+     */
     @OnClose
     public void onClose(javax.websocket.Session session, CloseReason closeReason, @PathParam("chatId") long chatId){
         ChatWebsocketManagement.removeSession(chatId, session);
     }
 
-    //we outttt
+    /**
+     * Entfernt die WebSockets-Session aus dem {@link ChatWebsocketManagement}.
+     */
     @OnError
-    public void onClose(javax.websocket.Session session, Throwable throwable, @PathParam("chatId") long chatId){
+    public void onError(javax.websocket.Session session, Throwable throwable, @PathParam("chatId") long chatId){
         ChatWebsocketManagement.removeSession(chatId, session);
     }
 }

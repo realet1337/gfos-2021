@@ -18,11 +18,11 @@ public class UserProfilesResource {
 
     /**
      * Aktualisiert ein {@link UserProfile}.
-     * @param chatMessage
+     * @param userProfile
      * @param token
      * @return Status Code 200,
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
-     * Status code 400, falls {@link UserProfile#maxLoadedmMessages} < {@link UserProfile#messageChunkSize} ist
+     * Status code 400, falls {@link UserProfile#maxLoadedMessages} &lt; {@link UserProfile#messageChunkSize} ist
      *  oder die {@link UserProfile}#id nicht mit der {@link UserProfile#id} des {@link UserProfile} des {@link UserProfile#user} übereinstimmt.
      */
     @PUT

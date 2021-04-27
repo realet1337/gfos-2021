@@ -443,7 +443,7 @@ public class ChatsResource {
 
     /**
      * Entfernt einen {@link Chat} und alle seine  {@link ChatMessage ChatMessages}.
-     * @param inputChat
+     * @param chatId
      * @param token
      * @return Status Code 200, 
      * Status Code 404, falls der {@link Chat} nicht vorhanden ist, 

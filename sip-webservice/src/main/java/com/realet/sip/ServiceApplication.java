@@ -1,7 +1,5 @@
 package com.realet.sip;
 
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +8,9 @@ import javax.persistence.Persistence;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+/**
+ * Die HauptKlasse der Anwendung. Registriert alle RESTEasy Resource-Klassen und initialisiert alle Facade-Klassen.
+ */
 @ApplicationPath("/")
 public class ServiceApplication extends Application {
     

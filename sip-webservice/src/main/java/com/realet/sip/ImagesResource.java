@@ -32,6 +32,15 @@ import javax.ws.rs.core.Response;
 @Path("/images")
 public class ImagesResource {
     
+    /**
+     * Speichert ein Bild im durch die System-Property "com.realet.sip.uploadDir" beschriebenen Upload-Verzeichnis unter "pic/user/".
+     * Generiert einen einzigartigen MD5-Hash als Dateinamen und konvertiert das Bild zu einer JPG-Datei.
+     * @param form
+     * @return Status Code 201 mit einem JSON-Objekt {"picture":<Neuer Dateiname ohne Endung>}, 
+     * Status Code 500, falls das Schreiben der Datei fehlschlägt. 
+     * Status Code 415, falls der jeweilige Bild-Typ nicht von ImageIO unterstützt wird.
+     * Status Code 400, falls das Bild größer als 30MB ist oder das Bild leer ist.
+     */
     @POST
     @Path("/users/pictures")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -105,6 +114,15 @@ public class ImagesResource {
         ).build();
     }
 
+    /**
+     * Speichert ein Bild im durch die System-Property "com.realet.sip.uploadDir" beschriebenen Upload-Verzeichnis unter "pic/group/".
+     * Generiert einen einzigartigen MD5-Hash als Dateinamen und konvertiert das Bild zu einer JPG-Datei.
+     * @param form
+     * @return Status Code 201 mit einem JSON-Objekt {"picture":<Neuer Dateiname ohne Endung>}, 
+     * Status Code 500, falls das Schreiben der Datei fehlschlägt. 
+     * Status Code 415, falls der jeweilige Bild-Typ nicht von ImageIO unterstützt wird.
+     * Status Code 400, falls das Bild größer als 30MB ist oder das Bild leer ist.
+     */
     @POST
     @Path("/groups/pictures")
     @Consumes(MediaType.MULTIPART_FORM_DATA)

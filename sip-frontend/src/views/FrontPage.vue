@@ -15,10 +15,15 @@
 <script>
 export default {
     name: "FrontPage",
+    data: function(){
+        return {
+            particles: undefined
+        }
+    },
     created: function(){
         this.$nextTick(
             function(){
-                window.Particles.init({
+                this.particles = window.Particles.init({
                     selector: '.background-particles',
                     connectParticles: true,
                     color: this.$vuetify.theme.currentTheme.primary,
@@ -27,6 +32,9 @@ export default {
                 });
             }
         );
+    },
+    beforeDestroy: function(){
+        this.particles.destroy();
     }
 }
 </script>

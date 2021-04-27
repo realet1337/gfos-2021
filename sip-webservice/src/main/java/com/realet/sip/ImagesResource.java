@@ -97,6 +97,7 @@ public class ImagesResource {
                 path = path + "/pic/user/" + outName + ".jpg";
 
                 outputFile = new File(path);
+                outputFile.getParentFile().mkdirs();
 
             }while(outputFile.exists()); //Just keep going until we get one.
 
@@ -179,6 +180,7 @@ public class ImagesResource {
                 path = path + "/pic/group/" + outName + ".jpg";
 
                 outputFile = new File(path);
+                outputFile.getParentFile().mkdirs();
 
             }while(outputFile.exists()); //Just keep going until we get one.
 

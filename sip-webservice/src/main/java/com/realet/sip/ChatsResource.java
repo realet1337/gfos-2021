@@ -442,7 +442,7 @@ public class ChatsResource {
     }
 
     /**
-     * Entfernt einen {@link Chat}.
+     * Entfernt einen {@link Chat} und alle seine  {@link ChatMessage ChatMessages}.
      * @param inputChat
      * @param token
      * @return Status Code 200, 

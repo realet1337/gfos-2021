@@ -40,9 +40,9 @@ public class GroupsResource {
      * Findet eine {@link Group}.
      * @param groupId
      * @param token
-     * @return Status Code 200 mit {@link Group}, serialisiert durch {@link GroupAdapter}
-     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
-     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     * @return Status Code 200 mit {@link Group}, serialisiert durch {@link GroupAdapter}, 
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
      */
     @GET
     @Path("/{groupId}")
@@ -81,9 +81,9 @@ public class GroupsResource {
      * Findet alle {@link Chat Chats} einer {@link Group}.
      * @param groupId
      * @param token
-     * @return Status Code 200 mit {@link Chat Chats}, serialisiert durch {@link ChatAdapter}
-     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
-     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     * @return Status Code 200 mit {@link Chat Chats}, serialisiert durch {@link ChatAdapter}, 
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte, 
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
      */
     @GET
     @Path("/{groupId}/chats")
@@ -122,9 +122,9 @@ public class GroupsResource {
      * Findet alle {@link User} ohne {@link Role} in einer {@link Group}.
      * @param groupId
      * @param token
-     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter}
+     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter},
      * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
-     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
      */
     @GET
     @Path("/{groupId}/basic-users")
@@ -163,9 +163,9 @@ public class GroupsResource {
      * Findet alle {@link User} einer {@link Group}.
      * @param groupId
      * @param token
-     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter}
+     * @return Status Code 200 mit {@link User Usern}, serialisiert durch {@link UserAdapter},
      * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
-     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
      */
     @GET
     @Path("/{groupId}/users")
@@ -204,9 +204,9 @@ public class GroupsResource {
      * Findet alle {@link Role Roles} einer {@link Group}.
      * @param groupId
      * @param token
-     * @return Status Code 200 mit {@link Role Roles}, serialisiert durch {@link RoleAdapter}mit einer {@link RoleAdapter#verbosity} von 1
+     * @return Status Code 200 mit {@link Role Roles}, serialisiert durch {@link RoleAdapter}mit einer {@link RoleAdapter#verbosity} von 1,
      * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
-     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
      */
     @GET
     @Path("/{groupId}/roles")
@@ -429,6 +429,16 @@ public class GroupsResource {
         return Response.ok().build();
     }
 
+    /**
+     * Fügt einen {@link User} zu einer {@link Group} hinzu. Diese Methode verändert den in der Datenbank gespeicherten {@link User} nicht.
+     * @param groupId
+     * @param inputUser
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls der {@link User} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link User} bereits Teil dieser {@link Group} ist.
+     */
     @POST
     @Path("/{groupId}/users")
     public Response addUser(@PathParam("groupId") long groupId, User inputUser, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -470,6 +480,16 @@ public class GroupsResource {
         
     }
 
+    /**
+     * Entfernt einen {@link User} aus einer {@link Group}. Der {@link User} existiert weiterhin.
+     * @param groupId
+     * @param userId
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls der {@link User} nicht Teil dieser {@link Group} oder der {@link Group#owner} ist.
+     */
     @DELETE
     @Path("/{groupId}/users/{userId}")
     public Response removeUser(@PathParam("groupId") long groupId, @PathParam("userId") long userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){
@@ -514,6 +534,17 @@ public class GroupsResource {
         return Response.status(200).build();
     }
 
+    /**
+     * Erstellt eine {@link Role} und fügt sie zu einer {@link Group} hinzu.
+     * @param groupId
+     * @param inputUser
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls die {@link Role#color} nicht vorhanden oder kein gültiger Hex-Code ist,
+     *  oder  der {@link Role#name} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.
+     */
     @POST
     @Path("/{groupId}/roles")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -584,6 +615,18 @@ public class GroupsResource {
         return Response.ok().build();
     }
 
+    /**
+     * Verändert {@link Role#priority} aller {@link Role Roles} in einer {@link Group}.
+     * Akzeptiert einen JSON-Array mit den {@link Role#id} ALLER {@link Group#roles} sortiert nach Prioritöt (wichtigste Rollen zuerst).
+     * @param groupId
+     * @param requestBody
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls die {@link Group} oder eine der {@link Role Roles} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
+     * Status code 400, falls Array-Elemente doppelt erscheinen, nicht als Long zu parsen sind, 
+     *  oder die zu ihnen gehörenden {@link Role Roles} nicht Teil der {@link Group} sind.
+     */
     @PUT
     @Path("/{groupId}/roles/priorities")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -623,11 +666,11 @@ public class GroupsResource {
                 ids.add(Long.valueOf(array.getLong(i)));
             }
             catch(JSONException e){
-                return Response.status(400).entity("Array elements must be Integers").build();
+                return Response.status(400).entity("Array elements must be Longs").build();
             }
         }
 
-        //the reason we are doing this in 2 steps is so the process doesn't fail midway through, possibly leaving us with non-unique 
+        //the reason we are doing this next part in 2 steps is so the process doesn't fail midway through, possibly leaving us with non-unique 
         //priorities
         List<Role> roles = new ArrayList<>();
         for(Long id: ids){
@@ -649,6 +692,14 @@ public class GroupsResource {
         return Response.ok().build();
     }
 
+    /**
+     * Löscht eine {@link Group} und alle dazugehörigen {@link Chat Chats} und {@link Role Roles}.
+     * @param groupId
+     * @param token
+     * @return Status Code 200,
+     * Status Code 404, falls die {@link Group} nicht gefunden werden konnte,
+     * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt.
+     */
     @DELETE
     @Path("/{groupId}")
     public Response deleteGroup(@PathParam("groupId") long groupId, @HeaderParam(HttpHeaders.AUTHORIZATION) String token){

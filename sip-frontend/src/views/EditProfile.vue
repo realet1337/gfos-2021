@@ -204,6 +204,8 @@ export default {
         this.user = Object.assign({}, this.$store.state.user)
     },
     computed: {
+        //@vuese
+        //Generiert eine Object-Url anhand des imgFile.
         avatarUrl: function(){
             return URL.createObjectURL(this.$data.imgFile);
         }

@@ -26,10 +26,12 @@
 <script>
 import RegisterForm from '@/components/RegisterForm'
 
+//@vuese
+//Zeigt das RegisterForm. Initialisiert die App, falls ein gültiges Token im Cookie gefunden werden kann.
 export default {
     components: {
         RegisterForm
     },
-    name: 'Register'
+    name: 'RegisterPage'
 }
 </script>

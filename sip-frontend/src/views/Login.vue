@@ -27,15 +27,14 @@ import Vue from 'vue'
 import LoginForm from '@/components/LoginForm'
 import store from '@/store/'
 
+//@vuese
+//Zeigt das LoginForm. Initialisiert die App, falls ein gültiges Token im Cookie gefunden werden kann.
 export default {
     components: {
         LoginForm
     },
     
     beforeRouteEnter: function(to, from, next) {
-
-
-        //check if token exists and validate. Redirect if valid. TODO: extend token/regenerate? Possibly implement refresh tokens?
         var cookie = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)')?.pop() || '' //taken from internet 
         cookie = cookie.split(',')[0];
 

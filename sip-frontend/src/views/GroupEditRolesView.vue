@@ -153,6 +153,8 @@ import Vue from 'vue';
 import AddUserConfirmDialog from '@/components/AddUserConfirmDialog'
 import RemoveUserConfirmDialog from '@/components/RemoveUserConfirmDialog'
 
+//@vuese
+//Erlaubt, Rollen zu kreieren, zu bearbeiten und zu löschen.
 export default {
     name: 'GroupEditRolesView',
     data: function(){
@@ -174,6 +176,8 @@ export default {
         AddUserConfirmDialog,
     },
     methods: {
+        //@vuese
+        //Lädt alle Rollen der Gruppe.
         fetchRoles: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
@@ -185,6 +189,8 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Aktualisiert eine Rolle beim Server, falls sie eine ID hat, falls nicht, muss die Rolle neu sein und wird neu hinzugefügt.
         submit: function(){
             this.role.color = this.color;
 
@@ -217,6 +223,8 @@ export default {
                 });
             }
         },
+        //@vuese
+        //Erstellt lokal eine neue Rolle ohne ID.
         createRole: function(){
             this.roleId = -1;
             this.role = {
@@ -226,6 +234,8 @@ export default {
             };
             this.color = '#FFFFFF';
         },
+        //@vuese
+        //Löscht eine Rolle beim Server.
         deleteRole: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/roles/' + this.role.id, {
                 headers:{
@@ -240,28 +250,40 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Zeigt den "RemoveUserConfirmDialog" mit einem "user" Parameter.
         removeUser: function(user){
             this.$refs.removeUserConfirmDialog.show(user, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
         },
+        //@vuese
+        //Zeigt den "AddUserConfirmDialog" mit einem "user" Parameter.
         addUser: function(user){
             if(!this.role.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user, this.role);
             }
         },
+        //@vuese
+        //Zeigt einen Dialog mit allen Gruppenmitgliedern, die nicht Teil der Rolle sind. Dieser erlaubt es, Nutzer zur Rolle hinzuzufügen.
         showUserFinder: function(){
             this.userFinderDialogIsOpen = true;
         },
+        //@vuese
+        //Entfernt einen Nutzer aus dem "user"-Parameter lokal aus einer Rolle.
         localRemoveUserFromRole: function(user){
             const roleIndex = this.role.users.findIndex(tmpUser => user.id === tmpUser.id);
             if(roleIndex !== -1){
                 this.role.users.splice(roleIndex,1);
             }
         },
+        //@vuese
+        //Fügt einen Nutzer aus dem "user"-Parameter lokal zu einer Rolle hinzu.
         localAddUserToRole: function(user){
             if(!this.role.users.some(tmpUser => user.id === tmpUser.id)){
                 this.role.users.push(user);
             }
         },
+        //@vuese
+        //Lädt alle Mitglieder einer Gruppe.
         fetchUsers: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/users', {
                 headers:{
@@ -273,20 +295,28 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Verschiebt eine Rolle mit index von Parameter "idx" nach oben. Überprüft nicht, ob dies möglich ist. 
         swapRolesUpwards: function(idx){
             const buf = this.priorityEditorArray[idx];
             Vue.set(this.priorityEditorArray, idx, this.priorityEditorArray[idx - 1]);
             Vue.set(this.priorityEditorArray, idx - 1, buf);
         },
+        //@vuese
+        //Verschiebt eine Rolle mit index von Parameter "idx" nach unten. Überprüft nicht, ob dies möglich ist.
         swapRolesDownwards: function(idx){
             const buf = this.priorityEditorArray[idx];
             Vue.set(this.priorityEditorArray, idx, this.priorityEditorArray[idx + 1]);
             Vue.set(this.priorityEditorArray, idx + 1, buf);
         },
+        //@vuese
+        //Zeigt einen Dialog mit einer Liste aller Rollen. Dieser erlaubt, die Reihenfolge dieser Rollen zu ändern.
         showPriorityEditor: function(){
             this.priorityEditorArray = this.roles.slice();
             this.priorityEditorIsOpen = true;
         },
+        //@vuese
+        //Aktualisiert die Prioritäten der Rollen beim Server.
         updateRolePriorities: function(){
             const ids = [];
             for(var i = 0; i < this.priorityEditorArray.length; i++){
@@ -309,6 +339,8 @@ export default {
         this.fetchUsers();
     },
     watch: {
+        //@vuese
+        //Wenn eine neue Rolle ausgewählt wird, wird diese auch zur Bearbeitung bereitgestellt.
         roleId: function(roleId){
             if(roleId !== -1 && roleId !== undefined){
                 this.role = Object.assign({}, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
@@ -317,6 +349,8 @@ export default {
         }
     },
     computed: {
+        //@vuese
+        //Findet alle Nutzer, die nicht Teil der aktuellen Rolle sind.
         notMembers: function(){
             if(this.role && this.role.id){
                 const roleUsers = this.role.users;

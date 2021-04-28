@@ -115,9 +115,10 @@ import UserFinderDialog from '@/components/UserFinderDialog'
 
 //@vuese
 //Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion.
-//Auf der linke Seite der Anwendung befindet sich ein navigation drawer, der es erlaubt, zwischen Chats zu wechseln.
+//Auf der linke Seite der Anwendung befindet sich ein Navigation Drawer, der es erlaubt, zwischen Chats zu wechseln.
 //Die App-Leiste zeigt Informationen wie den Online-Status, sowie, falls nicht online, das Datum, an dem der Nutzer zuletzt online war, an.
 //Registriert einen Event-Listener für den globalen eventHub, der auf neue Nachrichten reagiert.
+//Der Navigation drawer verschwindet und lässt sich optional öffnen, sollte der Bildschirm weniger als 600px breit sein.
 export default {
     name: 'DirectChat',
     components: {
@@ -129,9 +130,13 @@ export default {
     },
     data: function(){
         return {
+            //Alle Direct-Chats eines Users
             chats: [],
+            //Der aktuell ausgewählte Chat
             chat: undefined,
+            //Der Index des aktuell ausgewählten Chats inn "chats"
             chatIndex: 0,
+            //Ob der Navigation Drawer gezeigt wird
             showNavDrawer: false,
         }
     },

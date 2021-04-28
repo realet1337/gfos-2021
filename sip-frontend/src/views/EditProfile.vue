@@ -102,20 +102,29 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Erlaubt, das Profil des eigenen Nutzers zu bearbeiten, das Passwort zu ändern oder den Account zu löschen.
 export default {
     name: 'EditProfile',
     data: function(){
         return {
+            //Ob die Forms gültig sind. Index 0 bezieht sich auf das Profil-Formular, Index 1 auf das Passwort Formular.
             isValid: [false, false],
+            //Ein Cancel-Token für das Axios-Request zu "/api/images/users/pictures". Notwending, falls sich der User umentscheidet, bevor das erste Request fertig ist.
             cancelTokenSource: undefined,
+            //Blob für das ausgewählte Bild
             imgFile: undefined,
+            //Eigener Nutzer
             user: undefined,
+            //Ob der Dialog zur Kontolöschung angezeigt wird.
             showDeleteDialog: false,
             password1: '',
             password2: '',
         }
     },
     methods: {
+        //@vuese
+        //ändert das imgFile und sendet ein post-request an "/api/images/users/pictures" um einen neuen Picture-Code zu erhalten.
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){
                 this.$data.cancelTokenSource.cancel();
@@ -140,8 +149,9 @@ export default {
                 })
             }
         },
+        //@vuese
+        //Aktualisiert den User beim Server
         updateUser: function(){
-            //TODO: name validation
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/users', this.user, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
@@ -152,11 +162,12 @@ export default {
                 this.$router.push('/');
             });
         },
+        //@vuese
+        //Aktualisiert das Passwort beim Server
         changePass: function(){
             //prepare object
 
             const tmpUser = Object.assign({}, this.$store.state.user);
-            //TODO:  validation
             tmpUser.pass = this.password1;
 
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/users', tmpUser, {
@@ -170,9 +181,13 @@ export default {
                 this.$router.push('/');
             })
         },
+        //@vuese
+        //Oeffnet einen Dialog, der das Loeschen des Nutzers bestaetigen laesst.
         openDeleteDialog: function(){
             this.showDeleteDialog = true;
         },
+        //@vuese
+        //Loescht den User beim Server
         deleteUser: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/users/' + this.user.id, {
                 headers:{

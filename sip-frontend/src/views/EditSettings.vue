@@ -45,6 +45,8 @@
 <script>
 import Vue from 'vue';
 
+//@vuese
+//Erlaubt, die User-Einstellungen zu bearbeiten.
 export default {
     name: 'EditSettings',
     data: function(){
@@ -54,6 +56,8 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Aktualisiert die Einstellungen in Form eines "UserProfile" beim Server.
         onSubmit: function(){
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/user-profiles', this.userProfile, {
                 headers:{

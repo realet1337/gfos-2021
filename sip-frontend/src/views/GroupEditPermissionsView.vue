@@ -150,7 +150,7 @@ export default {
     },
     methods: {
         //@vuese
-        //Lädt alle Rollen einer Gruppe
+        //Lädt alle Rollen einer Gruppe.
         fetchRoles: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
@@ -163,7 +163,7 @@ export default {
             });
         },
         //@vuese
-        //Lädt alle Chats einer Gruppe
+        //Lädt alle Chats einer Gruppe.
         fetchChats: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/chats', {
                 headers:{
@@ -192,12 +192,12 @@ export default {
             });
         },
         //@vuese
-        //Zeigt einen Dialog mit einer Gruppe
+        //Zeigt einen Dialog mit einer Gruppe.
         showRoleFinder: function(){
             this.roleFinderDialogIsOpen = true;
         },
         //@vuese
-        //Fügt einen neue Permission beim Server hinzu
+        //Fügt einen neue Permission beim Server hinzu.
         addException: function(role){
             const permission = {
                 canRead: false,
@@ -216,7 +216,7 @@ export default {
             });
         },
         //@vuese
-        //Aktualisiert eine Permission beim Server
+        //Aktualisiert eine Permission beim Server.
         updatePermission: function(permission){
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/permissions', permission, {
                 headers:{
@@ -229,7 +229,7 @@ export default {
             });
         },
         //@vuese
-        //Löscht eine Permission beim Server
+        //Löscht eine Permission beim Server.
         deleteException: function(permission){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/permissions/' + permission.id, {
                 headers:{

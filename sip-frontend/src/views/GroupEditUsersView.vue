@@ -102,7 +102,7 @@ export default {
             })
         },
         //@vuese
-        //Zeigt den UserFinderDialog
+        //Zeigt den UserFinderDialog.
         showUserFinder: function(){
             this.$refs.userFinderDialog.show();
         }

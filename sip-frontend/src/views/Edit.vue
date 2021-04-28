@@ -70,7 +70,7 @@ export default {
     },
     methods: {
         //@vuese
-        //Generiert den Titel, basierend auf einem Schlüsselwort aus der Route
+        //Generiert den Titel, basierend auf einem Schlüsselwort aus der Route.
         getTitle: function(keyword){
             const dict = {
                 'profile': 'Profile',

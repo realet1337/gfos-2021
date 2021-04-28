@@ -113,7 +113,7 @@ export default {
             }
         },
         //@vuese
-        //Aktualisiert die Gruppe beim Server
+        //Aktualisiert die Gruppe beim Server.
         submit: function(){
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/groups', this.group, {
                 headers:{
@@ -131,7 +131,7 @@ export default {
             this.showDeleteDialog = true;
         },
         //@vuese
-        //Löscht die Gruppe beim Server
+        //Löscht die Gruppe beim Server.
         deleteGroup: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/groups/' + this.group.id, {
                 headers:{

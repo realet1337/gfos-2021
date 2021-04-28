@@ -150,7 +150,7 @@ export default {
             }
         },
         //@vuese
-        //Aktualisiert den User beim Server
+        //Aktualisiert den User beim Server.
         updateUser: function(){
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/users', this.user, {
                 headers:{
@@ -163,7 +163,7 @@ export default {
             });
         },
         //@vuese
-        //Aktualisiert das Passwort beim Server
+        //Aktualisiert das Passwort beim Server.
         changePass: function(){
             //prepare object
 

@@ -233,22 +233,22 @@ export default {
     },
     methods: {
         //@vuese
-        //Zeigt den rechten Navigation Drawer
+        //Zeigt den rechten Navigation Drawer.
         toggleUserDrawer: function(){
             this.$data.showUserDrawer = !this.$data.showUserDrawer;
         },
         //@vuese
-        //Zeigt den UserProfileDialog für einen User
+        //Zeigt den UserProfileDialog für einen User.
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },
         //@vuese
-        //Routet die Anwendung zum entsprechenden Chat
+        //Routet die Anwendung zum entsprechenden Chat.
         openDirectChat: function(chat){
             this.$router.push('/chat/' + chat.id);
         },
         //@vuese
-        //Passt die Komponente an um eine gewisse Gruppe zu zeigen
+        //Passt die Komponente an um eine gewisse Gruppe zu zeigen.
         openGroup: function(group){
             if(group.id !== this.$data.group.id){
                 this.$router.push('/group/' + group.id);
@@ -385,7 +385,7 @@ export default {
             this.$data.showUserDrawer = false;
         },
         //@vuese
-        //Lädt alle Gruppen eines Nutzers
+        //Lädt alle Gruppen eines Nutzers.
         getGroups: function(){
             //get groups
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/groups', {
@@ -418,7 +418,7 @@ export default {
             });
         },
         //@vuese
-        //Öffnet eine Gruppe anhand ihrer ID
+        //Öffnet eine Gruppe anhand ihrer ID.
         openGroupId: function(id){
             var groupIndex = this.groups.findIndex(group => group.id === id);
             if(groupIndex === -1){
@@ -437,12 +437,12 @@ export default {
             }
         },
         //@vuese
-        //Zeigt den "GroupCreatorDialog"
+        //Zeigt den "GroupCreatorDialog".
         showGroupCreator: function(){
             this.$refs.creatorDialog.show();
         },
         //@vuese
-        //Zeigt den ChatEditorDialog im Erstellungs-Modus
+        //Zeigt den ChatEditorDialog im Erstellungs-Modus.
         createChat: function(){
             this.$refs.chatEditorDialog.show();
         },
@@ -452,7 +452,7 @@ export default {
             this.$refs.chatEditorDialog.show(chat);
         },
         //@vuese
-        //Löscht einen Chat beim Server
+        //Löscht einen Chat beim Server.
         deleteChat: function(chat){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/chats/' + chat.id, {
                 headers:{
@@ -473,7 +473,7 @@ export default {
     },
     computed: {
         //@vuese
-        //Bestimmt anhand der geladenen Rollen und der geladenen Gruppe ob der User administrative Rechte hat
+        //Bestimmt anhand der geladenen Rollen und der geladenen Gruppe ob der User administrative Rechte hat.
         isAdmin: function(){
             if(this.group === undefined){
                 return false;
@@ -495,7 +495,7 @@ export default {
             return false;
         },
         //@vuese
-        //Findet alle Rollen die Mitglieder haben
+        //Findet alle Rollen die Mitglieder haben.
         rolesWithMembers: function(){
             return this.roles.filter(role => role.users.length > 0);
         }

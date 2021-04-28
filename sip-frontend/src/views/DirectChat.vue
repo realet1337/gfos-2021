@@ -204,7 +204,7 @@ export default {
             this.$data.chatIndex = this.$data.chats.findIndex(chat => this.$data.chat.id == chat.id);
         },
         //@vuese
-        //Zeigt den UserFinderDialog
+        //Zeigt den UserFinderDialog.
         showUserFinder: function(){
             this.$refs.finderDialog.show();
         },

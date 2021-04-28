@@ -69,6 +69,8 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Generiert den Titel, basierend auf einem Schluesselwort aus der Route
         getTitle: function(keyword){
             const dict = {
                 'profile': 'Profile',

@@ -93,7 +93,7 @@
                         <v-row no-gutters>
                             <v-divider></v-divider>
                         </v-row>
-                        <v-list-item link class="mt-2" @click="showChatFinder">
+                        <v-list-item link class="mt-2" @click="showRoleFinder">
                             <v-list-item-icon>
                                 <v-icon>mdi-plus</v-icon>
                             </v-list-item-icon>
@@ -133,6 +133,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Erlaubt das Hinzufügen, Bearbeiten und Entfernen von Berechtigungen.
 export default {
     name: 'GroupEditPermissionsView',
     data: function(){
@@ -147,6 +149,8 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Lädt alle Rollen einer Gruppe
         fetchRoles: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/roles', {
                 headers:{
@@ -158,6 +162,8 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Lädt alle Chats einer Gruppe
         fetchChats: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/chats', {
                 headers:{
@@ -169,6 +175,8 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Lädt alle Permissions eines Chats und findet die Permission ohne Role, die "rule". Alle anderen bilden die "exceptions".
         fetchPermissions: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/chats/' + this.chat.id + '/permissions', {
                 headers:{
@@ -183,9 +191,13 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
-        showChatFinder: function(){
+        //@vuese
+        //Zeigt einen Dialog mit einer Gruppe
+        showRoleFinder: function(){
             this.roleFinderDialogIsOpen = true;
         },
+        //@vuese
+        //Fügt einen neue Permission beim Server hinzu
         addException: function(role){
             const permission = {
                 canRead: false,
@@ -203,6 +215,8 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Aktualisiert eine Permission beim Server
         updatePermission: function(permission){
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/permissions', permission, {
                 headers:{
@@ -214,6 +228,8 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Löscht eine Permission beim Server
         deleteException: function(permission){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/permissions/' + permission.id, {
                 headers:{
@@ -231,6 +247,8 @@ export default {
         this.fetchChats();
     },
     watch: {
+        //@vuese
+        //Wenn ein neuer chat ausgewählt wird, werden die Berechtigungen neu geladen.
         chatId: function(chatId){
             if(chatId !== -1 && chatId !== undefined){
                 this.chat = this.chats[this.chats.findIndex(chat => chat.id === this.chatId)];
@@ -239,6 +257,8 @@ export default {
         }
     },
     computed: {
+        //@vuese
+        //Findet alle Rollen, die keine Berechtigung für den aktuellen Chat haben.
         rolesWithoutExceptions: function(){
             if(this.chat){
                 return this.roles.filter( r => !this.exceptions.some(p => r.id === p.role.id));

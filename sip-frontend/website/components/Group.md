@@ -12,14 +12,14 @@ Diese Komponente zeigt eine Gruppe an und erlaubt Interaktion. Auf der linken Se
 |openDirectChat|Routet die Anwendung zum entsprechenden Chat|-|
 |openGroup|Passt die Komponente an um eine gewisse Gruppe zu zeigen|-|
 |openChat|Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder öffnet einen Gruppen-Chat auf.|-|
-|initGroup|laedt alle Chats, Rollen und Nutzer ohne Rolle einer Gruppe.|-|
+|initGroup|Lädt alle Chats, Rollen und Nutzer ohne Rolle einer Gruppe.|-|
 |resetView|Setzt die Komponente zurück.|-|
-|getGroups|Laedt alle Gruppen eines Nutzers|-|
-|openGroupId|Oeffnet eine Gruppe anhand ihrer ID|-|
+|getGroups|Lädt alle Gruppen eines Nutzers|-|
+|openGroupId|Öffnet eine Gruppe anhand ihrer ID|-|
 |showGroupCreator|Zeigt den "GroupCreatorDialog"|-|
 |createChat|Zeigt den ChatEditorDialog im Erstellungs-Modus|-|
 |editChat|Zeigt den ChatEditorDialog im Bearbeitungs-Modus mit dem "chat" Parameter.|-|
-|deleteChat|Loescht einen Chat beim Server|-|
+|deleteChat|Löscht einen Chat beim Server|-|
 
 <!-- @vuese:Group:methods:end -->
 

@@ -182,12 +182,12 @@ export default {
             })
         },
         //@vuese
-        //Oeffnet einen Dialog, der das Loeschen des Nutzers bestaetigen laesst.
+        //Öffnet einen Dialog, der das Löschen des Nutzers bestätigen lässt.
         openDeleteDialog: function(){
             this.showDeleteDialog = true;
         },
         //@vuese
-        //Loescht den User beim Server
+        //Löscht den User beim Server
         deleteUser: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/users/' + this.user.id, {
                 headers:{

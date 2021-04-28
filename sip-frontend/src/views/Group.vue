@@ -285,7 +285,7 @@ export default {
             }
         },
         //@vuese
-        //Laedt alle Chats, Rollen und Nutzer ohne Rolle einer Gruppe.
+        //Lädt alle Chats, Rollen und Nutzer ohne Rolle einer Gruppe.
         initGroup: function(){
             //get chats
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/chats', {
@@ -385,7 +385,7 @@ export default {
             this.$data.showUserDrawer = false;
         },
         //@vuese
-        //Laedt alle Gruppen eines Nutzers
+        //Lädt alle Gruppen eines Nutzers
         getGroups: function(){
             //get groups
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/groups', {
@@ -418,7 +418,7 @@ export default {
             });
         },
         //@vuese
-        //Oeffnet eine Gruppe anhand ihrer ID
+        //Öffnet eine Gruppe anhand ihrer ID
         openGroupId: function(id){
             var groupIndex = this.groups.findIndex(group => group.id === id);
             if(groupIndex === -1){
@@ -452,7 +452,7 @@ export default {
             this.$refs.chatEditorDialog.show(chat);
         },
         //@vuese
-        //Loescht einen Chat beim Server
+        //Löscht einen Chat beim Server
         deleteChat: function(chat){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/chats/' + chat.id, {
                 headers:{

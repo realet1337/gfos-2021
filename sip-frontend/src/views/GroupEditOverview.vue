@@ -72,6 +72,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Erlaubt das Bearbeiten grundlegender Eigenschaften einer Gruppe wie z.B. ihren Namen und das Löschen einer Gruppe.
 export default {
     name: 'GroupEditOverview',
     data: function(){
@@ -84,6 +86,8 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //ändert das imgFile und sendet ein post-request an "/api/images/groups/pictures" um einen neuen Picture-Code zu erhalten.
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){
                 this.$data.cancelTokenSource.cancel();
@@ -108,8 +112,9 @@ export default {
                 })
             }
         },
+        //@vuese
+        //Aktualisiert die Gruppe beim Server
         submit: function(){
-            //TODO: name validation
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/groups', this.group, {
                 headers:{
                     'Authorization': 'Bearer ' + this.$store.state.token,
@@ -120,9 +125,13 @@ export default {
                 this.$router.push('/');
             })
         },
+        //@vuese
+        //Öffnet einen Dialog, der das Löschen der Gruppe bestätigen lässt.
         openDeleteDialog: function(){
             this.showDeleteDialog = true;
         },
+        //@vuese
+        //Löscht die Gruppe beim Server
         deleteGroup: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/groups/' + this.group.id, {
                 headers:{
@@ -147,6 +156,8 @@ export default {
         })
     },
     computed: {
+        //@vuese
+        //Generiert eine Object-Url anhand des imgFile.
         avatarUrl: function(){
             return URL.createObjectURL(this.$data.imgFile);
         }

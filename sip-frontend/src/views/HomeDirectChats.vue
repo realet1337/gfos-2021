@@ -39,6 +39,8 @@ import UserProfileDialog from '@/components/UserProfileDialog'
 import Vue from 'vue'
 import UserFinderDialog from '@/components/UserFinderDialog'
 
+//@vuese
+//Zeigt alle Direct-Chats des eigenen Users in Form von Karten
 export default {
     name: 'HomeDirectChats',
     components:{
@@ -54,7 +56,6 @@ export default {
         }
     },
     created: function(){
-
         window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/direct-chats/', {
             headers:{
                 'Authorization': 'Bearer ' + this.$store.state.token,
@@ -64,17 +65,25 @@ export default {
         })
     },
     methods: {
+        //@vuese
+        //Zeigt den UserProfileDialog.
         showUserDialog: function(user){
 
             this.$refs.userDialog.show(user);
 
         },
+        //@vuese
+        //Routet die Anwendung zu einem Chat.
         openDirectChat: function(chat){
             this.$router.push('/chat/' + chat.id);
         },
+        //@vuese
+        //Routet die Anwendung zu einer Group.
         openGroup: function(group){
             this.$router.push('/group/' + group.id);
         },
+        //@vuese
+        //Zeigt den UserFinderDialog.
         showUserFinder: function(){
             this.$refs.finderDialog.show();
         }

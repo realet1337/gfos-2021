@@ -37,6 +37,8 @@ import GroupCard from '@/components/GroupCard.vue'
 import Vue from 'vue'
 import GroupCreatorDialog from '@/components/GroupCreatorDialog'
 
+//@vuese
+//Zeigt alle Gruppen des eigenen Users in Form von Karten
 export default {
     name: 'HomeGroups',
     components:{
@@ -59,9 +61,13 @@ export default {
         })
     },
     methods: {
+        //@vuese
+        //Zeigt den GroupCreatorDialog
         showGroupCreator: function(){
             this.$refs.creatorDialog.show();
         },
+        //@vuese
+        //Zeigt eine Gruppe anhand ihrer ID
         openGroupId: function(id){
             this.$router.push('/group/' + id);
         }

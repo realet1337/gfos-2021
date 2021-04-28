@@ -100,6 +100,8 @@ import LoadingScreen from '@/components/LoadingScreen'
 import MessageAlerts from '@/components/MessageAlerts'
 import Vue from 'vue'
 
+//@vuese
+//Der Home-Screen zeigt eine App Bar und eine Liste von Chats oder Gruppen in einem <router-view> mit "HomeDirectChats", "HomeGroups".
 export default {
     name: 'Home',
     components: {
@@ -112,6 +114,8 @@ export default {
         }
     },
     methods:{
+        //@vuese
+        //Routet die Anwendung zu einem Chat.
         openChat: function(chat){
             if(chat.name){
                 this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
@@ -120,6 +124,8 @@ export default {
                 this.$router.push('/chat/' + chat.id);
             }
         },
+        //@vuese
+        //Lädt den eigenen User.
         fetchUser: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId, {
                 headers:{
@@ -131,6 +137,8 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
+        //Loggt den User beim Server aus.
         logout: function(){
             window.axios.post(Vue.prototype.$getApiUrl('http') + '/auth/logout', 
                 new URLSearchParams({

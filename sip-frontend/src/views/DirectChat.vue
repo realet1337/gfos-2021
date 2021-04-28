@@ -113,6 +113,11 @@ import MessageAlerts from '@/components/MessageAlerts'
 import LoadingScreen from '@/components/LoadingScreen'
 import UserFinderDialog from '@/components/UserFinderDialog'
 
+//@vuese
+//Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion.
+//Auf der linke Seite der Anwendung befindet sich ein navigation drawer, der es erlaubt, zwischen Chats zu wechseln.
+//Die App-Leiste zeigt Informationen wie den Online-Status, sowie, falls nicht online, das Datum, an dem der Nutzer zuletzt online war, an.
+//Registriert einen Event-Listener für den globalen eventHub, der auf neue Nachrichten reagiert.
 export default {
     name: 'DirectChat',
     components: {
@@ -131,9 +136,13 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Zeigt den UserProfileDialog mit dem entsprechenden User.
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },
+        //@vuese
+        //Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder ruft "openDirectChat" auf.
         openChat: function(chat){
             if(!chat.name){
                 this.openDirectChat(chat);
@@ -142,6 +151,8 @@ export default {
                 this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);
             }
         },
+        //@vuese
+        //Passt die Komponente an um einen anderen Chat anzuzeigen.
         openDirectChat: function(chat){
             if(chat.id != this.$data.chat.id){
                 if(!chat.notSelf){
@@ -155,9 +166,13 @@ export default {
                 this.$router.push('/chat/' + chat.id);
             }
         },
+        //@vuese
+        //Routet die Anwendung zur "Group"-Komponente mit der entsprechenden Id.
         openGroup: function(group){
             this.$router.push('/group/' + group.id);
         },
+        //@vuese
+        //Findet den  User eines Chats, der nicht mit der im Store gespeicherten userId übereinstimmt und fügt ihn dem Chat als "notSelf" hinzu.
         findNotSelf: function(chat){
             if(chat.user1.id == this.$store.state.userId){
                 chat.notSelf = chat.user2;
@@ -167,6 +182,8 @@ export default {
             }
             return chat;
         },
+        //@vuese
+        //Verschiebt den Chat einer neuen Nachricht in der Liste nach oben.
         onNewMessage: function(message){
             //prepare for usage
             this.findNotSelf(message.chat);
@@ -181,9 +198,13 @@ export default {
             //fix chatIndex
             this.$data.chatIndex = this.$data.chats.findIndex(chat => this.$data.chat.id == chat.id);
         },
+        //@vuese
+        //Zeigt den UserFinderDialog
         showUserFinder: function(){
             this.$refs.finderDialog.show();
         },
+        //@vuese
+        //(async) Sendet eine Server-Abfrage um alle Chats zu erhalten und ändert die Komponente um diese anzuzeigen.
         fetchChats: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/direct-chats/', {
                 headers:{

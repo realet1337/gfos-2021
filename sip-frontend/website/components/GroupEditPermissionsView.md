@@ -7,13 +7,13 @@ Erlaubt das Hinzufügen, Bearbeiten und Entfernen von Berechtigungen.
 <!-- @vuese:GroupEditPermissionsView:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|fetchRoles|Lädt alle Rollen einer Gruppe|-|
-|fetchChats|Lädt alle Chats einer Gruppe|-|
+|fetchRoles|Lädt alle Rollen einer Gruppe.|-|
+|fetchChats|Lädt alle Chats einer Gruppe.|-|
 |fetchPermissions|Lädt alle Permissions eines Chats und findet die Permission ohne Role, die "rule". Alle anderen bilden die "exceptions".|-|
-|showRoleFinder|Zeigt einen Dialog mit einer Gruppe|-|
-|addException|Fügt einen neue Permission beim Server hinzu|-|
-|updatePermission|Aktualisiert eine Permission beim Server|-|
-|deleteException|Löscht eine Permission beim Server|-|
+|showRoleFinder|Zeigt einen Dialog mit einer Gruppe.|-|
+|addException|Fügt einen neue Permission beim Server hinzu.|-|
+|updatePermission|Aktualisiert eine Permission beim Server.|-|
+|deleteException|Löscht eine Permission beim Server.|-|
 
 <!-- @vuese:GroupEditPermissionsView:methods:end -->
 

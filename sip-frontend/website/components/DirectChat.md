@@ -13,7 +13,7 @@ Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion. Auf 
 |openGroup|Routet die Anwendung zur "Group"-Komponente mit der entsprechenden Id.|-|
 |findNotSelf|Findet den  User eines Chats, der nicht mit der im Store gespeicherten userId übereinstimmt und fügt ihn dem Chat als "notSelf" hinzu.|-|
 |onNewMessage|Verschiebt den Chat einer neuen Nachricht in der Liste nach oben.|-|
-|showUserFinder|Zeigt den UserFinderDialog|-|
+|showUserFinder|Zeigt den UserFinderDialog.|-|
 |fetchChats|(async) Sendet eine Server-Abfrage um alle Chats zu erhalten und ändert die Komponente um diese anzuzeigen.|-|
 
 <!-- @vuese:DirectChat:methods:end -->

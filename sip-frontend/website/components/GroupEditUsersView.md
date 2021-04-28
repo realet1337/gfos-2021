@@ -11,7 +11,7 @@ Erlaubt, Nutzer zu Gruppen hinzuzufügen und sie zu entfernen.
 |addUser|Zeigt den AddUserConfirmDialog.|-|
 |fetchUsers|Lädt alle Nutzer.|-|
 |fetchGroup|Lädt die aktuelle Gruppe.|-|
-|showUserFinder|Zeigt den UserFinderDialog|-|
+|showUserFinder|Zeigt den UserFinderDialog.|-|
 
 <!-- @vuese:GroupEditUsersView:methods:end -->
 

@@ -101,7 +101,7 @@ import MessageAlerts from '@/components/MessageAlerts'
 import Vue from 'vue'
 
 //@vuese
-//Der Home-Screen zeigt eine App Bar und eine Liste von Chats oder Gruppen in einem <router-view> mit "HomeDirectChats", "HomeGroups".
+//Der Home-Screen zeigt eine App Bar und eine Liste von Chats oder Gruppen in einem <pre>&lt;router-view&gt;</pre> mit "HomeDirectChats", "HomeGroups".
 export default {
     name: 'Home',
     components: {

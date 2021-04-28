@@ -47,6 +47,8 @@ import AddUserConfirmDialog from '@/components/AddUserConfirmDialog'
 import RemoveUserConfirmDialog from '@/components/RemoveUserConfirmDialog'
 import UserFinderDialog from '@/components/UserFinderDialog'
 
+//@vuese
+//Erlaubt, Nutzer zu Gruppen hinzuzufügen und sie zu entfernen.
 export default {
     name: 'GroupEditUsersView',
     components: {
@@ -61,14 +63,18 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Zeigt den RemoveUserConfirmDialog.
         removeUser: function(user){
             this.$refs.removeUserConfirmDialog.show(user);
         },
+        //Zeigt den AddUserConfirmDialog.
         addUser: function(user){
             if(!this.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user);
             }
         },
+        //Lädt alle Nutzer.
         fetchUsers: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/users', {
                 headers:{
@@ -80,6 +86,7 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //Lädt die aktuelle Gruppe.
         fetchGroup: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId, {
                 headers:{
@@ -91,6 +98,7 @@ export default {
                 this.$router.push('/home/groups');
             })
         },
+        //Zeigt den UserFinderDialog
         showUserFinder: function(){
             this.$refs.userFinderDialog.show();
         }

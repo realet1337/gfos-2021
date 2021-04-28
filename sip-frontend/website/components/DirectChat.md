@@ -1,6 +1,6 @@
 # DirectChat
 
-Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion. Auf der linke Seite der Anwendung befindet sich ein Navigation Drawer, der es erlaubt, zwischen Chats zu wechseln. Die App-Leiste zeigt Informationen wie den Online-Status, sowie, falls nicht online, das Datum, an dem der Nutzer zuletzt online war, an. Registriert einen Event-Listener für den globalen eventHub, der auf neue Nachrichten reagiert. Der Navigation drawer verschwindet und lässt sich optional öffnen, sollte der Bildschirm weniger als 600px breit sein.
+Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion. Auf der linken Seite der Anwendung befindet sich ein Navigation Drawer, der es erlaubt, zwischen Chats zu wechseln. Die App-Leiste zeigt Informationen wie den Online-Status, sowie, falls nicht online, das Datum, an dem der Nutzer zuletzt online war, an. Registriert einen Event-Listener für den globalen eventHub, der auf neue Nachrichten reagiert. Der Navigation drawer verschwindet und lässt sich optional öffnen, sollte der Bildschirm weniger als 600px breit sein.
 
 ## Methods
 

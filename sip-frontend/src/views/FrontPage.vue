@@ -13,6 +13,9 @@
     </v-app>
 </template>
 <script>
+//@vuese
+//Zeigt das sip-Logo und Partikel im Hintergrund mit
+//https://github.com/marcbruederlin/particles.js
 export default {
     name: "FrontPage",
     data: function(){

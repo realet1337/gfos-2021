@@ -202,6 +202,12 @@ import GroupCreatorDialog from '@/components/GroupCreatorDialog'
 import ChatEditorDialog from '@/components/ChatEditorDialog'
 import Vue from 'vue'
 
+//@vuese
+//Diese Komponente zeigt eine Gruppe an und erlaubt Interaktion.
+//Auf der linken Seite der Anwendung befindet sich ein Navigation Drawer, der es erlaubt, zwischen Chats und Gruppen zu wechseln. Falls der Nutzer administrative Rechte hat, kann er hier auch Chats hinzufügen, bearbeiten und entfernen.
+//Auf der rechten Seite der Anwendung befindet sich ein Navigation Drawer, der alle GruppenMitglieder, nach Rollen sortiert, anzeigt.
+//Die App-Leiste zeigt den Namen des aktuellen Chats, sowie ein Icon für den zweiten Navigation Drawer und, falls der User adminstrative Rechte hat, ein Icon als Link zu den Gruppeneinstellungen an.
+//Die Navigation Drawers verschwindet und lassen sich optional öffnen, sollte der Bildschirm weniger als 600px breit sein.
 export default {
     name: 'Group',
     components: {
@@ -226,15 +232,23 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Zeigt den rechten Navigation Drawer
         toggleUserDrawer: function(){
             this.$data.showUserDrawer = !this.$data.showUserDrawer;
         },
+        //@vuese
+        //Zeigt den UserProfileDialog für einen User
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },
+        //@vuese
+        //Routet die Anwendung zum entsprechenden Chat
         openDirectChat: function(chat){
             this.$router.push('/chat/' + chat.id);
         },
+        //@vuese
+        //Passt die Komponente an um eine gewisse Gruppe zu zeigen
         openGroup: function(group){
             if(group.id !== this.$data.group.id){
                 this.$router.push('/group/' + group.id);
@@ -246,6 +260,8 @@ export default {
                 }
             }
         },
+        //@vuese
+        //Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder öffnet einen Gruppen-Chat auf.
         openChat: function(chat){
 
             if(chat.id !== this.$data.chat.id){
@@ -268,15 +284,8 @@ export default {
                 }
             }
         },
-        findNotSelf: function(chat){
-            if(chat.user1.id == this.$store.state.userId){
-                chat.notSelf = chat.user2;
-            }
-            else{
-                chat.notSelf = chat.user1;
-            }
-            return chat;
-        },
+        //@vuese
+        //Laedt alle Chats, Rollen und Nutzer ohne Rolle einer Gruppe.
         initGroup: function(){
             //get chats
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/chats', {
@@ -367,12 +376,16 @@ export default {
                 }
             });
         },
+        //@vuese
+        //Setzt die Komponente zurück.
         resetView: function(){
             this.$data.chats = [];
             this.$data.chat = undefined;
             this.$data.roles = [];
             this.$data.showUserDrawer = false;
         },
+        //@vuese
+        //Laedt alle Gruppen eines Nutzers
         getGroups: function(){
             //get groups
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/groups', {
@@ -404,6 +417,8 @@ export default {
                 }
             });
         },
+        //@vuese
+        //Oeffnet eine Gruppe anhand ihrer ID
         openGroupId: function(id){
             var groupIndex = this.groups.findIndex(group => group.id === id);
             if(groupIndex === -1){
@@ -421,15 +436,23 @@ export default {
                 this.initGroup();
             }
         },
+        //@vuese
+        //Zeigt den "GroupCreatorDialog"
         showGroupCreator: function(){
             this.$refs.creatorDialog.show();
         },
+        //@vuese
+        //Zeigt den ChatEditorDialog im Erstellungs-Modus
         createChat: function(){
             this.$refs.chatEditorDialog.show();
         },
+        //@vuese
+        //Zeigt den ChatEditorDialog im Bearbeitungs-Modus mit dem "chat" Parameter.
         editChat: function(chat){
             this.$refs.chatEditorDialog.show(chat);
         },
+        //@vuese
+        //Loescht einen Chat beim Server
         deleteChat: function(chat){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/chats/' + chat.id, {
                 headers:{
@@ -449,6 +472,8 @@ export default {
 
     },
     computed: {
+        //@vuese
+        //Bestimmt anhand der geladenen Rollen und der geladenen Gruppe ob der User administrative Rechte hat
         isAdmin: function(){
             if(this.group === undefined){
                 return false;
@@ -469,6 +494,8 @@ export default {
             }
             return false;
         },
+        //@vuese
+        //Findet alle Rollen die Mitglieder haben
         rolesWithMembers: function(){
             return this.roles.filter(role => role.users.length > 0);
         }

@@ -7,7 +7,7 @@ Zeigt einen Navigation Drawer auf der linken Bildschirmseite, ein router-view mi
 <!-- @vuese:Edit:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|getTitle|Generiert den Titel, basierend auf der Route|-|
+|getTitle|Generiert den Titel, basierend auf einem Schluesselwort aus der Route|-|
 
 <!-- @vuese:Edit:methods:end -->
 

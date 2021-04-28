@@ -68,12 +68,14 @@ export default {
         removeUser: function(user){
             this.$refs.removeUserConfirmDialog.show(user);
         },
+        //@vuese
         //Zeigt den AddUserConfirmDialog.
         addUser: function(user){
             if(!this.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user);
             }
         },
+        //@vuese
         //Lädt alle Nutzer.
         fetchUsers: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/users', {
@@ -86,6 +88,7 @@ export default {
                 this.$router.push('/home/groups');
             });
         },
+        //@vuese
         //Lädt die aktuelle Gruppe.
         fetchGroup: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId, {
@@ -98,6 +101,7 @@ export default {
                 this.$router.push('/home/groups');
             })
         },
+        //@vuese
         //Zeigt den UserFinderDialog
         showUserFinder: function(){
             this.$refs.userFinderDialog.show();

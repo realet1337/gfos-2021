@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         //@vuese
-        //ändert das imgFile und sendet ein post-request an "/api/images/groups/pictures" um einen neuen Picture-Code zu erhalten.
+        //Ändert das imgFile und sendet ein post-request an "/api/images/groups/pictures" um einen neuen Picture-Code zu erhalten.
         //@arg file
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){

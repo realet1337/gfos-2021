@@ -21,6 +21,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Bittet den Nutzer um Bestätigung, dass er einen Nutzer aus einer Gruppe/Rolle entfernen will.
 export default {
     name: 'RemoveUserConfirmDialog',
     data: function(){
@@ -31,6 +33,11 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Zeigt den Dialog. Wird dies als show(user) aufgerufen, fragt die Komponente, ob der Nutzer aus einer Gruppe entfernt werden soll.
+        //Wird dies als show(user, role) aufgerufen, fragt die Komponente, ob der Nutzer aus einer Rolle entfernt werden soll.
+        //@arg user
+        //@arg role
         show: function(user, role){
             this.user = user;
 
@@ -43,9 +50,13 @@ export default {
 
             this.isOpen = true;
         },
+        //@vuese
+        //Schließt den Dialog.
         close: function(){
             this.isOpen = false;
         },
+        //@vuese
+        //Entfernt den Nutzer, abhängig davon, wie "show" aufgerufen wurde, beim Server entweder aus einer Gruppe oder aus einer Rolle.
         remove: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/roles/' + this.role.id + '/users/' + this.user.id,  {
                 headers:{

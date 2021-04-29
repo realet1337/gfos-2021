@@ -224,7 +224,7 @@ export default {
     },
     methods: {
         //@vuese
-        //ändert das imgFile und sendet ein post-request an "/api/images/users/pictures" um einen neuen Picture-Code zu erhalten.
+        //Ändert das imgFile und sendet ein post-request an "/api/images/users/pictures" um einen neuen Picture-Code zu erhalten.
         //@arg file
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){
@@ -275,6 +275,9 @@ export default {
             });
             this.$data.processing = true;
         },
+        //@vuese
+        //Testet ob eine E-Mail gültig ist und gibt ggf. eine Fehlermeldung zurück.
+        //@arg v
         testEmail: function(v){
             const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(v) || 'Please enter a valid email'

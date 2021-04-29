@@ -141,6 +141,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Zeigt das Profil eines Nutzers in einem Dialog an. Erlaubt, den Nutzer zu blockieren und einen Chat mit ihm zu öffnen.
 export default {
     name: 'UserProfileDialog',
     components:{
@@ -155,6 +157,8 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Lädt einen Direct-Chat zwischen dem gezeigten Nutzer  und dem eingeloggten Nutzer vom Server und emmitiert 'open-direct-chat' mit ihm.
         openDirectChat: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/chats', {
                     headers:{
@@ -173,10 +177,15 @@ export default {
                     }
                 })
         },
+        //@vuese
+        //Emittiert 'open-group' mit einem Parameter group und schließt den Dialog.
+        //@arg group
         openGroup: function(group){
             this.$emit('open-group', group);
             this.$data.isOpen = false;
         },
+        //@vuese
+        //Setzt die Komponente zurück und zeigt den Dialog.
         show: function(user){
 
             this.sharedGroups = [];
@@ -222,6 +231,8 @@ export default {
                 })
             }
         },
+        //@vuese
+        //Blockiert einen Nutzer beim Server.
         blockUser: function(){
             window.axios.post(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/blocked-users', this.$data.user, {
                 headers:{
@@ -231,6 +242,8 @@ export default {
                 //pass
             });
         },
+        //@vuese
+        //Hebt eine Blockierung beim Server auf.
         unblockUser: function(){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/blocked-users/' + this.$data.user.id, {
                 headers:{
@@ -242,6 +255,8 @@ export default {
         }
     },
     computed: {
+        //@vuese
+        //Ob der gezeigt Nutzer blockiert ist.
         userIsBlocked: function(){
             return this.$store.state.blockedUsers.some(user => user.id == this.$data.user.id);
         }

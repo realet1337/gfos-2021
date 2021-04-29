@@ -22,6 +22,9 @@
 </template>
 <script>
 import Vue from 'vue';
+
+//@vuese
+//Lässt den Nutzer andere Nutzer anhand ihrer ID suchen
 export default {
     name: 'UserFinderDialog',
     data: function(){
@@ -33,11 +36,15 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Setzt den Dialog zurück und zeigt ihn.
         show: function(){
             this.$data.id = '';
             this.$data.errorMessage = '';
             this.$data.isOpen = true;
         },
+        //@vuese
+        //Sucht den Nutzer beim Server. Zeigt eine Fehlermeldung, falls nicht gefunden.
         search: function(){
             if(this.isValid){
                 this.errorMessage = '';
@@ -54,6 +61,8 @@ export default {
                 });
             }
         },
+        //@vuese
+        //Schließt den Dialog.
         close: function(){
             this.$data.isOpen = false;
         }

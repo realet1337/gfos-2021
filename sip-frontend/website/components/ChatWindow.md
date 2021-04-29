@@ -26,8 +26,8 @@ Sobald erstellt, lädt diese Komponente die Berichtigungen zu einem Chat sowie d
 |removeMessage|Entfernt eine Nachricht lokal.|chatMessage|
 |editMessage|Leert das Eingabefeld und aktiviert Bearbeitungsmodus.|chatMessage|
 |updateMessage|Aktualisiert eine Nachricht lokal.|chatMessage|
-|createWatcher|Baut websocket Verbindung auf, um den Chat zu beobachten. Registriert callback für neue Nachrichten.|-|
-|onNewMessage|Callback für den globalen eventHub bei Event "new-message".|chatMessage|
+|createWatcher|Baut WebSockets Verbindung auf, um den Chat zu beobachten. Registriert callback für neue Nachrichten.|-|
+|onNewMessage|Callback für den globalen Event-Hub bei Event "new-message".|chatMessage|
 |getPermissions|Lädt Permissions.|-|
 
 <!-- @vuese:ChatWindow:methods:end -->

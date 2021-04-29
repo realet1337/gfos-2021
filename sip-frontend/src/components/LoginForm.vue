@@ -40,7 +40,8 @@
 import Vue from 'vue'
 
 //@vuese
-//Hier kann sich der Nutzer anmelden
+//@group COMPONENTS
+//Hier kann sich der Nutzer anmelden.
 export default {
     data: function() {
         return {

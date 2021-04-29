@@ -44,17 +44,24 @@
 
 <script>
 //@vuese
-//Ein Menü mit Aktionen für Nachrichten
+//@group COMPONENTS
+//Ein Menü mit Aktionen für Nachrichten.
 export default {
     name: 'MessageOptionsMenu',
     props: {
-        //Die chatMessage, für die das Menü angezeigt wird.
+        //Die Nachricht, für die das Menü angezeigt wird.
         chatMessage: Object
     },
     methods: {
         dummy: function(){
+            //@vuese
+            //Wenn der Nutzer den "Copy" Menüeintrag anklickt.
             this.$emit('copy-to-clipboard');
+            //@vuese
+            //Wenn der Nutzer den "Edit" Menüeintrag anklickt.
             this.$emit('edit-message');
+            //@vuese
+            //Wenn der Nutzer den "Delete" Menüeintrag anklickt.
             this.$emit('delete-message');
         }
     }

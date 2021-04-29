@@ -24,7 +24,8 @@
 import Vue from 'vue';
 
 //@vuese
-//Lässt den Nutzer andere Nutzer anhand ihrer ID suchen
+//@group COMPONENTS
+//Lässt den Nutzer andere Nutzer anhand ihrer ID suchen.
 export default {
     name: 'UserFinderDialog',
     data: function(){

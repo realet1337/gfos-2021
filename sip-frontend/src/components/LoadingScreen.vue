@@ -12,7 +12,8 @@
 <script>
 
 //@vuese
-//Zeigt das Logo mittig auf einem dunkelgrauen Hintergrund
+//@group COMPONENTS
+//Zeigt das Logo mittig auf einem dunkelgrauen Hintergrund.
 export default {
     name: 'LoadingScreen'
 }

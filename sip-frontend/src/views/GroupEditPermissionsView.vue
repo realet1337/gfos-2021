@@ -134,6 +134,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group VIEWS
 //Erlaubt das Hinzufügen, Bearbeiten und Entfernen von Berechtigungen.
 export default {
     name: 'GroupEditPermissionsView',

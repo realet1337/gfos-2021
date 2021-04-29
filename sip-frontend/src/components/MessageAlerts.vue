@@ -39,6 +39,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group COMPONENTS
 //Eine Snackbar, die die neueste erhaltene Nachricht anzeigt. Falls eine neue Nachricht ankommt, wird der Timer zurückgesetzt. 
 //Keine neue Snackbar wird angezeigt. Registriert einen Event-Listener für den globalen Event-Hub.
 export default{

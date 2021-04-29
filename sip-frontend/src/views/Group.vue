@@ -203,6 +203,7 @@ import ChatEditorDialog from '@/components/ChatEditorDialog'
 import Vue from 'vue'
 
 //@vuese
+//@group VIEWS
 //Diese Komponente zeigt eine Gruppe an und erlaubt Interaktion.
 //Auf der linken Seite der Anwendung befindet sich ein Navigation Drawer, der es erlaubt, zwischen Chats und Gruppen zu wechseln. Falls der Nutzer administrative Rechte hat, kann er hier auch Chats hinzufügen, bearbeiten und entfernen.
 //Auf der rechten Seite der Anwendung befindet sich ein Navigation Drawer, der alle GruppenMitglieder, nach Rollen sortiert, anzeigt.

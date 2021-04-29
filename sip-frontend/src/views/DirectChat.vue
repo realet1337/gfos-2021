@@ -114,10 +114,11 @@ import LoadingScreen from '@/components/LoadingScreen'
 import UserFinderDialog from '@/components/UserFinderDialog'
 
 //@vuese
+//@group VIEWS
 //Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion.
 //Auf der linken Seite der Anwendung befindet sich ein Navigation Drawer, der es erlaubt, zwischen Chats zu wechseln.
 //Die App-Leiste zeigt Informationen wie den Online-Status, sowie, falls nicht online, das Datum, an dem der Nutzer zuletzt online war, an.
-//Registriert einen Event-Listener für den globalen eventHub, der auf neue Nachrichten reagiert.
+//Registriert einen Event-Listener für den globalen Event-Hub, der auf neue Nachrichten reagiert.
 //Der Navigation drawer verschwindet und lässt sich optional öffnen, sollte der Bildschirm weniger als 600px breit sein.
 export default {
     name: 'DirectChat',
@@ -215,7 +216,7 @@ export default {
             this.$refs.finderDialog.show();
         },
         //@vuese
-        //(async) Sendet eine Server-Abfrage um alle Chats zu erhalten und ändert die Komponente um diese anzuzeigen.
+        //Sendet eine Server-Abfrage um alle Chats zu erhalten und ändert die Komponente um diese anzuzeigen.
         fetchChats: function(){
             window.axios.get(Vue.prototype.$getApiUrl('http') + '/users/' + this.$store.state.userId + '/direct-chats/', {
                 headers:{

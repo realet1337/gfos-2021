@@ -40,6 +40,7 @@ import Vue from 'vue'
 import UserFinderDialog from '@/components/UserFinderDialog'
 
 //@vuese
+//@group VIEWS
 //Zeigt alle Direct-Chats des eigenen Users in Form von Karten
 export default {
     name: 'HomeDirectChats',

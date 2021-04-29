@@ -34,6 +34,7 @@
 import Vue from 'vue';
 
 //@vuese
+//@group COMPONENTS
 //Erlaubt das Erstellen von Gruppen samt Namen, Beschreibung und Bild.
 export default {
     name: 'GroupCreatorDialog',
@@ -102,6 +103,9 @@ export default {
                 }
             }).then((response) => {
                 this.close();
+                //@vuese
+                //Emittitet die der erstellten Gruppe.
+                //@arg group
                 this.$emit('open-group-id', response.data.id);
                 // this.$emit('show-group', response.data);
             }, () => {

@@ -30,6 +30,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group COMPONENTS
 //Zeigt für Direkt-Unterhaltungen auf einer Karte sowohl den anderen Nutzer als auch die zuletzt gesendet Nachricht an.
 export default {
     name: 'ChatCard',

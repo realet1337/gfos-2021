@@ -17,6 +17,7 @@
 import Vue from 'vue';
 
 //@vuese
+//@group COMPONENTS
 //Erlaubt das Bearbeiten von Gruppenchats.
 export default {
     name: 'ChatEditorDialog',

@@ -23,14 +23,14 @@
     </v-card>
 </template>
 <script>
-import Vue from 'vue'
 
 //@vuese
+//@group COMPONENTS
 //Zeigt den Namen, das Bild und die Beschreibung einer Gruppe auf einer Karte.
 export default {
     name: 'GroupCard',
     props: {
-        //Die angezeigte Gruppe
+        //Die angezeigte Gruppe.
         group: Object
     },
 }

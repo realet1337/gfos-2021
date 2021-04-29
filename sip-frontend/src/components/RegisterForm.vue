@@ -192,7 +192,13 @@
 import Vue from 'vue'
 
 //@vuese
-//Erlaubt Nutzerregistrierung.
+//@group COMPONENTS
+//Erlaubt Nutzerregistrierung  in 3 Schritten:
+//<ol>
+//<li>Name + Login-Informationen</li>
+//<li>Profil</li>
+//<li>Einstellungen</li>
+//</ol>
 export default {
     data: function() {
         return {
@@ -210,7 +216,6 @@ export default {
                 messageChunkSize: 50,
                 maxLoadedMessages: 100,
             },
-
             //woulda loved to use an array but vue
             showPassword1: false,
             showPassword2: false,

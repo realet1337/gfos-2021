@@ -73,6 +73,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group VIEWS
 //Erlaubt das Bearbeiten grundlegender Eigenschaften einer Gruppe wie z.B. ihren Namen und das Löschen einer Gruppe.
 export default {
     name: 'GroupEditOverview',

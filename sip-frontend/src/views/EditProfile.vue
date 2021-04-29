@@ -103,6 +103,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group VIEWS
 //Erlaubt, das Profil des eigenen Nutzers zu bearbeiten, das Passwort zu ändern oder den Account zu löschen.
 export default {
     name: 'EditProfile',

@@ -22,6 +22,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group COMPONENTS
 //Bittet den Nutzer um Bestätigung, dass er einen Nutzer zu einer Gruppe/Rolle hinzufügen will.
 export default {
     name: 'AddUserConfirmDialog',
@@ -64,7 +65,7 @@ export default {
                         'Authorization': 'Bearer ' + this.$store.state.token,
                     }
                 }).then(() => {
-                    //Wenn der Nutzer  hinzugefügt wurde
+                    //Wenn der Nutzer  hinzugefügt wurde.
                     //@arg User, falls er zu einer Rolle und nicht zu einer Gruppe hinzugefügt wurde.
                     this.$emit('added');
                     this.close();

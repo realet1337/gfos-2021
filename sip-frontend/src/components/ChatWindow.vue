@@ -150,6 +150,7 @@ import Vue from 'vue'
 import MessageOptionsMenu from './MessageOptionsMenu'
 
 //@vuese
+//@group COMPONENTS
 //Sobald erstellt, lädt diese Komponente die Berichtigungen zu einem Chat sowie die neuesten Nachrichten, die Anzahl ist definiert durch userProfile.messageChunkSize im store.
 //Falls der Nutzer nicht lesen oder schreiben darf, werden jeweils schriftzüge angezeigt. Gegebenenfalls verschwindet das Eingabefeld.
 //Nachrichten werden gruppiert, falls sie vom selben Nutzer stammen, am selben Tag geschrieben
@@ -462,7 +463,7 @@ export default {
 
         },
         //@vuese
-        //Baut websocket Verbindung auf, um den Chat zu beobachten. Registriert callback für neue Nachrichten.
+        //Baut WebSockets Verbindung auf, um den Chat zu beobachten. Registriert callback für neue Nachrichten.
         createWatcher: function(){
             //create watcher
             var _this = this;
@@ -487,7 +488,7 @@ export default {
             this.$data.ws = ws;
         },
         //@vuese
-        //Callback für den globalen eventHub bei Event "new-message".
+        //Callback für den globalen Event-Hub bei Event "new-message".
         //@arg chatMessage
         onNewMessage: function(chatMessage){
             if(this.$data.hasNewest && chatMessage.chat.id == this.$route.params.chatId){

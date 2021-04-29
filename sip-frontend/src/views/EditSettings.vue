@@ -46,6 +46,7 @@
 import Vue from 'vue';
 
 //@vuese
+//@group VIEWS
 //Erlaubt, die User-Einstellungen zu bearbeiten.
 export default {
     name: 'EditSettings',

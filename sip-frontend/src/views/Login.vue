@@ -28,6 +28,7 @@ import LoginForm from '@/components/LoginForm'
 import store from '@/store/'
 
 //@vuese
+//@group VIEWS
 //Zeigt das LoginForm. Initialisiert die App, falls ein gültiges Token im Cookie gefunden werden kann.
 export default {
     components: {

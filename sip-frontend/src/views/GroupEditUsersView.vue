@@ -48,6 +48,7 @@ import RemoveUserConfirmDialog from '@/components/RemoveUserConfirmDialog'
 import UserFinderDialog from '@/components/UserFinderDialog'
 
 //@vuese
+//@group VIEWS
 //Erlaubt, Nutzer zu Gruppen hinzuzufügen und sie zu entfernen.
 export default {
     name: 'GroupEditUsersView',

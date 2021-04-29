@@ -142,6 +142,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group COMPONENTS
 //Zeigt das Profil eines Nutzers in einem Dialog an. Erlaubt, den Nutzer zu blockieren und einen Chat mit ihm zu öffnen.
 export default {
     name: 'UserProfileDialog',
@@ -169,6 +170,9 @@ export default {
                         user2: this.$store.state.userId
                     }
                 }).then((response) => {
+                    //@vuese
+                    //Wenn der Nutzer auf "MESSAGE" klickt um den Direct-Chat zu öffnen.
+                    //@arg chat
                     this.$emit('open-direct-chat', response.data);
                     this.$data.isOpen = false;
                 },(error) => {
@@ -181,6 +185,9 @@ export default {
         //Emittiert 'open-group' mit einem Parameter group und schließt den Dialog.
         //@arg group
         openGroup: function(group){
+            //@vuese
+            //Wenn der Nutzer eine Gruppe anklickt.
+            //@arg group
             this.$emit('open-group', group);
             this.$data.isOpen = false;
         },

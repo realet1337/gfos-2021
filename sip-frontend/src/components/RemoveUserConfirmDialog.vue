@@ -22,6 +22,7 @@
 import Vue from 'vue'
 
 //@vuese
+//@group COMPONENTS
 //Bittet den Nutzer um Bestätigung, dass er einen Nutzer aus einer Gruppe/Rolle entfernen will.
 export default {
     name: 'RemoveUserConfirmDialog',
@@ -63,6 +64,9 @@ export default {
                     'Authorization': 'Bearer ' + this.$store.state.token,
                 }
             }).then(() => {
+                //@vuese
+                //Wenn der Nutzer erfolgreich entfernt wurde
+                //@arg user
                 this.$emit('removed', this.user);
                 this.close();
             }, () => {

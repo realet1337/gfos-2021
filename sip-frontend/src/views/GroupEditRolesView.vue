@@ -154,6 +154,7 @@ import AddUserConfirmDialog from '@/components/AddUserConfirmDialog'
 import RemoveUserConfirmDialog from '@/components/RemoveUserConfirmDialog'
 
 //@vuese
+//@group VIEWS
 //Erlaubt, Rollen zu kreieren, zu bearbeiten und zu löschen.
 export default {
     name: 'GroupEditRolesView',

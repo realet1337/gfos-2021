@@ -41,6 +41,9 @@
                     ></v-file-input>
                 </v-col>
             </v-row>
+            <v-row v-if="imageError" no-gutters>
+                <span class="red">Can't use this image.</span>
+            </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" class="mx-auto">
                     <v-btn :disabled="!isValid" width="150" large class="ml-auto mt-2" color="primary" depressed @click="submit">UPDATE</v-btn>
@@ -84,6 +87,7 @@ export default {
             imgFile: undefined,
             group: undefined,
             showDeleteDialog: false,
+            imageError: false,
         }
     },
     methods: {
@@ -99,6 +103,7 @@ export default {
                 this.$data.imgFile = undefined;
             }
             else{
+                this.imageError = false;
                 this.$data.imgFile = file;
                 const formData = new FormData();
                 formData.append('file', file);
@@ -111,6 +116,10 @@ export default {
                     cancelToken: cancelTokenSource.token
                 }).then((response) => {
                     this.$data.group.picture = response.data.picture;
+                }, () => {
+                    this.imageError = true;
+                    this.imgFile = undefined;
+                    this.picture = undefined; 
                 })
             }
         },

@@ -59,19 +59,36 @@ export default {
         //@vuese
         //Entfernt den Nutzer, abhängig davon, wie "show" aufgerufen wurde, beim Server entweder aus einer Gruppe oder aus einer Rolle.
         remove: function(){
-            window.axios.delete(Vue.prototype.$getApiUrl('http') + '/roles/' + this.role.id + '/users/' + this.user.id,  {
-                headers:{
-                    'Authorization': 'Bearer ' + this.$store.state.token,
-                }
-            }).then(() => {
-                //@vuese
-                //Wenn der Nutzer erfolgreich entfernt wurde
-                //@arg user
-                this.$emit('removed', this.user);
-                this.close();
-            }, () => {
-                this.$router.push('/home/groups');
-            });
+            if(this.role){
+                window.axios.delete(Vue.prototype.$getApiUrl('http') + '/roles/' + this.role.id + '/users/' + this.user.id,  {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    //@vuese
+                    //Wenn der Nutzer erfolgreich entfernt wurde
+                    //@arg user
+                    this.$emit('removed', this.user);
+                    this.close();
+                }, () => {
+                    this.$router.push('/home/groups');
+                });
+            }
+            else{
+                window.axios.delete(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/users/' + this.user.id,  {
+                    headers:{
+                        'Authorization': 'Bearer ' + this.$store.state.token,
+                    }
+                }).then(() => {
+                    //@vuese
+                    //Wenn der Nutzer erfolgreich entfernt wurde
+                    //@arg user
+                    this.$emit('removed', this.user);
+                    this.close();
+                }, () => {
+                    this.$router.push('/home/groups');
+                });
+            }
         }
     }
 }

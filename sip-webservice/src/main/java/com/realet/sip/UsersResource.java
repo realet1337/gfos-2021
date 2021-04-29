@@ -449,8 +449,12 @@ public class UsersResource {
         user.setPass(BCrypt.withDefaults().hashToString(10, user.getPass().toCharArray()));
         UserProfile userProfile;
 
-        if(user.getUsername() == null){
+        if(user.getUsername() == null || user.getEmail() == null){
             return Response.status(400).build();
+        }
+
+        if(UsersFacade.findByEmail(user.getEmail()).isPresent()){
+            return Response.status(400).entity("Email is taken").build();
         }
 
         Pattern p = Pattern.compile("\\S(.*\\S)?", Pattern.DOTALL);
@@ -481,17 +485,7 @@ public class UsersResource {
         }
         catch(PersistenceException e){
             e.printStackTrace();
-
-            //find column
-            String errorMessage = e.getMessage().split(" ")[1];
-            errorMessage = errorMessage.substring(1, errorMessage.length()-1);
-
-            if(errorMessage.equals("e_mail")){
-                return Response.status(400).entity("Email is already in use.").build();
-            }
-            else{
-                return Response.status(400).build();
-            }
+            return Response.serverError().build();
         }
     }
 

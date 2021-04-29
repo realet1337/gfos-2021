@@ -11,10 +11,10 @@ import './assets/css/main.css'
 Vue.prototype.$eventHub = new Vue();
 
 Vue.prototype.$notificationTimeout = 5000;
-Vue.prototype.$apiHost = "192.168.178.39:8080/sip-webservice"
-Vue.prototype.$uploadHost ="192.168.178.39:8080/upload"
-// Vue.prototype.$apiHost = ""; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
-// Vue.prototype.$uploadHost = ""; //empty if deployed on same server otherwise point to upload location, e.g.: 192.168.1.1:8080/upload (no trailing '/', no protocol)
+// Vue.prototype.$apiHost = "192.168.178.39:8080/sip-webservice"
+// Vue.prototype.$uploadHost ="192.168.178.39:8080/upload"
+Vue.prototype.$apiHost = ""; //empty if deployed on same server otherwise point to api location, e.g.: 192.168.1.1:8080/api (no trailing '/', no protocol)
+Vue.prototype.$uploadHost = ""; //empty if deployed on same server otherwise point to upload location, e.g.: 192.168.1.1:8080/upload (no trailing '/', no protocol)
 
 Vue.prototype.$getApiUrl = function(protocol){
 	if(Vue.prototype.$apiHost){

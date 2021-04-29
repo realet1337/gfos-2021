@@ -20,6 +20,9 @@
                             label="Avatar"
                         ></v-file-input>
                     </v-row>
+                    <v-row v-if="imageError" no-gutters>
+                        <span class="red">Can't use this image.</span>
+                    </v-row>
                     <p class="secondary--text text--lighten-2"><b>Pick a name:</b></p>
                     <v-text-field class="mt-5 mb-n3" filled v-model="name" :rules="[v => !!v || 'The group needs a name', v => /\S/.test(v) || 'The group needs a name']"></v-text-field>
                     <p class="secondary--text text--lighten-2"><b>Describe the group:</b></p>
@@ -47,6 +50,7 @@ export default {
             cancelTokenSource: undefined,
             imgFile: undefined,
             picture: undefined,
+            imageError: false,
         }
     },
     methods: {
@@ -62,6 +66,7 @@ export default {
                 this.$data.imgFile = undefined;
             }
             else{
+                this.imageError = false;
                 this.$data.imgFile = file;
                 const formData = new FormData();
                 formData.append('file', file);
@@ -74,7 +79,11 @@ export default {
                     cancelToken: cancelTokenSource.token
                 }).then((response) => {
                     this.$data.picture = response.data.picture;
-                })
+                }, () => {
+                    this.imageError = true;
+                    this.imgFile = undefined;
+                    this.picture = undefined; 
+                });
             }
         },
         //Setzt die Komponente zurück und zeigt den Dialog.

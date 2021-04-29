@@ -106,6 +106,9 @@
                                 label="Avatar"
                             ></v-file-input>
                         </v-row>
+                        <v-row v-if="imageError" no-gutters>
+                            <span class="red">Can't use this image.</span>
+                        </v-row>
                         <v-row>
                             <v-col>
                                 <p class="label-text mb-1 ml-3"><b>INFO</b></p>
@@ -240,6 +243,7 @@ export default {
                 this.$data.imgFile = undefined;
             }
             else{
+                this.imageError = false;
                 this.$data.imgFile = file;
                 const formData = new FormData();
                 formData.append('file', file);
@@ -252,12 +256,16 @@ export default {
                     cancelToken: cancelTokenSource.token
                 }).then((response) => {
                     this.$data.picture = response.data.picture;
-                })
+                }, () => {
+                    this.imageError = true;
+                    this.imgFile = undefined;
+                    this.picture = undefined; 
+                });
             }
         },
         //@vuese
         //Erstellt den Nutzer beim Server. Falls dies gelingt, wird die Anwendung nach "/login" geroutet.
-        onSubmit: async function() {
+        onSubmit: function() {
             var userPayload = {
                 username: this.$data.username,
                 email: this.$data.email,
@@ -265,7 +273,7 @@ export default {
                 userProfiles: [this.$data.config]
             };
             if(this.$data.picture){
-                userPayload.profilePicture = await this.$data.picture;
+                userPayload.profilePicture = this.$data.picture;
             }
             if(this.$data.userInfo){
                 userPayload.info = this.$data.userInfo;

@@ -67,6 +67,7 @@ public class ImagesResource {
         
         BufferedImage image = null;
         try {
+            iis = ImageIO.createImageInputStream(new ByteArrayInputStream(form.getData()));
             reader.setInput(iis);
             image = reader.read(0);
         } catch (IOException e) {
@@ -76,7 +77,10 @@ public class ImagesResource {
         if(image == null){
             return Response.status(400).build();
         }
-        
+        BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
+        image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        newBufferedImage.getGraphics().drawImage(image, 0, 0, null);
+
         String outName = "";
         File outputFile;
         try {
@@ -97,7 +101,6 @@ public class ImagesResource {
                 path = path + "/pic/user/" + outName + ".jpg";
 
                 outputFile = new File(path);
-                outputFile.getParentFile().mkdirs();
 
             }while(outputFile.exists()); //Just keep going until we get one.
 
@@ -106,9 +109,10 @@ public class ImagesResource {
             return Response.status(500).build();
         }
 
+        outputFile.getParentFile().mkdirs();
 
         try (OutputStream os = new FileOutputStream(outputFile)) {
-            ImageIO.write(image, "jpg", os);
+            ImageIO.write(newBufferedImage, "jpg", os);
         } catch (IOException e) {
             return Response.status(500).entity("Couldn't create image.").build();
         }

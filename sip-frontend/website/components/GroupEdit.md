@@ -7,7 +7,7 @@ Zeigt einen Navigation Drawer auf der linken Bildschirmseite, ein <pre>&lt;route
 <!-- @vuese:GroupEdit:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|getTitle|Generiert den Titel, basierend auf einem Schluesselwort aus der Route.|-|
+|getTitle|Generiert den Titel, basierend auf einem Schluesselwort aus der Route.|keyword|
 
 <!-- @vuese:GroupEdit:methods:end -->
 

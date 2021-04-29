@@ -7,7 +7,7 @@ Bittet den Nutzer um Bestätigung, dass er einen Nutzer zu einer Gruppe/Rolle hi
 <!-- @vuese:AddUserConfirmDialog:events:start -->
 |Event Name|Description|Parameters|
 |---|---|---|
-|added|-|-|
+|added|Wenn der Nutzer  hinzugefügt wurde|User, falls er zu einer Rolle und nicht zu einer Gruppe hinzugefügt wurde.|
 
 <!-- @vuese:AddUserConfirmDialog:events:end -->
 

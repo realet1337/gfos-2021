@@ -11,14 +11,14 @@ Erlaubt, Rollen zu kreieren, zu bearbeiten und zu löschen.
 |submit|Aktualisiert eine Rolle beim Server, falls sie eine ID hat, falls nicht, muss die Rolle neu sein und wird neu hinzugefügt.|-|
 |createRole|Erstellt lokal eine neue Rolle ohne ID.|-|
 |deleteRole|Löscht eine Rolle beim Server.|-|
-|removeUser|Zeigt den "RemoveUserConfirmDialog" mit einem "user" Parameter.|-|
-|addUser|Zeigt den "AddUserConfirmDialog" mit einem "user" Parameter.|-|
+|removeUser|Zeigt den "RemoveUserConfirmDialog" mit einem "user" Parameter.|user|
+|addUser|Zeigt den "AddUserConfirmDialog" mit einem "user" Parameter.|user|
 |showUserFinder|Zeigt einen Dialog mit allen Gruppenmitgliedern, die nicht Teil der Rolle sind. Dieser erlaubt es, Nutzer zur Rolle hinzuzufügen.|-|
-|localRemoveUserFromRole|Entfernt einen Nutzer aus dem "user"-Parameter lokal aus einer Rolle.|-|
-|localAddUserToRole|Fügt einen Nutzer aus dem "user"-Parameter lokal zu einer Rolle hinzu.|-|
+|localRemoveUserFromRole|Entfernt einen Nutzer aus dem "user"-Parameter lokal aus einer Rolle.|user|
+|localAddUserToRole|Fügt einen Nutzer aus dem "user"-Parameter lokal zu einer Rolle hinzu.|user|
 |fetchUsers|Lädt alle Mitglieder einer Gruppe.|-|
-|swapRolesUpwards|Verschiebt eine Rolle mit index von Parameter "idx" nach oben. Überprüft nicht, ob dies möglich ist.|-|
-|swapRolesDownwards|Verschiebt eine Rolle mit index von Parameter "idx" nach unten. Überprüft nicht, ob dies möglich ist.|-|
+|swapRolesUpwards|Verschiebt eine Rolle mit index von Parameter "idx" nach oben. Überprüft nicht, ob dies möglich ist.|idx|
+|swapRolesDownwards|Verschiebt eine Rolle mit index von Parameter "idx" nach unten. Überprüft nicht, ob dies möglich ist.|idx|
 |showPriorityEditor|Zeigt einen Dialog mit einer Liste aller Rollen. Dieser erlaubt, die Reihenfolge dieser Rollen zu ändern.|-|
 |updateRolePriorities|Aktualisiert die Prioritäten der Rollen beim Server.|-|
 

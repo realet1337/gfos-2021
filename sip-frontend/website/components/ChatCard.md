@@ -7,7 +7,7 @@ Zeigt für Direkt-Unterhaltungen auf einer Karte sowohl den anderen Nutzer als a
 <!-- @vuese:ChatCard:props:start -->
 |Name|Description|Type|Required|Default|
 |---|---|---|---|---|
-|chat|-|—|`false`|-|
+|chat|Der angezeigte Chat|`Object`|`false`|-|
 
 <!-- @vuese:ChatCard:props:end -->
 

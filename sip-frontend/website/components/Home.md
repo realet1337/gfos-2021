@@ -7,7 +7,7 @@ Der Home-Screen zeigt eine App Bar und eine Liste von Chats oder Gruppen in eine
 <!-- @vuese:Home:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|openChat|Routet die Anwendung zu einem Chat.|-|
+|openChat|Routet die Anwendung zu einem Chat.|chat|
 |fetchUser|Lädt den eigenen User.|-|
 |logout|Loggt den User beim Server aus.|-|
 

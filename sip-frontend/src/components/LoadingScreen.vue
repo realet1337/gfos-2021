@@ -9,3 +9,11 @@
         </v-container>
     </v-main>
 </template>
+<script>
+
+//@vuese
+//Zeigt das Logo mittig auf einem dunkelgrauen Hintergrund
+export default {
+    name: 'LoadingScreen'
+}
+</script>

@@ -7,7 +7,7 @@ Zeigt einen Navigation Drawer auf der linken Bildschirmseite, ein <pre>&lt;route
 <!-- @vuese:Edit:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|getTitle|Generiert den Titel, basierend auf einem Schlüsselwort aus der Route.|-|
+|getTitle|Generiert den Titel, basierend auf einem Schlüsselwort aus der Route.|keyword|
 
 <!-- @vuese:Edit:methods:end -->
 

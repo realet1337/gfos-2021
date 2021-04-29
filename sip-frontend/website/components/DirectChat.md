@@ -7,12 +7,12 @@ Diese Komponente zeigt eine Direkt-Unterhaltung an und erlaubt Interaktion. Auf 
 <!-- @vuese:DirectChat:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|showUser|Zeigt den UserProfileDialog mit dem entsprechenden User.|-|
-|openChat|Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder ruft "openDirectChat" auf.|-|
-|openDirectChat|Passt die Komponente an um einen anderen Chat anzuzeigen.|-|
-|openGroup|Routet die Anwendung zur "Group"-Komponente mit der entsprechenden Id.|-|
-|findNotSelf|Findet den  User eines Chats, der nicht mit der im Store gespeicherten userId übereinstimmt und fügt ihn dem Chat als "notSelf" hinzu.|-|
-|onNewMessage|Verschiebt den Chat einer neuen Nachricht in der Liste nach oben.|-|
+|showUser|Zeigt den UserProfileDialog mit dem entsprechenden User.|user|
+|openChat|Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder ruft "openDirectChat" auf.|chat|
+|openDirectChat|Passt die Komponente an um einen anderen Chat anzuzeigen.|chat|
+|openGroup|Routet die Anwendung zur "Group"-Komponente mit der entsprechenden Id.|group|
+|findNotSelf|Findet den  User eines Chats, der nicht mit der im Store gespeicherten userId übereinstimmt und fügt ihn dem Chat als "notSelf" hinzu.|chat|
+|onNewMessage|Verschiebt den Chat einer neuen Nachricht in der Liste nach oben.|message|
 |showUserFinder|Zeigt den UserFinderDialog.|-|
 |fetchChats|(async) Sendet eine Server-Abfrage um alle Chats zu erhalten und ändert die Komponente um diese anzuzeigen.|-|
 

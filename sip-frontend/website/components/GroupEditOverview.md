@@ -7,7 +7,7 @@ Erlaubt das Bearbeiten grundlegender Eigenschaften einer Gruppe wie z.B. ihren N
 <!-- @vuese:GroupEditOverview:methods:start -->
 |Method|Description|Parameters|
 |---|---|---|
-|updateFile|ändert das imgFile und sendet ein post-request an "/api/images/groups/pictures" um einen neuen Picture-Code zu erhalten.|-|
+|updateFile|ändert das imgFile und sendet ein post-request an "/api/images/groups/pictures" um einen neuen Picture-Code zu erhalten.|file|
 |submit|Aktualisiert die Gruppe beim Server.|-|
 |openDeleteDialog|Öffnet einen Dialog, der das Löschen der Gruppe bestätigen lässt.|-|
 |deleteGroup|Löscht die Gruppe beim Server.|-|

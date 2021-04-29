@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class ChatWebsocketManagement {
 
     /**
-     * Format: chatId =&gt; {@link javax.websocket.Session}
+     * Format: chatId =&gt; {@link javax.websocket.Session}.
      */
     static HashMap<Long, ArrayList<javax.websocket.Session>> sessions = new HashMap<>();
 

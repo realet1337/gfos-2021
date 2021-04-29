@@ -16,8 +16,11 @@ import javax.websocket.server.ServerEndpoint;
  * Diese Klasse akzeptiert WebSockets-Verbindungen nach "/chats/{chatId}/websockets". 
  * Diese werden benutzt, um live Ergeignisse aus einen bestimmten Chat an den Client zu übermitteln.
  * Das schliesst neue Nachrichten aus, da diese durch die {@link UserWebsocketResource} gesendet werden.
- * <br>Dies geschieht in folgendem Format:<br>
+ * <br>
+ * Dies geschieht in folgendem Format:
+ * <br>
  * Nachricht geändert: "updated: &lt;{@link ChatMessage} als JSON&gt;"
+ * <br>
  * Nachricht geändert: "removed: &lt;{@link ChatMessage} als JSON&gt;"
  */
 @ServerEndpoint("/chats/{chatId}/websockets")

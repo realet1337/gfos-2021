@@ -16,8 +16,10 @@ import javax.persistence.TemporalType;
 
 /**
  * Die {@link Session}-Klasse modelliert eine Sitzung.
+ * <br>
  * Definiert eine NamedQuery "Session.getAllUserSessionsExcept", welche alle {@link Session Sessions} eines User, die nicht ein bestimmtes token haben, findet. 
-    *  Akzeptiert zwei Parameter: "user", "token".
+ * Akzeptiert zwei Parameter: "user", "token".
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "Sessions".
  */
 @Entity

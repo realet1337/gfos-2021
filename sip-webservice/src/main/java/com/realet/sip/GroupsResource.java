@@ -618,7 +618,7 @@ public class GroupsResource {
 
     /**
      * Verändert {@link Role#priority} aller {@link Role Roles} in einer {@link Group}.
-     * Akzeptiert einen JSON-Array mit den {@link Role#id} ALLER {@link Group#roles} sortiert nach Prioritöt (wichtigste Rollen zuerst).
+     * Akzeptiert einen JSON-Array mit den {@link Role#id} ALLER {@link Group#roles} sortiert nach Priorität (wichtigste Rollen zuerst).
      * @param groupId
      * @param requestBody
      * @param token

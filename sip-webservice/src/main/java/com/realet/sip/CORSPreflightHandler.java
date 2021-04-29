@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 /**
- * Beantworte all OPTIONS-Anfragen mit den korrekten HTTP-Header und einer 200 OK Antwort, um CORS zu erlauben.
+ * Beantworte all OPTIONS-Anfragen mit den korrekten HTTP-Headers und einer 200 OK Antwort, um CORS zu erlauben.
  */
 @Path("/")
 public class CORSPreflightHandler {

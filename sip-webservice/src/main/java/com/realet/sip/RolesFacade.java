@@ -7,12 +7,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Manager-Klasse für {@link Role Roles}
+ * Manager-Klasse für {@link Role Roles}.
  */
 public class RolesFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link RolesFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link RolesFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

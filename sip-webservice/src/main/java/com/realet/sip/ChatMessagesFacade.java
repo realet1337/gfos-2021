@@ -20,12 +20,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 /**
- * Manager-Klasse für {@link ChatMessage ChatMessages}
+ * Manager-Klasse für {@link ChatMessage ChatMessages}.
  */
 public class ChatMessagesFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link ChatMessagesFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link ChatMessagesFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

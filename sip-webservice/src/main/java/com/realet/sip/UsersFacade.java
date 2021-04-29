@@ -8,12 +8,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
 /**
- * Manager-Klasse für {@link User Users}
+ * Manager-Klasse für {@link User Users}.
  */
 public class UsersFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link UsersFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link UsersFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 
@@ -67,7 +67,7 @@ public class UsersFacade {
     }
 
     /**
-     * Findet alle {@link Chat Chats} einer {@link Group}
+     * Findet alle {@link User}, die einen bestimmten {@link Chat} lesen können.
      */
     public static List<User> findGroupChatReaders(long chatId, long groupId){
 

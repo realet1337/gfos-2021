@@ -6,12 +6,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Manager-Klasse für {@link UserProfile UserProfiles}
+ * Manager-Klasse für {@link UserProfile UserProfiles}.
  */
 public class UserProfilesFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link UserProfilesFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link UserProfilesFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

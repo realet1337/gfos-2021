@@ -20,13 +20,16 @@ import javax.persistence.Table;
  * oder andernfalls die Zugangsberechtigungen einer {@link Role} zu einem {@link Chat Chat}. 
  * {@link Permission Permissions} funktionieren nach OR-Prinzip. 
  * Wenn also eine {@link Permission} Zugriff erlaubt, ist es irrelevant, wie viele {@link Permission Permissions} dies nicht tun.
+ * <br>
  * Definiert eine NamedQuery "Permission.findByRoleAndChat", welche eine {@link Permission} einer {@link Role} zu einem {@link Chat} findet. Akzeptiert zwei Parameter: "role", "chat".
+ * <br>
  * Definiert eine NamedNativeQuery "Permission.findGroupChatPermissions", welche 1-3 relevante {@link Permission Permissions} eines {@link User Users} zu einem {@link Chat} findet; 
  *  Einen Eintrag mit {@link Permission#canRead} == true, falls vorhanden, 
  *  einen Eintrag mit {@link Permission#canWrite} == true, falls vorhanden 
  *  und die Grundberechtigungen zu einem {@link Chat},
  *  was alle notwendingen Informationen bereitstellt um die Berechtigungen eines {@link User Users} zu erfahren.
  *  Akzeptiert einen Parameter: 1: {@link User#id}, 2: {@link Chat#id}.
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "Permissions".
  */
 @Entity

@@ -71,7 +71,7 @@ public class ChatsResource {
     // }
 
     /**
-     * Findet eine Direkt-Unterhaltung zweier {@link User}
+     * Findet eine Direkt-Unterhaltung zweier {@link User}.
      * @param user1Id
      * @param user2Id
      * @param token

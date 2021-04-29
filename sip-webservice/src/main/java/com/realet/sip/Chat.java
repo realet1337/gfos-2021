@@ -22,9 +22,13 @@ import org.hibernate.annotations.CascadeType;
 
 /**
  * Die {@link Chat} Klasse ist ein Behälter für {@link ChatMessage ChatMessages}. Ein {@link Chat} kann entweder zu einer {@link Group} gehören, in diesem Fall hat er einen {@link Chat#name name}, oder zwei {@link User Users} haben, wodurch er eine Direkte-Unterhaltung modelliert. 
+ * <br>
  * Definiert eine NamedQuery "Chat.findByUsers", welchen eine Direkt-Unterhaltung zweier {@link User} findet. Akzeptiert zwei Parameter: "user1", "user2".
+ * <br>
  * Definiert eine NamedQuery "Chat.findByGroup", welche alle {@link Chat Chats} einer {@link Group} findet. Akzeptiert einen Parameter: "group".
- * Definiert eine NamedNativeQuery "Chat.findetDirectChatsByUser", welche alle Direkt-Unterhaltungen eines {@link User Users} findet und diese nach {@link ChatMessage#sent} der zuletzt gesendeten {@link ChatMessage} sortiert. Akzeptiert einen Parameter: 1: {@link User#id}.
+ * <br>
+ * Definiert eine NamedNativeQuery "Chat.findDirectChatsByUser", welche alle Direkt-Unterhaltungen eines {@link User Users} findet und diese nach {@link ChatMessage#sent} der zuletzt gesendeten {@link ChatMessage} sortiert. Akzeptiert einen Parameter: 1: {@link User#id}.
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "Chats".
  */
 @Entity

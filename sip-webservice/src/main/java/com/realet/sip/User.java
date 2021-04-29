@@ -27,12 +27,16 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 /**
  * Die {@link User}-Klasse repraesentiert einen Nutzer der Applikation. Ein {@link User} enthält die Anmelde-, sowie Anzeigeinformationen eines Nutzers.
+ * <br>
  * Definiert eine NamedQuery "User.findByEmail", welche einen {@link User} anhand seiner {@link User#email} findet. 
  *  Akzeptiert einen Parameter: "email".
+ * <br>
  * Definiert eine NamedNativeQuery "User.findBasicGroupMembers", welche alle {@link User} ohne {@link Role} einer {@link Group} findet. 
  *  Akzeptiert einen Parameter: 1: {@link Group#id}.
+ * <br>
  * Definiert eine NamedNativeQuery "User.findGroupChatReaders", welche alle {@link User}, die einen bestimmten {@link Chat} lesen können, findet. 
  *  Akzeptiert einen Parameter: 1: {@link Chat#id}.
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "Users".
  */
 @Entity
@@ -340,9 +344,6 @@ public class User{
         this.profilePicture = profilePicture;
     }
 
-    /**
-     * Diese Methode vergleicht nur die {@link User#id} beider Objekte.
-     */
     public User(String username, String email, String pass, String info, String status, Date lastSeen,
             boolean isOnline, String profilePicture) {
         this.username = username;
@@ -387,6 +388,9 @@ public class User{
         this.userProfiles = userProfiles;
     }
 
+    /**
+     * Diese Methode vergleicht nur die {@link User#id} beider Objekte.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

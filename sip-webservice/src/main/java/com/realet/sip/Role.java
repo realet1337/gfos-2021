@@ -24,12 +24,16 @@ import org.hibernate.annotations.CascadeType;
 
 /**
  * Eine {@link Role} gehört zu einer {@link Group}. {@link Role Roles} regulieren Zugriff auf {@link Chat Chats}.
+ * <br>
  * Definiert eine NamedQuery "Role.findGroupRolesOrderedByPriority", welche alle {@link Role Roles} einer {@link Group} findet und aufsteigend nach {@link Role#priority} sortiert. 
  *  Akzeptiert einen Parameter: "group".
+ * <br>
  * Definiert eine NamedQuery "Role.findUserGroupRoles", welche alle {@link Role Roles} eines {@link User Users} in einer {@link Group} findet. 
  *  Akzeptiert zwei Parameter: "group", "user".
+ * <br>
  * Definiert eine NamedQuery "Role.findAdminRolesByUserAndGroup", welche alle {@link Role Roles} eines {@link User Users} in einer {@link Group}, die {@link Role#admin}==true haben, findet. 
  *  Akzeptiert zwei Parameter: "group", "user".
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "Roles".
  */
 @Entity

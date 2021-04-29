@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 /**
  * Diese Klasse repräsentiert eine einzelne {@link ChatMessage}. Sie enthält Text und gehört zu einem {@link Chat}. 
  * Eine {@link ChatMessage} hat einen {@link ChatMessage#author} und enthält Informationen darüber, wann sie geschrieben, und das letzte Mal bearbeitet wurde. 
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "ChatMessages".
  */
 

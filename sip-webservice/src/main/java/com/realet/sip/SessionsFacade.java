@@ -8,12 +8,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Manager-Klasse für {@link Session Sessions}
+ * Manager-Klasse für {@link Session Sessions}.
  */
 public class SessionsFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link SessionsFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link SessionsFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

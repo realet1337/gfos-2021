@@ -11,7 +11,8 @@ import javax.persistence.Table;
 
 /**
  * Ein {@link UserProfile} gehört zu einem {@link User} und speichert persönliche Konfigurationen des Nutzers.
- * Ein JPA-Entity für eine Tabelle names "UserProfiles"
+ * <br>
+ * Ein JPA-Entity für eine Tabelle names "UserProfiles".
  */
 @Entity
 @Table(name = "UserProfiles")

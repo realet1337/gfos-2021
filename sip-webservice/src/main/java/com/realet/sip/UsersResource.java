@@ -39,7 +39,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public class UsersResource {
 
     /***
-     * Findet einen {@link User}
+     * Findet einen {@link User}.
      * @param id
      * @return Status Code 200 mit {@link User}, serialisiert durch {@link UserAdapter}, 
      * Status Code 404, falls der {@link User} nicht gefunden werden konnte, 
@@ -286,7 +286,7 @@ public class UsersResource {
     }
 
     /**
-     * Entfernt einen {@link User} von {@link User#blockedUsers} eines anderen {@link User Users} hinzu.
+     * Entfernt einen {@link User} aus {@link User#blockedUsers} eines anderen {@link User Users}.
      * Informiert alle WebSockets, die für diesen {@link User} registriert sind.
      * @param userId
      * @param token
@@ -531,6 +531,7 @@ public class UsersResource {
      * {@link User#email}, {@link User#lastSeen} und {@link User#isOnline} werden in jedem Fall beibehalten.
      * {@link User#pass} wird beibehalten, falls kein neues Passwort angegeben ist.
      * @param user
+     * @param token
      * @return Status Code 200, 
      * Status Code 403, falls das token ungültig ist oder keinen Zugriff auf diese Ressource erlaubt, 
      * Status Code 400, falls {@link User#username} nicht vorhanden oder leer ist, oder nur aus Leerzeichen besteht.

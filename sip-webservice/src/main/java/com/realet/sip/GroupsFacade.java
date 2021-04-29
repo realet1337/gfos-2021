@@ -7,12 +7,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Manager-Klasse für {@link Group Groups}
+ * Manager-Klasse für {@link Group Groups}.
  */
 public class GroupsFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link GroupsFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link GroupsFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

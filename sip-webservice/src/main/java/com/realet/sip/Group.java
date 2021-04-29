@@ -25,7 +25,9 @@ import org.hibernate.annotations.CascadeType;
 /**
  * Die {@link Group} Klasse modelliert eine Gruppe. Eine Gruppe ist eine Sammlung von {@link Role Roles}, {@link User Users} und {@link Chat Chats}. 
  * {@link Chat Chats}, die zu einer {@link Group Group} gehören, können Namen haben.
+ * <br>
  * Definiert eine NamedQuery "Group.findShared", welche alle gemeinsamen Gruppen zweier {@link User} findet. Akzeptiert zwei Parameter: "user1", "user2".
+ * <br>
  * Ein JPA-Entity für eine Tabelle names "Groups".
  */
 @Entity

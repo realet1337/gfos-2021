@@ -8,12 +8,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
 /**
- * Manager-Klasse für {@link Permission Permissions}
+ * Manager-Klasse für {@link Permission Permissions}.
  */
 public class PermissionsFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link PermissionsFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link PermissionsFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

@@ -8,12 +8,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
 /**
- * Manager-Klasse für {@link Chat Chats}
+ * Manager-Klasse für {@link Chat Chats}.
  */
 public class ChatsFacade {
 
     /**
-     * Die EntityManagerFactory die für alle Operationen von {@link ChatsFacade} verwendet wird.
+     * Die EntityManagerFactory, die für alle Operationen von {@link ChatsFacade} verwendet wird.
      */
     static EntityManagerFactory emf;
 

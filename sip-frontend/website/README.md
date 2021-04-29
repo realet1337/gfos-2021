@@ -5,6 +5,7 @@ Dies ist dies Dokumentation der Sip-Webapp. Alle Komponenten sind in der Seitenl
 - [SIP](#sip)
   - [src/main.js](#srcmainjs)
   - [src/store/index.js](#srcstoreindexjs)
+  - [src/router/index.js](#srcrouterindexjs)
 
 ## src/main.js
 Das Skript main.js etabliert einige Konstanten, die durch den Vue prototype für alle Komponenten erreichbar sind.
@@ -47,3 +48,119 @@ Definiert den Store und Setter-Mutations für alle Attribute.
 |blockedUsers|List aller vom eigenen Nutzer blockierten Nutzer|
 |blockedBy|List aller Nutzer, die den eigenen Nutzer blockiert haben|
 |userProfile|UserProfile Objekt des eigenen Nutzers|
+
+## src/router/index.js
+
+Definiert alle Routen:
+
+```js
+const routes = [
+	{
+		path: '/login',
+		name: 'Login',
+		component: Login
+	},
+	{
+		path: '/register',
+		name: 'Register',
+		component: Register
+	},
+	{
+		path: '/home',
+		component: Home,
+		children: [
+			{
+				path:'',
+				redirect:'direct-chats',
+				name: 'Home',
+			},
+			{
+				path: 'direct-chats',
+				component: HomeDirectChats,
+				name: "HomeDirectChats",
+			},
+			{
+				path: 'groups',
+				component: HomeGroups,
+				name: "HomeGroups",
+			}
+		]
+	},
+	{
+		path: '/chat/:chatId',
+		component: DirectChat,
+		name: 'DirectChat'
+	},
+	{
+		path: '/group/:groupId/chat/:chatId',
+		component: Group,
+		name: 'GroupChat'
+	},
+	{
+		path: '/group/:groupId',
+		component: Group,
+		name: 'Group'
+	},
+	{
+		path: '/group/:groupId/edit',
+		component: GroupEdit,
+		children: [
+			{
+				path:'overview',
+				component: GroupEditOverview,
+				name: 'GroupEditOverview',
+			},
+			{
+				path: 'roles',
+				component: GroupEditRolesView,
+				name: "GroupEditRolesView",
+			},
+			{
+				path: 'permissions',
+				component: GroupEditPermissionsView,
+				name: "GroupEditPermissionsView",
+			},
+			{
+				path: 'users',
+				component: GroupEditUsersView,
+				name: "GroupEditUsersView",
+			}
+		]
+	},
+	{
+		path: '/edit',
+		component: Edit,
+		children: [
+			{
+				path: 'profile',
+				component: EditProfile,
+				name: 'EditProfile'
+			},
+			{
+				path: 'settings',
+				component: EditSettings,
+				name: 'EditSettings'
+			},
+		]
+	},
+	{
+		path: '',
+		name: 'FrontPage',
+		component: FrontPage,
+	}
+]
+```
+
+Definiert außerdem einen globalen forEach Navigation-Guard. Dieser überprüft, falls die Navigation zu
+
+`/home...`
+
+`/chat...`
+
+`/group...`
+
+`/edit...`
+
+führt, ob ein Token im Store vorhanden ist. Falls nein, wird im Cookie gesucht. Wird dort eins gefunden, wird es beim Server überprüft. Ist dies erfolgreich, wird die App intialisiert.
+
+Falls die Anwendung intialisiert ist, die Navigation aber zu einer anderen Route führt, wird die Anwendung terminiert.

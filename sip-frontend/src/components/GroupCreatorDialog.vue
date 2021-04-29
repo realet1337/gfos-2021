@@ -32,6 +32,9 @@
 </template>
 <script>
 import Vue from 'vue';
+
+//@vuese
+//Erlaubt das Erstellen von Gruppen samt Namen, Beschreibung und Bild.
 export default {
     name: 'GroupCreatorDialog',
     data: function(){
@@ -46,6 +49,9 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //ändert das imgFile und sendet ein post-request an "/api/images/groups/pictures" um einen neuen Picture-Code zu erhalten.
+        //@arg file
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){
                 this.$data.cancelTokenSource.cancel();
@@ -70,6 +76,7 @@ export default {
                 })
             }
         },
+        //Setzt die Komponente zurück und zeigt den Dialog.
         show: function(){
             this.$data.name = '';
             this.$data.description = '';
@@ -78,6 +85,7 @@ export default {
             this.$data.picture = undefined;
             this.$data.isOpen = true;
         },
+        //Erstellt die Gruppe beim Server.
         create: function(){
             const group = {
                 name: this.$data.name,
@@ -100,6 +108,7 @@ export default {
                 //no errors possible if request is correct
             })
         },
+        //Schließt den Dialog.
         close: function(){
             this.$data.isOpen = false;
         }

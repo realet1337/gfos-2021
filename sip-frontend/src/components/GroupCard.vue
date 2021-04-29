@@ -25,13 +25,13 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Zeigt den Namen, das Bild und die Beschreibung einer Gruppe auf einer Karte.
 export default {
     name: 'GroupCard',
-    props: ['group'],
-    computed:{
-        imageUrl: function(){
-            return Vue.prototype.$apiBaseUrl + "/upload/pic/group/" + this.$props.group.picture + ".jpg";
-        }
+    props: {
+        //Die angezeigte Gruppe
+        group: Object
     },
 }
 </script>

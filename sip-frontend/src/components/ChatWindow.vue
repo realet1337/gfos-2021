@@ -532,7 +532,14 @@ export default {
                     this.$router.push('/home')
                 }
             })
-        }
+        },
+        //will not be called, just for vuese
+        dummy: function(){
+            //@vuese
+            //Wenn das Profilbild oder der Name eines Nutzers angeklickt wird.
+            //@arg user
+            this.$emit('show-user');
+        },
     },
     created: function(){
 

@@ -173,6 +173,8 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Lädt neue Nachrichten und setzt hasOldest und hasNewest entsprechend. Ruft "addMessages" mit der Serverantwort auf.
         updateMessages: function(before, after){
 
             var queryParams = {
@@ -237,6 +239,9 @@ export default {
                 }
             })
         },
+        //@vuese
+        //Sendet eine Nachricht an den Server, falls "editing" false ist und sie nicht ausschliesslich ausschließlich aus Leerzeichen besteht.
+        //Aktualisiert eine Nachricht beim Server, falls "editing" true ist und sie nicht ausschliesslich ausschließlich aus Leerzeichen besteht.
         sendMessage: function(){
             if(/\S/.test(this.$data.message)){
                 if(this.$data.editing.id){
@@ -298,10 +303,14 @@ export default {
                 this.$data.editing = {};
             });
         },
+        //@vuese
+        //Scrollt den Nachrichtencontainer nach unten.
         scrollDownMessages: function(){
             var msgDiv = document.getElementById('messages');
             msgDiv.scrollTop = msgDiv.scrollHeight - msgDiv.clientHeight;
         },
+        //@vuese
+        //Fügt Nachrichten lokal hinzu. Nimmt Rücksicht auf userProfile.maxLoadedMessages im store und behält Scroll-Position bei. Achtung: nimmt an, dass sich der gesamte Array entweder vor oder hinter den geladenen Nachrichten befindet.
         addMessages: function(chatMessages){
 
             if(chatMessages.length === 0){
@@ -377,6 +386,9 @@ export default {
 
             
         },
+        //@vuese
+        //Kopiert einen Text zur Zwischenablage.
+        //@arg text
         copyToClipboard: function(text){
             //random blog posts coming in clutch once again
             var el = document.createElement('textarea');
@@ -388,6 +400,9 @@ export default {
             document.execCommand('copy');
             document.body.removeChild(el);
         },
+        //@vuese
+        //Löscht eine Nachricht beim Server.
+        //@arg chatMessage
         deleteMessage: function(chatMessage){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/chat-messages/' + chatMessage.id, {
                 headers:{
@@ -407,6 +422,9 @@ export default {
                 }
             });
         },
+        //@vuese
+        //Entfernt eine Nachricht lokal.
+        //@arg chatMessage
         removeMessage: function(chatMessage){
             var index = this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id);
             this.$data.ignoreJSScroll = true;
@@ -421,10 +439,16 @@ export default {
                 this.$data.ignoreJSScroll = false;
             });
         },
+        //@vuese
+        //Leert das Eingabefeld und aktiviert Bearbeitungsmodus.
+        //@arg chatMessage
         editMessage: function(chatMessage){
             this.$data.editing = chatMessage;
             this.$data.message = chatMessage.content;
         },
+        //@vuese
+        //Aktualisiert eine Nachricht lokal.
+        //@arg chatMessage
         updateMessage: function(chatMessage){
             var index = this.$data.chatMessages.findIndex((msg) => chatMessage.id === msg.id );
 
@@ -437,6 +461,8 @@ export default {
             });
 
         },
+        //@vuese
+        //Baut websocket Verbindung auf, um den Chat zu beobachten. Registriert callback für neue Nachrichten.
         createWatcher: function(){
             //create watcher
             var _this = this;
@@ -460,11 +486,16 @@ export default {
             }
             this.$data.ws = ws;
         },
+        //@vuese
+        //Callback für den globalen eventHub bei Event "new-message".
+        //@arg chatMessage
         onNewMessage: function(chatMessage){
             if(this.$data.hasNewest && chatMessage.chat.id == this.$route.params.chatId){
                 this.addMessages([chatMessage]);
             }
         },
+        //@vuese
+        //Lädt Permissions.
         getPermissions: function(){
             window.axios.get(this.$getApiUrl('http') + '/chats/' + this.$route.params.chatId + '/permissions',{
                 headers: {

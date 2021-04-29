@@ -33,6 +33,7 @@ export default {
     methods: {
         //@vuese
         //Öffnet den Dialog. Falls ein "chat"-Paramter angegeben ist, wird der Dialog im Bearbeitungsmodus geöffnet, andernfalls wird er der Erstellungsmodus gewählt.
+        //@arg chat
         show: function(chat){
             if(chat){
                 Object.assign(this.chat, chat);
@@ -82,7 +83,7 @@ export default {
             }
         },
         //@vuese
-        //Schließt den Chat
+        //Schließt den Dialog
         close: function(){
             this.isOpen = false;
         }

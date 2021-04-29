@@ -13,7 +13,7 @@
         dense>
             <v-list-item
                 link
-                @click="$emit('copyToClipboard')"
+                @click="$emit('copy-to-clipboard')"
             >
                 <v-list-item-content
                     style="min-width: 100px;"
@@ -22,7 +22,7 @@
             <v-list-item
                 v-if="chatMessage.author.id === $store.state.userId"
                 link
-                @click="$emit('editMessage')"
+                @click="$emit('edit-message')"
             >
                 <v-list-item-content
                     style="min-width: 100px;"
@@ -31,7 +31,7 @@
             <v-list-item
                 v-if="chatMessage.author.id === $store.state.userId"
                 link
-                @click="$emit('deleteMessage')"
+                @click="$emit('delete-message')"
             >
                 <v-list-item-content
                     class="red--text text--lighten-2"
@@ -43,8 +43,20 @@
 </template>
 
 <script>
+//@vuese
+//Ein Menü mit Aktionen für Nachrichten
 export default {
     name: 'MessageOptionsMenu',
-    props: ['chatMessage']
+    props: {
+        //Die chatMessage, für die das Menü angezeigt wird.
+        chatMessage: Object
+    },
+    methods: {
+        dummy: function(){
+            this.$emit('copy-to-clipboard');
+            this.$emit('edit-message');
+            this.$emit('delete-message');
+        }
+    }
 }
 </script>

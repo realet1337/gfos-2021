@@ -191,6 +191,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Erlaubt Nutzerregistrierung.
 export default {
     data: function() {
         return {
@@ -221,7 +223,9 @@ export default {
         }
     },
     methods: {
-
+        //@vuese
+        //ändert das imgFile und sendet ein post-request an "/api/images/users/pictures" um einen neuen Picture-Code zu erhalten.
+        //@arg file
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){
                 this.$data.cancelTokenSource.cancel();
@@ -246,6 +250,8 @@ export default {
                 })
             }
         },
+        //@vuese
+        //Erstellt den Nutzer beim Server. Falls dies gelingt, wird die Anwendung nach "/login" geroutet.
         onSubmit: async function() {
             var userPayload = {
                 username: this.$data.username,
@@ -276,6 +282,8 @@ export default {
 
     },
     computed: {
+        //@vuese
+        //Generiert eine Object-Url anhand des imgFile.
         avatarUrl: function(){
             return URL.createObjectURL(this.$data.imgFile);
         }

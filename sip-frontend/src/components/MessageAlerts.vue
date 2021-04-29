@@ -38,6 +38,9 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Eine Snackbar, die die neueste erhaltene Nachricht anzeigt. Falls eine neue Nachricht ankommt, wird der Timer zurückgesetzt. 
+//Keine neue Snackbar wird angezeigt. Registriert einen Event-Listener für den globalen Event-Hub.
 export default{
     name: 'MessageAlerts',
     data: function(){
@@ -54,6 +57,9 @@ export default{
         this.$eventHub.$off('new-message', this.onNewMessage);
     },
     methods: {
+        //@vuese
+        //Zeigt die Snackbar bzw. setzt das Timeout zurück und zeigt die neue Nachricht an.
+        //@arg chatMessage
         onNewMessage: function(chatMessage){
             if(chatMessage.author.id != this.$store.state.userId && chatMessage.chat.id != this.$route.params.chatId){
                 this.$data.chatMessage = chatMessage;
@@ -67,7 +73,12 @@ export default{
                 }, Vue.prototype.$notificationTimeout);
             }
         },
-        openChat: function(){            
+        //@vuese
+        //Schließt den Dialog und emittiert ein "open-chat" event.
+        openChat: function(){
+            //@vuese
+            //Wenn der entsprechende Knopf geklickt wird.
+            //@arg chat
             this.$emit('open-chat', this.$data.chatMessage.chat);
             this.$data.show = false;
         }

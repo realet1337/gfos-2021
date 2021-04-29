@@ -39,6 +39,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Hier kann sich der Nutzer anmelden
 export default {
     data: function() {
         return {
@@ -56,6 +58,8 @@ export default {
     },
     methods: {
 
+        //@vuese
+        //Führt Anmeldung durch. Falls dies fehlschlägt wird eine Fehlermeldung gezeigt.
         onSubmit: function() {
 
             this.$data.error = false

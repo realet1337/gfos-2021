@@ -59,9 +59,9 @@
                     <v-col style="max-width: 20px; min-width: 20px;" class="ml-auto mr-1">
                         <MessageOptionsMenu 
                         :chatMessage="chatMessage"
-                        @deleteMessage="deleteMessage(chatMessage)"
-                        @editMessage="editMessage(chatMessage)"
-                        @copyToClipboard="copyToClipboard(chatMessage.content)"/>
+                        @delete-message="deleteMessage(chatMessage)"
+                        @edit-message="editMessage(chatMessage)"
+                        @copy-to-clipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
                 </v-row>
 
@@ -78,9 +78,9 @@
                     <v-col class="ml-auto mr-1" style="max-width: 20px; min-width: 20px;">
                         <MessageOptionsMenu
                         :chatMessage="chatMessage"
-                        @deleteMessage="deleteMessage(chatMessage)"
-                        @editMessage="editMessage(chatMessage)"
-                        @copyToClipboard="copyToClipboard(chatMessage.content)"/>
+                        @delete-message="deleteMessage(chatMessage)"
+                        @edit-message="editMessage(chatMessage)"
+                        @copy-to-clipboard="copyToClipboard(chatMessage.content)"/>
                     </v-col>
                 </v-row>
             </div>

@@ -1,7 +1,7 @@
 ## Installation/Deployment
 *(Getestet mit WildFly 23.0.1, MySql 8.0.24, openjdk 11.0.10, Ubuntu 20.04.2)*
 
-Platzieren Sie zur Installation das `.ear` Archiv, welches im `dist` Verzeichnis gefunden werden kann.
+Deployen Sie zur Installation das `.ear` Archiv, welches im `dist` Verzeichnis gefunden werden kann.
 Die App braucht einige Dinge um zu funktionieren:
 
  1. Eine system property mit Namen `com.realet.sip.uploadDir`. Diese sagt der Anwendung,
@@ -16,7 +16,7 @@ Die App braucht einige Dinge um zu funktionieren:
     
  2. Eine MySql datasource names "MySqlDS". Hier ist eine gute Erklärung: https://medium.com/@hasnat.saeed/install-and-configure-mysql-jdbc-driver-on-jboss-wildfly-e751a3be60d3.     Laden sie die richtige Connector/J-Version für ihre MySql Installation (empf. 8.0.24) und konfigurieren sie das Modul mit Version 1.9 (`xmlns="urn:jboss:module:1.9"`).
  
- 3. Einen File-Handler für statische Inhalte bei der URL `/upload`. Dies sollte dasselbe Verzeichnis wie `com.realet.sip.uploadDir` bereitstellen. Falls sie WildFly benutzen, 
+ 3. Einen File-Handler für statische Inhalte bei der URL `/upload`. Dieser sollte dasselbe Verzeichnis wie `com.realet.sip.uploadDir` bereitstellen. Falls sie WildFly benutzen, 
     können sie hierfür die folgenden Tags in WildFlys standalone.xml in der undertow-Sektion einfügen:
  
 	 `<location  name="/upload"  handler="uploads"/>` 

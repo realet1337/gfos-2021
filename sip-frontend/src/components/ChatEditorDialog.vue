@@ -15,6 +15,9 @@
 </template>
 <script>
 import Vue from 'vue';
+
+//@vuese
+//Erlaubt das Bearbeiten von Gruppenchats.
 export default {
     name: 'ChatEditorDialog',
     data: function(){
@@ -28,6 +31,8 @@ export default {
         };
     },
     methods: {
+        //@vuese
+        //Öffnet den Dialog. Falls ein "chat"-Paramter angegeben ist, wird der Dialog im Bearbeitungsmodus geöffnet, andernfalls wird er der Erstellungsmodus gewählt.
         show: function(chat){
             if(chat){
                 Object.assign(this.chat, chat);
@@ -41,6 +46,8 @@ export default {
             }
             this.isOpen = true;
         },
+        //@vuese
+        //Aktualisiert/erstellt, abhängig vom Modus, beim Server einen Chat.
         submit: function(){
             if(this.isEditing){
                 window.axios.put(Vue.prototype.$getApiUrl('http') + '/chats', this.chat, {
@@ -67,6 +74,8 @@ export default {
                 })
             }
         },
+        //@vuese
+        //Schließt den Chat
         close: function(){
             this.isOpen = false;
         }

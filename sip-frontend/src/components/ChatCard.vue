@@ -29,14 +29,11 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Zeigt für Direkt-Unterhaltungen auf einer Karte sowohl den anderen Nutzer als auch die zuletzt gesendet Nachricht an.
 export default {
     name: 'ChatCard',
     props: ['chat'],
-    computed:{
-        imageUrl: function(){
-            return Vue.prototype.$getApiUrl('http') + "/upload/pic/user/" + this.$data.user.profilePicture + ".jpg";
-        }
-    },
     data: function(){
         return {
             user: this.$props.chat.user1.id == this.$store.state.userId ? this.$props.chat.user2 : this.$props.chat.user1 ,

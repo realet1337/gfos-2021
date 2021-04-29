@@ -21,6 +21,8 @@
 <script>
 import Vue from 'vue'
 
+//@vuese
+//Bittet den Nutzer um Bestätigung, dass er einen Nutzer zu einer Gruppe/Rolle hinzufügen will.
 export default {
     name: 'AddUserConfirmDialog',
     data: function(){
@@ -31,6 +33,9 @@ export default {
         }
     },
     methods: {
+        //@vuese
+        //Zeigt den Dialog. Wird dies als show(user) aufgerufen, fragt die Komponente, ob der Nutzer zu einer Gruppe hinzugefügt werden soll.
+        //Wird dies als show(user, role) aufgerufen, fragt die Komponente, ob der Nutzer zu einer Rolle hinzugefügt werden soll.
         show: function(user, role){
             this.user = user;
 
@@ -43,9 +48,13 @@ export default {
 
             this.isOpen = true;
         },
+        //@vuese
+        //Schließt den Dialog.
         close: function(){
             this.isOpen = false;
         },
+        //@vuese
+        //Fügt den Nutzer, abhängig davon, wie "show" aufgerufen wurde, beim Server entweder zu einer Gruppe oder einer Rolle hinzu.
         add: function(){
             if(!this.role){
                 window.axios.post(Vue.prototype.$getApiUrl('http') + '/groups/' + this.$route.params.groupId + '/users', this.user, {

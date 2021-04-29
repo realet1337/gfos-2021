@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.realet.sip</groupId>
     <artifactId>sip-webservice</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     
     <packaging>war</packaging>
     <name>sip-webservice</name>

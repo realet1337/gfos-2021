@@ -17,7 +17,7 @@ public class UserProfileAdapter extends TypeAdapter<UserProfile>{
      * {@link UserProfile#id}, 
      * {@link UserProfile#reverseBlocking}, 
      * {@link UserProfile#maxLoadedMessages}, 
-     * {@link UserProfile#messageChunkSize}, 
+     * {@link UserProfile#messageChunkSize}.
      * @param out JsonWriter Objekt, welches das serialisierte {@link UserProfile} Objekt erhält.
      * @param value Zu serialisierendes {@link UserProfile} Objekt.
      * @throws IOException

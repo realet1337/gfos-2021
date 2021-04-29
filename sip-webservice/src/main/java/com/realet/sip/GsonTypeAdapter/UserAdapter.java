@@ -20,7 +20,7 @@ public class UserAdapter extends TypeAdapter<User>{
      * {@link User#profilePicture}, falls existent, 
      * {@link User#isOnline}, 
      * {@link User#status}, falls existent, 
-     * {@link User#lastSeen}, falls existent, 
+     * {@link User#lastSeen}, falls existent.
      * @param out JsonWriter Objekt, welches das serialisierte {@link User} Objekt erhält.
      * @param value Zu serialisierendes {@link User} Objekt.
      * @throws IOException

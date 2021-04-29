@@ -19,7 +19,7 @@ public class PermissionAdapter extends TypeAdapter<Permission>{
      * {@link Permission#id}, 
      * {@link Permission#canRead}, 
      * {@link Permission#canWrite}, 
-     * {@link Permission#role}, als Objekt, mit Attributen als IDs, falls existent, 
+     * {@link Permission#role}, als Objekt, mit Attributen als IDs, falls existent.
      * @param out JsonWriter Objekt, welches das serialisierte {@link Permission} Objekt erhält.
      * @param value Zu serialisierendes {@link Permission} Objekt.
      * @throws IOException

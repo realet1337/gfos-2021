@@ -20,7 +20,7 @@ public class GroupAdapter extends TypeAdapter<Group>{
      * {@link Group#description}, falls existent, 
      * {@link Group#name}, 
      * {@link Group#picture}, falls existent, 
-     * {@link Group#owner}, als Objekt, 
+     * {@link Group#owner}, als Objekt.
      * @param out JsonWriter Objekt, welches das serialisierte {@link Group} Objekt erhält.
      * @param value Zu serialisierendes {@link Group} Objekt.
      * @throws IOException

@@ -67,6 +67,7 @@ export default {
     methods: {
         //@vuese
         //Zeigt den UserProfileDialog.
+        //@arg user
         showUserDialog: function(user){
 
             this.$refs.userDialog.show(user);
@@ -74,11 +75,13 @@ export default {
         },
         //@vuese
         //Routet die Anwendung zu einem Chat.
+        //@arg chat
         openDirectChat: function(chat){
             this.$router.push('/chat/' + chat.id);
         },
         //@vuese
         //Routet die Anwendung zu einer Group.
+        //@arg group
         openGroup: function(group){
             this.$router.push('/group/' + group.id);
         },

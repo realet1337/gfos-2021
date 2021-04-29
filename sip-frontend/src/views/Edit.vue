@@ -71,6 +71,7 @@ export default {
     methods: {
         //@vuese
         //Generiert den Titel, basierend auf einem Schlüsselwort aus der Route.
+        //@arg keyword
         getTitle: function(keyword){
             const dict = {
                 'profile': 'Profile',

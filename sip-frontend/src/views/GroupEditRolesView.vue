@@ -252,11 +252,13 @@ export default {
         },
         //@vuese
         //Zeigt den "RemoveUserConfirmDialog" mit einem "user" Parameter.
+        //@arg user
         removeUser: function(user){
             this.$refs.removeUserConfirmDialog.show(user, this.roles[this.roles.findIndex(role => role.id === this.roleId)]);
         },
         //@vuese
         //Zeigt den "AddUserConfirmDialog" mit einem "user" Parameter.
+        //@arg user
         addUser: function(user){
             if(!this.role.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user, this.role);
@@ -269,6 +271,7 @@ export default {
         },
         //@vuese
         //Entfernt einen Nutzer aus dem "user"-Parameter lokal aus einer Rolle.
+        //@arg user
         localRemoveUserFromRole: function(user){
             const roleIndex = this.role.users.findIndex(tmpUser => user.id === tmpUser.id);
             if(roleIndex !== -1){
@@ -277,6 +280,7 @@ export default {
         },
         //@vuese
         //Fügt einen Nutzer aus dem "user"-Parameter lokal zu einer Rolle hinzu.
+        //@arg user
         localAddUserToRole: function(user){
             if(!this.role.users.some(tmpUser => user.id === tmpUser.id)){
                 this.role.users.push(user);
@@ -297,6 +301,7 @@ export default {
         },
         //@vuese
         //Verschiebt eine Rolle mit index von Parameter "idx" nach oben. Überprüft nicht, ob dies möglich ist. 
+        //@arg idx
         swapRolesUpwards: function(idx){
             const buf = this.priorityEditorArray[idx];
             Vue.set(this.priorityEditorArray, idx, this.priorityEditorArray[idx - 1]);
@@ -304,6 +309,7 @@ export default {
         },
         //@vuese
         //Verschiebt eine Rolle mit index von Parameter "idx" nach unten. Überprüft nicht, ob dies möglich ist.
+        //@arg idx
         swapRolesDownwards: function(idx){
             const buf = this.priorityEditorArray[idx];
             Vue.set(this.priorityEditorArray, idx, this.priorityEditorArray[idx + 1]);

@@ -116,6 +116,7 @@ export default {
     methods:{
         //@vuese
         //Routet die Anwendung zu einem Chat.
+        //@arg chat
         openChat: function(chat){
             if(chat.name){
                 this.$router.push('/group/' + chat.group.id + '/chat/' + chat.id);

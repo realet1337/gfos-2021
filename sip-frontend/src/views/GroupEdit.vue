@@ -83,6 +83,7 @@ export default {
     methods: {
         //@vuese
         //Generiert den Titel, basierend auf einem Schluesselwort aus der Route.
+        //@arg keyword
         getTitle: function(keyword){
             const dict = {
                 'overview': 'Overview',

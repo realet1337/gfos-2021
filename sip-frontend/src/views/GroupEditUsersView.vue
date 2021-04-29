@@ -65,11 +65,13 @@ export default {
     methods: {
         //@vuese
         //Zeigt den RemoveUserConfirmDialog.
+        //@arg user
         removeUser: function(user){
             this.$refs.removeUserConfirmDialog.show(user);
         },
         //@vuese
         //Zeigt den AddUserConfirmDialog.
+        //@arg user
         addUser: function(user){
             if(!this.users.some(tmpUser => user.id == tmpUser.id)){
                 this.$refs.addUserConfirmDialog.show(user);

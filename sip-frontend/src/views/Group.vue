@@ -239,16 +239,19 @@ export default {
         },
         //@vuese
         //Zeigt den UserProfileDialog für einen User.
+        //@arg user
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },
         //@vuese
         //Routet die Anwendung zum entsprechenden Chat.
+        //@arg chat
         openDirectChat: function(chat){
             this.$router.push('/chat/' + chat.id);
         },
         //@vuese
         //Passt die Komponente an um eine gewisse Gruppe zu zeigen.
+        //@arg group
         openGroup: function(group){
             if(group.id !== this.$data.group.id){
                 this.$router.push('/group/' + group.id);
@@ -262,6 +265,7 @@ export default {
         },
         //@vuese
         //Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder öffnet einen Gruppen-Chat auf.
+        //@arg chat
         openChat: function(chat){
 
             if(chat.id !== this.$data.chat.id){
@@ -419,6 +423,7 @@ export default {
         },
         //@vuese
         //Öffnet eine Gruppe anhand ihrer ID.
+        //@arg id
         openGroupId: function(id){
             var groupIndex = this.groups.findIndex(group => group.id === id);
             if(groupIndex === -1){
@@ -448,11 +453,13 @@ export default {
         },
         //@vuese
         //Zeigt den ChatEditorDialog im Bearbeitungs-Modus mit dem "chat" Parameter.
+        //@arg chat
         editChat: function(chat){
             this.$refs.chatEditorDialog.show(chat);
         },
         //@vuese
         //Löscht einen Chat beim Server.
+        //@arg chat
         deleteChat: function(chat){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/chats/' + chat.id, {
                 headers:{

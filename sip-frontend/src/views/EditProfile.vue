@@ -125,6 +125,7 @@ export default {
     methods: {
         //@vuese
         //ändert das imgFile und sendet ein post-request an "/api/images/users/pictures" um einen neuen Picture-Code zu erhalten.
+        //@arg file
         updateFile: async function(file){
             if(this.$data.cancelTokenSource){
                 this.$data.cancelTokenSource.cancel();

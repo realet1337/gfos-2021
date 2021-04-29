@@ -68,6 +68,7 @@ export default {
         },
         //@vuese
         //Zeigt eine Gruppe anhand ihrer ID
+        //@arg id
         openGroupId: function(id){
             this.$router.push('/group/' + id);
         }

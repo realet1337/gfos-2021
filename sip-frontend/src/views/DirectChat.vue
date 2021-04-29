@@ -143,11 +143,13 @@ export default {
     methods: {
         //@vuese
         //Zeigt den UserProfileDialog mit dem entsprechenden User.
+        //@arg user
         showUser: function(user){
             this.$refs.userDialog.show(user);
         },
         //@vuese
         //Öffnet eine beliebige Art von Chat, überprüft ob Chat ein Gruppen-/Direkt-Chat ist und routet die Anwendung entweder zu entsprechenden URL oder ruft "openDirectChat" auf.
+        //@arg chat
         openChat: function(chat){
             if(!chat.name){
                 this.openDirectChat(chat);
@@ -158,6 +160,7 @@ export default {
         },
         //@vuese
         //Passt die Komponente an um einen anderen Chat anzuzeigen.
+        //@arg chat
         openDirectChat: function(chat){
             if(chat.id != this.$data.chat.id){
                 if(!chat.notSelf){
@@ -173,11 +176,13 @@ export default {
         },
         //@vuese
         //Routet die Anwendung zur "Group"-Komponente mit der entsprechenden Id.
+        //@arg group
         openGroup: function(group){
             this.$router.push('/group/' + group.id);
         },
         //@vuese
         //Findet den  User eines Chats, der nicht mit der im Store gespeicherten userId übereinstimmt und fügt ihn dem Chat als "notSelf" hinzu.
+        //@arg chat
         findNotSelf: function(chat){
             if(chat.user1.id == this.$store.state.userId){
                 chat.notSelf = chat.user2;
@@ -189,6 +194,7 @@ export default {
         },
         //@vuese
         //Verschiebt den Chat einer neuen Nachricht in der Liste nach oben.
+        //@arg message
         onNewMessage: function(message){
             //prepare for usage
             this.findNotSelf(message.chat);

@@ -198,6 +198,7 @@ export default {
         },
         //@vuese
         //Fügt einen neue Permission beim Server hinzu.
+        //@arg role
         addException: function(role){
             const permission = {
                 canRead: false,
@@ -217,6 +218,7 @@ export default {
         },
         //@vuese
         //Aktualisiert eine Permission beim Server.
+        //@arg permission
         updatePermission: function(permission){
             window.axios.put(Vue.prototype.$getApiUrl('http') + '/permissions', permission, {
                 headers:{
@@ -230,6 +232,7 @@ export default {
         },
         //@vuese
         //Löscht eine Permission beim Server.
+        //@arg permission
         deleteException: function(permission){
             window.axios.delete(Vue.prototype.$getApiUrl('http') + '/permissions/' + permission.id, {
                 headers:{

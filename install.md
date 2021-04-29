@@ -1,32 +1,35 @@
 ## Installation/Deployment
-*(Tested on WildFly 23.0.1, MySql 8.0.24, openjdk 11.0.10, Ubuntu 20.04.2)*
+*(Getestet mit WildFly 23.0.1, MySql 8.0.24, openjdk 11.0.10, Ubuntu 20.04.2)*
 
-To install, simply deploy the `.ear` archive found in the `dist` directory.
-The app needs a few things to work:
+Platzieren Sie zur Installation das `.ear` Archiv, welches im `dist` Verzeichnis gefunden werden kann.
+Die App braucht einige Dinge um zu funktionieren:
 
- 1. A system property called `com.realet.sip.uploadDir`. This tells the
-    application where it should store profile pictures. Make sure this
-    directory is writable. If you use WildFly, you can add this tag behind the `<extensions>` tag in WildFly's standalone.xml:
+ 1. Eine system property mit Namen `com.realet.sip.uploadDir`. Diese sagt der Anwendung,
+    wo sie Profil-Bilder speichern soll. Dieses Verzeichnis muss
+    beschreibbar sein. Falls sie WildFly verwenden, können sie diesen Tag hinter dem `<extensions>` Tag in WildFly's standalone.xml einfügen:
     
     ```
     <system-properties>
 	    <property  name="com.realet.sip.uploadDir"  value="<Upload Directory here>"/>
     </system-properties>
     ```
- 2. A MySql datasource called "MySqlDS". Here is a great walkthrough: https://medium.com/@hasnat.saeed/install-and-configure-mysql-jdbc-driver-on-jboss-wildfly-e751a3be60d3. Make sure to download the newest version of Connector/J and configure the module with version 1.9 (`xmlns="urn:jboss:module:1.9"`).
+    
+ 2. Eine MySql datasource names "MySqlDS". Hier ist eine gute Erklärung: https://medium.com/@hasnat.saeed/install-and-configure-mysql-jdbc-driver-on-jboss-wildfly-e751a3be60d3.     Laden sie die richtige Connector/J-Version für ihre MySql Installation (empf. 8.0.24) und konfigurieren sie das Modul mit Version 1.9 (`xmlns="urn:jboss:module:1.9"`).
  
- 3. A file handler for static content for URL `/upload`. This should serve the same directory specified by `com.realet.sip.uploadDir`. If you're on WildFly, you can do this by adding
+ 3. Einen File-Handler für statische Inhalte bei der URL `/upload`. Dies sollte dasselbe Verzeichnis wie `com.realet.sip.uploadDir` bereitstellen. Falls sie WildFly benutzen, 
+    können sie hierfür die folgenden Tags in WildFlys standalone.xml in der undertow-Sektion einfügen:
  
 	 `<location  name="/upload"  handler="uploads"/>` 
 	
 	`<file  name="uploads"  path="<Upload Directory here>"/>`    
 	
-	next to the respective tags for the URL `/` which is being served from `${jboss.home.dir}/welcome-content`.
+    Diese sollten neben dem Tag für die URL `/`, welche aus `${jboss.home.dir}/welcome-content` angeboten wird, Platz finden.
 
-4. The necessary database schema. To generate these tables, simply run `create.sql` from the `dist` directory. `dist` also holds `drop.sql` which drops all of those tables.
+4. Das notwendige Datenbank-Schema. Um diese Tabellen zu generieren, führen sie einfach `create.sql` aus dem `dist` Verzeichnis aus. `dist` enthält außerdem `drop.sql`, was 
+   diese Tabellen entfernt.
 
-(*Note: The App will attempt to register for web-context `/`. Most Application servers occupy this already, meaning that it won't be possible to open the App. To avoid this on WildFly, either rename the `welcome-content` folder or remove the handler altogether.)* 
+(*Note: Die App versucht, sich für den Web-Context `/` zu registrieren. Die meisten Application servers belegen diesen Pfad bereits, was bedeutet, dass es nicht möglich sein wird, die App zu öffnen. Um dies auf WildFly zu vermeiden, benennen sie entweder `welcome-content` um oder entfernen sie den Handler komplett.)* 
 
-And that's it! You should be good to go. (╹ڡ╹ )
+Und das wars! Die App sollte funktionieren. (╹ڡ╹ )
 
-It is also possible to deploy the Web-App as a static build with the Webservice on a different server. To achieve that, simply change the `$apiHost` and `$uploadHost` attributes in `sip-frontend/src/main.js` to point to your Webservice and run `npm run build` in the `sip-frontend` directory. This will generate static files that can be deployed separately from the Webservice. The Webservice can be built by running `mvn clean install` in the `sip-webservice` directory. Don't forget to account for CORS though!
+Es is auch möglich, die  Web-App als Statischen Build laufen zu lassen, mit dem Webservice auf einem anderen Server. Um diese zu erreichen, ändern sie einfach die `$apiHost` und `$uploadHost` Attribute in `sip-frontend/src/main.js` um auf ihren Webservice zu zeigen und führen sie `npm run build` im `sip-frontend` Verzeichnis aus. Dies generiert statische Dateien, die unabhängig vom Webservice deployed werden können. Ein Webservice-Build kann erstellt werden, indem `mvn clean install` im `sip-webservice` Verzeichnis ausgeführt wird. Vergessen sie CORS nicht!

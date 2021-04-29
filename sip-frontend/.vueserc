@@ -1,3 +1,5 @@
 {
-	"include": ["src/components/*.vue","src/views/*.vue"]
+	"include": ["src/components/*.vue",
+	"src/views/*.vue",
+	"src/App.vue"]
 }

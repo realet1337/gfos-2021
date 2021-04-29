@@ -36,6 +36,8 @@ export default {
         //@vuese
         //Zeigt den Dialog. Wird dies als show(user) aufgerufen, fragt die Komponente, ob der Nutzer zu einer Gruppe hinzugefügt werden soll.
         //Wird dies als show(user, role) aufgerufen, fragt die Komponente, ob der Nutzer zu einer Rolle hinzugefügt werden soll.
+        //@arg user
+        //@arg role
         show: function(user, role){
             this.user = user;
 
@@ -62,6 +64,8 @@ export default {
                         'Authorization': 'Bearer ' + this.$store.state.token,
                     }
                 }).then(() => {
+                    //Wenn der Nutzer  hinzugefügt wurde
+                    //@arg User, falls er zu einer Rolle und nicht zu einer Gruppe hinzugefügt wurde.
                     this.$emit('added');
                     this.close();
                 }, () => {

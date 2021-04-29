@@ -1,5 +1,7 @@
 # ChatCard
 
+Zeigt für Direkt-Unterhaltungen auf einer Karte sowohl den anderen Nutzer als auch die zuletzt gesendet Nachricht an.
+
 ## Props
 
 <!-- @vuese:ChatCard:props:start -->

@@ -55,6 +55,10 @@ export default {
                             'Authorization': 'Bearer ' + this.$store.state.token,
                     }
                 }).then(() => {
+                    
+                    //@vuese
+                    //Emittiert den aktualisierten Chat
+                    //@arg chat
                     this.$emit('chat-updated', this.chat);
                     this.close();
                 }, () => {
@@ -67,6 +71,9 @@ export default {
                             'Authorization': 'Bearer ' + this.$store.state.token,
                     }
                 }).then(() => {
+                    //@vuese
+                    //Emittiert den erstellten Chat
+                    //@arg chat
                     this.$emit('chat-created', this.chat);
                     this.close();
                 }, () => {

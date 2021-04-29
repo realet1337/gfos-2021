@@ -25,15 +25,20 @@
             </div>
             <div v-for="(chatMessage, index) in chatMessages" :key="chatMessage.id"
             no-gutters>
-                <v-row class="mt-3 mb-1" v-if="index === 0 || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" no-gutters>
+                <v-row class="mt-3 mb-1" v-if="index === 0 
+                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()
+                || new Date(chatMessages[index - 1].sent).getMonth() < new Date(chatMessage.sent).getMonth()
+                || new Date(chatMessages[index - 1].sent).getFullYear() < new Date(chatMessage.sent).getFullYear()" no-gutters>
                     <v-divider class="mt-3 mb-1"></v-divider>
                     <span class="date-divider-label mx-2">{{new Date(chatMessage.sent).toDateString()}}</span>
                     <v-divider inset class="mt-3 ml-0"></v-divider>
                 </v-row>
 
                 <!-- different user or 5 min apart -->
-                <v-row v-if="index === 0 || chatMessages[index - 1].author.id !== chatMessage.author.id
-                || new Date(chatMessages[index - 1].sent).getTime() + 300000 < new Date(chatMessage.sent).getTime()" class="text-message reveal-on-hover-container mt-5 rounded mr-2" no-gutters>
+                <v-row v-if="index === 0 
+                || chatMessages[index - 1].author.id !== chatMessage.author.id
+                || new Date(chatMessages[index - 1].sent).getTime() + 300000 < new Date(chatMessage.sent).getTime() 
+                || new Date(chatMessages[index - 1].sent).getDate() < new Date(chatMessage.sent).getDate()" class="text-message reveal-on-hover-container mt-5 rounded mr-2" no-gutters>
                     <!-- beeg -->
                     <v-col cols="auto" style="max-width: 63px;">
                         <v-avatar @click="$emit('show-user', chatMessage.author)" color="primary" class="clickable mt-1 ml-2" size="40">
@@ -112,6 +117,7 @@
             </v-row>
             <v-row v-if="$data.canWrite || editing.id" no-gutters>
                 <v-col>
+                    <!-- Sending message creates an annoying visual bug on mobile when using a textarea. Welp, they couldn't do multiple lines anyways. -->
                     <v-textarea
                         v-if="!$vuetify.breakpoint.xs"
                         @keydown.enter.exact.prevent="sendMessage"
@@ -143,6 +149,10 @@
 import Vue from 'vue'
 import MessageOptionsMenu from './MessageOptionsMenu'
 
+//@vuese
+//Sobald erstellt, lädt diese Komponente die Berichtigungen zu einem Chat sowie die neuesten Nachrichten, die Anzahl ist definiert durch userProfile.messageChunkSize im store.
+//Falls der Nutzer nicht lesen oder schreiben darf, werden jeweils schriftzüge angezeigt. Gegebenenfalls verschwindet das Eingabefeld.
+//Nachrichten werden gruppiert, falls sie vom selben Nutzer stammen, am selben Tag geschrieben
 export default {
     name: 'ChatWindow',
     components: {

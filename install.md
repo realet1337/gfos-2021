@@ -1,5 +1,5 @@
 ## Installation/Deployment
-*(Getestet mit WildFly 23.0.1, MySql 8.0.24, openjdk 11.0.10, Ubuntu 20.04.2)*
+*(Getestet mit WildFly 23.0.1, MySql 8.0.23, openjdk 11.0.11, Ubuntu 20.04.2)*
 
 Deployen Sie zur Installation das `.ear` Archiv, welches im `dist` Verzeichnis gefunden werden kann.
 Die App braucht einige Dinge um zu funktionieren:
